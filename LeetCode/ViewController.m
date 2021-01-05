@@ -6,8 +6,38 @@
 //
 
 #import "ViewController.h"
+#import "LeetCodeModel.h"
 
-@interface ViewController ()
+#import "LeetCodeListViewController.h"
+#import "BinaryTreeViewController.h"
+#import "TwoPointerViewController.h"
+#import "HuisuViewController.h"
+#import "LeetCodeArrayViewController.h"
+
+#define kLeetCodeSet @"leetCode题集"
+#define kLeetCodeSetEasy @"easy"
+#define kLeetCodeSetMedium @"medium"
+#define kLeetCodeSetHard @"hard"
+#define kLeetCodeSetAll @"all"
+
+#define kLeetCodeModule @"leetCode模块复习"
+#define kLeetCodeModuleTree @"二叉树"
+#define kLeetCodeModulePointer @"双指针"
+#define kLeetCodeModuleBackTracking @"回溯算法"
+#define kLeetCodeModuleArray @"数组"
+
+#define kBack @"返回"
+
+@interface ViewController ()<UITableViewDelegate, UITableViewDataSource>
+
+@property (nonatomic, strong) NSArray <LeetCodeModel *>*allArray;
+@property (nonatomic, strong) NSMutableArray <LeetCodeModel *>*easyArray;
+@property (nonatomic, strong) NSMutableArray <LeetCodeModel *>*mediumArray;
+@property (nonatomic, strong) NSMutableArray <LeetCodeModel *>*hardArray;
+
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray *dataArray;
+@property (nonatomic, strong) NSDictionary *config;
 
 @end
 
@@ -16,7 +46,129 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.navigationItem.title = @"LeetCode";
+
+    self.config = @{
+        kLeetCodeSet:@[kLeetCodeSetEasy, kLeetCodeSetMedium, kLeetCodeSetHard, kLeetCodeSetAll, kBack],
+        kLeetCodeModule:@[kLeetCodeModuleTree, kLeetCodeModulePointer, kLeetCodeModuleBackTracking, kLeetCodeModuleArray, kBack],
+        kBack:@[kLeetCodeSet, kLeetCodeModule],
+        kLeetCodeModuleTree:NSStringFromClass(BinaryTreeViewController.class),
+        kLeetCodeModulePointer:NSStringFromClass(TwoPointerViewController.class),
+        kLeetCodeModuleBackTracking:NSStringFromClass(HuisuViewController.class),
+        kLeetCodeSetEasy:NSStringFromClass(LeetCodeListViewController.class),
+        kLeetCodeSetMedium:NSStringFromClass(LeetCodeListViewController.class),
+        kLeetCodeSetHard:NSStringFromClass(LeetCodeListViewController.class),
+        kLeetCodeSetAll:NSStringFromClass(LeetCodeListViewController.class),
+        kLeetCodeModuleArray:NSStringFromClass(LeetCodeArrayViewController.class),
+    };
+    
+    self.dataArray = self.config[kBack];
+    [self.view addSubview:self.tableView];
+    
+    [self configData];
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.dataArray.count;
+}
 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(UITableViewCell.class) forIndexPath:indexPath];
+    cell.textLabel.text = self.dataArray[indexPath.row];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *key = self.dataArray[indexPath.row];
+    if ([self.config[key] isKindOfClass:NSArray.class]) {
+        self.dataArray = self.config[key];
+        [self.tableView reloadData];
+    } else {
+        if ([key isEqualToString:kLeetCodeSetEasy]) {
+            [self popToList:@"简单" data:self.easyArray];
+        } else if ([key isEqualToString:kLeetCodeSetMedium]) {
+            [self popToList:@"中等" data:self.mediumArray];
+        } else if ([key isEqualToString:kLeetCodeSetHard]) {
+            [self popToList:@"困难" data:self.hardArray];
+        } else if ([key isEqualToString:kLeetCodeSetAll]) {
+            [self popToList:@"全部" data:self.allArray];
+        } else {
+            Class cls = NSClassFromString(self.config[key]);
+            UIViewController *vc = [[cls alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+    }
+}
+
+- (void)popToList:(NSString *)title data:(NSArray <LeetCodeModel *>*)array
+{
+    LeetCodeListViewController *vc = [[LeetCodeListViewController alloc] init];
+    vc.title = title;
+    vc.array = array;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)configData
+{
+    self.allArray = @[
+        [LeetCodeModel modelWithTitle:@"两数之和" num:1 type:LeetCodeTypeEasy],
+        [LeetCodeModel modelWithTitle:@"两数相加" num:2 type:LeetCodeTypeNormal],
+        [LeetCodeModel modelWithTitle:@"无重复字符的最长子串" num:3 type:LeetCodeTypeNormal],
+        [LeetCodeModel modelWithTitle:@"寻找两个正序数组的中位数" num:4 type:LeetCodeTypeHard],
+        [LeetCodeModel modelWithTitle:@"最长回文子串" num:5 type:LeetCodeTypeNormal],
+        [LeetCodeModel modelWithTitle:@"Z字形变换" num:6 type:LeetCodeTypeNormal],
+        [LeetCodeModel modelWithTitle:@"整数反转" num:7 type:LeetCodeTypeEasy],
+        [LeetCodeModel modelWithTitle:@"字符串转整数(atoi)" num:8 type:LeetCodeTypeNormal],
+    ];
+    
+    [self.allArray enumerateObjectsUsingBlock:^(LeetCodeModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.type == LeetCodeTypeEasy) {
+            [self.easyArray addObject:obj];
+        } else if (obj.type == LeetCodeTypeNormal) {
+            [self.mediumArray addObject:obj];
+        } else if (obj.type == LeetCodeTypeHard) {
+            [self.hardArray addObject:obj];
+        }
+    }];
+}
+
+- (UITableView *)tableView
+{
+    if (!_tableView) {
+        _tableView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:(UITableViewStylePlain)];
+        _tableView.dataSource = self;
+        _tableView.delegate = self;
+        _tableView.rowHeight = 44;
+        [_tableView registerClass:UITableViewCell.class forCellReuseIdentifier:NSStringFromClass(UITableViewCell.class)];
+    }
+    return _tableView;
+}
+
+- (NSMutableArray<LeetCodeModel *> *)easyArray
+{
+    if (!_easyArray) {
+        _easyArray = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _easyArray;
+}
+
+- (NSMutableArray<LeetCodeModel *> *)mediumArray
+{
+    if (!_mediumArray) {
+        _mediumArray = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _mediumArray;
+}
+
+- (NSMutableArray<LeetCodeModel *> *)hardArray
+{
+    if (!_hardArray) {
+        _hardArray = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _hardArray;
+}
 @end
