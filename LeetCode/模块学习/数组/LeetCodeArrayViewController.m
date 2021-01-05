@@ -7,7 +7,7 @@
 //
 
 #import "LeetCodeArrayViewController.h"
-
+#import "ListNode.h"
 @interface LeetCodeArrayViewController ()
 
 @end
@@ -18,7 +18,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self configRowTitles:@[@"搜索插入位置", @"移除元素", @"三数之和", @"四数之和", @"反转链表", @"环形链表"]];
+    [self configRowTitles:@[@"搜索插入位置", @"移除元素", @"三数之和", @"四数之和", @"反转链表", @"环形链表", @"长度最小的子数组", @"螺旋矩阵II"]];
 }
 
 - (void)didSelectRowAtIndex:(NSInteger)index
@@ -41,6 +41,12 @@
             break;
         case 5:
             [self action5];
+            break;
+        case 6:
+            [self action6];
+            break;
+        case 7:
+            [self action7];
             break;
             
         default:
@@ -272,11 +278,164 @@
     输出: 5->4->3->2->1->NULL
      */
     
+    ListNode *node5 = [ListNode nodeValue:5 next:nil];
+    ListNode *node4 = [ListNode nodeValue:4 next:node5];
+    ListNode *node3 = [ListNode nodeValue:3 next:node4];
+    ListNode *node2 = [ListNode nodeValue:2 next:node3];
+    ListNode *node1 = [ListNode nodeValue:1 next:node2];
+    
+    ListNode *reverseNode = [self reverseListNode:node1];
+    NSLog(@"%@", reverseNode);
+}
+
+- (ListNode *)reverseListNode:(ListNode *)root
+{
+    ListNode *pre = nil;
+    ListNode *cur = root;
+    
+    while (cur != nil) {
+        ListNode *temp = cur.next;
+        cur.next = pre;
+        pre = cur;
+        cur = temp;
+    };
+    return pre;
 }
 
 - (void)action5
 {
+    // 第142题.环形链表II
+    // 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
     
+    ListNode *node3 = [ListNode nodeValue:4 next:nil];
+    ListNode *node2 = [ListNode nodeValue:0 next:node3];
+    ListNode *node1 = [ListNode nodeValue:2 next:node2];
+    ListNode *head = [ListNode nodeValue:3 next:node1];
+    node3.next = node1;
+    
+    ListNode *cycleNode = [self findCycleNode:head];
+    NSLog(@"%@", cycleNode);
+}
+
+- (ListNode *)findCycleNode:(ListNode *)head
+{
+    ListNode *fast = head;
+    ListNode *slow = head;
+    
+    while (fast) {
+        fast = fast.next.next;
+        slow = slow.next;
+        
+        // 找出相遇点
+        if (fast.value == slow.value) {
+            // 快慢指针相遇后，此时从head 和 相遇点，同时查找直至相遇 相遇点就是环点
+            ListNode* index1 = fast;
+            ListNode* index2 = head;
+            while (fast.value == head.value) {
+                index1 = index1.next;
+                index2 = index2.next;
+            }
+            return index2;
+        }
+    }
+    return nil;
+}
+
+- (void)action6
+{
+    // 209.长度最小的子数组
+    // 给定一个含有 n 个正整数的数组和一个正整数 s ，找出该数组中满足其和 ≥ s 的长度最小的 连续 子数组，并返回其长度。如果不存在符合条件的子数组，返回 0。
+    /*
+     示例：
+     输入：s = 7, nums = [2,3,1,2,4,3]
+     输出：2
+     解释：子数组 [4,3] 是该条件下的长度最小的子数组。
+     */
+    NSArray *array = @[@(2), @(3), @(1), @(2), @(4), @(3)];
+    NSInteger length = [self minSubArrayLength:array target:7];
+    NSLog(@"length %ld", length);
+}
+
+// 时间复杂度O(n) 因为begin 和 end最多各移动n次
+- (NSInteger)minSubArrayLength:(NSArray <NSNumber *>*)nums target:(NSInteger)target
+{
+    if (nums.count == 0) {
+        return 0;
+    }
+        
+    NSInteger begin = 0;
+    NSInteger end = 0;
+    NSInteger length = NSIntegerMax;
+    NSInteger sum = 0;
+    while ((end < nums.count)) {
+        sum += nums[end].integerValue;
+        // 当sum大于target时 更新length 并减掉begin 移动begin和end
+        // 当sum小于target时 移动end
+        while (sum >= target) {
+            length = MIN(length, end - begin + 1);
+            sum -= nums[begin].integerValue;
+            begin++;
+        }
+        end++;
+    }
+    // 如果没有匹配值 length = NSIntegerMax 返回0
+    return (length == NSIntegerMax) ? 0 : length;
+}
+
+- (void)action7
+{
+    // 59.螺旋矩阵II
+    // 给定一个正整数 n，生成一个包含 1 到 n2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
+    /*
+     示例: 输入: 3
+     输出: [ [ 1, 2, 3 ], [ 8, 9, 4 ], [ 7, 6, 5 ] ]
+     */
+    
+    NSArray *matrix = [self getMattixArray:4];
+    NSLog(@"matrix:%@", matrix);
+    
+}
+
+// https://leetcode-cn.com/problems/spiral-matrix-ii/solution/spiral-matrix-ii-mo-ni-fa-she-ding-bian-jie-qing-x/
+- (NSArray *)getMattixArray:(NSInteger)n
+{
+    NSMutableArray <NSMutableArray <NSNumber *>*>* matrix = [NSMutableArray arrayWithCapacity:0];
+    // 构造矩阵
+    for (int i = 0; i < n; i++) {
+        NSMutableArray *rowArray = [NSMutableArray arrayWithCapacity:0];
+        for (int j = 0; j < n; j++) {
+            [rowArray addObject:@(0)];
+        }
+        [matrix addObject:rowArray];
+    }
+    
+    // 上下左右
+    NSInteger l = 0, r = n - 1, t = 0, b = n - 1;
+    NSInteger num = 1, tar = n * n;
+    while(num <= tar){
+        for(NSInteger i = l; i <= r; i++)
+        {
+            matrix[t][i] = @(num++); // left to right.
+        }
+        t++;
+        for(NSInteger i = t; i <= b; i++)
+        {
+            matrix[i][r] = @(num++); // top to bottom.
+        }
+        r--;
+        for(NSInteger i = r; i >= l; i--)
+        {
+            matrix[b][i] = @(num++); // right to left.
+        }
+        b--;
+        for(NSInteger i = b; i >= t; i--)
+        {
+            matrix[i][l] = @(num++); // bottom to top.
+        }
+        l++;
+    }
+
+    return matrix;
 }
 
 @end

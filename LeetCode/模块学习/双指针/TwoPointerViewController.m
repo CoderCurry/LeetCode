@@ -130,11 +130,11 @@ ListNode* reverseList(ListNode* head) {
      2. 有环的情况下 fast和slow相遇点 通过数学证明 相遇点走一格 head走一格 他们会相遇在环点
      */
     
-    ListNode *node4 = [ListNode nodeValue:@"2" next:nil];
-    ListNode *node3 = [ListNode nodeValue:@"2" next:node4];
-    ListNode *node2 = [ListNode nodeValue:@"2" next:node3];
-    ListNode *node1 = [ListNode nodeValue:@"1" next:node2];
-    ListNode *head = [ListNode nodeValue:@"0" next:node1];
+    ListNode *node4 = [ListNode nodeValue:@(2) next:nil];
+    ListNode *node3 = [ListNode nodeValue:@(2) next:node4];
+    ListNode *node2 = [ListNode nodeValue:@(2) next:node3];
+    ListNode *node1 = [ListNode nodeValue:@(1) next:node2];
+    ListNode *head = [ListNode nodeValue:@(0) next:node1];
     
     // node1 是环点
     node4.next = node1;

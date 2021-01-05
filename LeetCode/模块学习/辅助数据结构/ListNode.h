@@ -14,11 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ListNode : NSObject
 
 // 值
-@property (nonatomic, copy) NSString *value;
+@property (nonatomic, assign) NSInteger value;
 // 链表指向
 @property (nonatomic, strong) ListNode *next;
 
-+ (instancetype)nodeValue:(NSString *)value next:(ListNode * _Nullable)next;
++ (instancetype)nodeValue:(NSInteger)value next:(ListNode * _Nullable)next;
 
 @end
 

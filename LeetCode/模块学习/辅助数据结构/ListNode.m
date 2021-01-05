@@ -10,7 +10,7 @@
 
 @implementation ListNode
 
-+ (instancetype)nodeValue:(NSString *)value next:(ListNode * _Nullable)next
++ (instancetype)nodeValue:(NSInteger)value next:(ListNode * _Nullable)next
 {
     ListNode *node = [[ListNode alloc] init];
     node.value = value;

@@ -13,6 +13,8 @@
 #import "TwoPointerViewController.h"
 #import "HuisuViewController.h"
 #import "LeetCodeArrayViewController.h"
+#import "CTestViewController.h"
+#import "ListNodeViewController.h"
 
 #define kLeetCodeSet @"leetCode题集"
 #define kLeetCodeSetEasy @"easy"
@@ -25,6 +27,9 @@
 #define kLeetCodeModulePointer @"双指针"
 #define kLeetCodeModuleBackTracking @"回溯算法"
 #define kLeetCodeModuleArray @"数组"
+#define kLeetCodeModuleListNode @"链表"
+
+#define kLeetCodeMM @"leetCodeC++代码"
 
 #define kBack @"返回"
 
@@ -37,7 +42,8 @@
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *dataArray;
-@property (nonatomic, strong) NSDictionary *config;
+@property (nonatomic, strong) NSDictionary *homeConfig;
+@property (nonatomic, strong) NSDictionary *jumpConfig;
 
 @end
 
@@ -49,10 +55,30 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationItem.title = @"LeetCode";
 
-    self.config = @{
-        kLeetCodeSet:@[kLeetCodeSetEasy, kLeetCodeSetMedium, kLeetCodeSetHard, kLeetCodeSetAll, kBack],
-        kLeetCodeModule:@[kLeetCodeModuleTree, kLeetCodeModulePointer, kLeetCodeModuleBackTracking, kLeetCodeModuleArray, kBack],
-        kBack:@[kLeetCodeSet, kLeetCodeModule],
+    self.homeConfig = @{
+        kLeetCodeSet:@[
+                kLeetCodeSetEasy,
+                kLeetCodeSetMedium,
+                kLeetCodeSetHard,
+                kLeetCodeSetAll,
+                kBack],
+        kLeetCodeModule:@[
+                kLeetCodeModuleArray,
+                kLeetCodeModuleListNode,
+                kLeetCodeModuleTree,
+                kLeetCodeModulePointer,
+                kLeetCodeModuleBackTracking,
+                kBack],
+        kBack:@[
+//                kLeetCodeSet,
+                kLeetCodeModule,
+                kLeetCodeMM]
+    };
+    
+    self.jumpConfig = @{
+        kLeetCodeMM:NSStringFromClass(CTestViewController.class),
+        kLeetCodeModuleArray:NSStringFromClass(LeetCodeArrayViewController.class),
+        kLeetCodeModuleListNode:NSStringFromClass(ListNodeViewController.class),
         kLeetCodeModuleTree:NSStringFromClass(BinaryTreeViewController.class),
         kLeetCodeModulePointer:NSStringFromClass(TwoPointerViewController.class),
         kLeetCodeModuleBackTracking:NSStringFromClass(HuisuViewController.class),
@@ -60,10 +86,9 @@
         kLeetCodeSetMedium:NSStringFromClass(LeetCodeListViewController.class),
         kLeetCodeSetHard:NSStringFromClass(LeetCodeListViewController.class),
         kLeetCodeSetAll:NSStringFromClass(LeetCodeListViewController.class),
-        kLeetCodeModuleArray:NSStringFromClass(LeetCodeArrayViewController.class),
     };
     
-    self.dataArray = self.config[kBack];
+    self.dataArray = self.homeConfig[kBack];
     [self.view addSubview:self.tableView];
     
     [self configData];
@@ -84,24 +109,35 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *key = self.dataArray[indexPath.row];
-    if ([self.config[key] isKindOfClass:NSArray.class]) {
-        self.dataArray = self.config[key];
+    
+    if ([self.homeConfig.allKeys containsObject:key]) {
+        self.dataArray = self.homeConfig[key];
         [self.tableView reloadData];
-    } else {
-        if ([key isEqualToString:kLeetCodeSetEasy]) {
-            [self popToList:@"简单" data:self.easyArray];
-        } else if ([key isEqualToString:kLeetCodeSetMedium]) {
-            [self popToList:@"中等" data:self.mediumArray];
-        } else if ([key isEqualToString:kLeetCodeSetHard]) {
-            [self popToList:@"困难" data:self.hardArray];
-        } else if ([key isEqualToString:kLeetCodeSetAll]) {
-            [self popToList:@"全部" data:self.allArray];
-        } else {
-            Class cls = NSClassFromString(self.config[key]);
-            UIViewController *vc = [[cls alloc] init];
-            [self.navigationController pushViewController:vc animated:YES];
-        }
+    } else if ([self.jumpConfig.allKeys containsObject:key]) {
+        Class cls = NSClassFromString(self.jumpConfig[key]);
+        UIViewController *vc = [[cls alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
     }
+    
+    
+//    if ([self.config[key] isKindOfClass:NSArray.class]) {
+//        self.dataArray = self.config[key];
+//        [self.tableView reloadData];
+//    } else {
+//        if ([key isEqualToString:kLeetCodeSetEasy]) {
+//            [self popToList:@"简单" data:self.easyArray];
+//        } else if ([key isEqualToString:kLeetCodeSetMedium]) {
+//            [self popToList:@"中等" data:self.mediumArray];
+//        } else if ([key isEqualToString:kLeetCodeSetHard]) {
+//            [self popToList:@"困难" data:self.hardArray];
+//        } else if ([key isEqualToString:kLeetCodeSetAll]) {
+//            [self popToList:@"全部" data:self.allArray];
+//        } else {
+//            Class cls = NSClassFromString(self.config[key]);
+//            UIViewController *vc = [[cls alloc] init];
+//            [self.navigationController pushViewController:vc animated:YES];
+//        }
+//    }
 }
 
 - (void)popToList:(NSString *)title data:(NSArray <LeetCodeModel *>*)array
