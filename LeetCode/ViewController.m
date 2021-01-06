@@ -15,6 +15,7 @@
 #import "LeetCodeArrayViewController.h"
 #import "CTestViewController.h"
 #import "ListNodeViewController.h"
+#import "HashViewController.h"
 
 #define kLeetCodeSet @"leetCode题集"
 #define kLeetCodeSetEasy @"easy"
@@ -28,6 +29,8 @@
 #define kLeetCodeModuleBackTracking @"回溯算法"
 #define kLeetCodeModuleArray @"数组"
 #define kLeetCodeModuleListNode @"链表"
+#define kLeetCodeModuleHash @"哈希表"
+
 
 #define kLeetCodeMM @"leetCodeC++代码"
 
@@ -65,6 +68,7 @@
         kLeetCodeModule:@[
                 kLeetCodeModuleArray,
                 kLeetCodeModuleListNode,
+                kLeetCodeModuleHash,
                 kLeetCodeModuleTree,
                 kLeetCodeModulePointer,
                 kLeetCodeModuleBackTracking,
@@ -79,6 +83,7 @@
         kLeetCodeMM:NSStringFromClass(CTestViewController.class),
         kLeetCodeModuleArray:NSStringFromClass(LeetCodeArrayViewController.class),
         kLeetCodeModuleListNode:NSStringFromClass(ListNodeViewController.class),
+        kLeetCodeModuleHash:NSStringFromClass(HashViewController.class),
         kLeetCodeModuleTree:NSStringFromClass(BinaryTreeViewController.class),
         kLeetCodeModulePointer:NSStringFromClass(TwoPointerViewController.class),
         kLeetCodeModuleBackTracking:NSStringFromClass(HuisuViewController.class),

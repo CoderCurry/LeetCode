@@ -7,6 +7,7 @@
 
 #import "ListNodeViewController.h"
 #import "ListNode.h"
+#import "MyLinkedList.h"
 
 @interface ListNodeViewController ()
 
@@ -18,7 +19,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self configRowTitles:@[@"移除链表元素", @"链表设计"]];
+    [self configRowTitles:@[@"移除链表元素", @"链表设计", @"反转链表", @"环形链表II"]];
 }
 
 - (void)didSelectRowAtIndex:(NSInteger)index
@@ -26,6 +27,15 @@
     switch (index) {
         case 0:
             [self action0];
+            break;
+        case 1:
+            [self action1];
+            break;
+        case 2:
+            [self action2];
+            break;
+        case 3:
+            [self action3];
             break;
             
         default:
@@ -84,34 +94,23 @@
      deleteAtIndex(index)：如果索引 index 有效，则删除链表中的第 index 个节点。
      */
     
-    ListNode *listNode = [ListNode nodeValue:88 next:nil];
-    
+    MyLinkedList *linkedList = [[MyLinkedList alloc] init];
+    [linkedList addHeadNode:1];
+    [linkedList addTailNode:3];
+    [linkedList addAtIndex:1 value:2];
+    [linkedList getValueIndex:1];
+    [linkedList deleteAtIndex:1];
+    [linkedList getValueIndex:1];
 }
 
-- (void)listNode:(ListNode *)head getIndex:(NSInteger)index
+- (void)action2
 {
-    
+    NSLog(@"在数组章节中");
 }
 
-- (void)listNode:(ListNode *)head addHead:(NSInteger)val
+- (void)action3
 {
-    ListNode *newHead = [ListNode nodeValue:val next:head];
-    
-}
-
-- (void)listNode:(ListNode *)head addTail:(NSInteger)val
-{
-    
-}
-
-- (void)listNode:(ListNode *)head addAtIndex:(NSInteger)index value:(NSInteger)value
-{
-    
-}
-
-- (void)listNode:(ListNode *)head deleteAtIndex:(NSInteger)index
-{
-    
+    NSLog(@"在数组章节中");
 }
 
 @end

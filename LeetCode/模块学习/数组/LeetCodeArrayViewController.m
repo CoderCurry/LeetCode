@@ -18,7 +18,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self configRowTitles:@[@"搜索插入位置", @"移除元素", @"三数之和", @"四数之和", @"反转链表", @"环形链表", @"长度最小的子数组", @"螺旋矩阵II"]];
+    [self configRowTitles:@[@"搜索插入位置", @"移除元素", @"三数之和", @"四数之和", @"反转链表", @"环形链表II", @"长度最小的子数组", @"螺旋矩阵II"]];
 }
 
 - (void)didSelectRowAtIndex:(NSInteger)index

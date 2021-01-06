@@ -23,7 +23,6 @@
 		CD56598525A4425B0010B0F3 /* BinaryTreeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56598125A4425A0010B0F3 /* BinaryTreeViewController.m */; };
 		CD56598625A4425B0010B0F3 /* BinaryTreeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD56598225A4425B0010B0F3 /* BinaryTreeViewController.xib */; };
 		CD56598C25A443C30010B0F3 /* TwoPointerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56598925A443C30010B0F3 /* TwoPointerViewController.m */; };
-		CD56598D25A443C30010B0F3 /* TwoPointerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD56598A25A443C30010B0F3 /* TwoPointerViewController.xib */; };
 		CD56599325A4442C0010B0F3 /* HuisuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56599125A4442C0010B0F3 /* HuisuViewController.m */; };
 		CD56599425A4442C0010B0F3 /* HuisuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD56599225A4442C0010B0F3 /* HuisuViewController.xib */; };
 		CD56599B25A444520010B0F3 /* LeetCodeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56599825A444520010B0F3 /* LeetCodeListViewController.m */; };
@@ -31,6 +30,7 @@
 		CD56599D25A444520010B0F3 /* LeetCodeAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56599A25A444520010B0F3 /* LeetCodeAnswer.m */; };
 		CD833E2725A4D80700BE801A /* ListNodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD833E2625A4D80700BE801A /* ListNodeViewController.m */; };
 		CD833E2D25A4E36600BE801A /* MyLinkedList.m in Sources */ = {isa = PBXBuildFile; fileRef = CD833E2C25A4E36600BE801A /* MyLinkedList.m */; };
+		CD833E3225A60D6700BE801A /* HashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD833E3125A60D6700BE801A /* HashViewController.m */; };
 		CDF99E4225A4D15C00657964 /* CTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CDF99E4125A4D15C00657964 /* CTestViewController.mm */; };
 /* End PBXBuildFile section */
 
@@ -63,7 +63,6 @@
 		CD56598225A4425B0010B0F3 /* BinaryTreeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BinaryTreeViewController.xib; sourceTree = "<group>"; };
 		CD56598325A4425B0010B0F3 /* BinaryTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BinaryTree.h; sourceTree = "<group>"; };
 		CD56598925A443C30010B0F3 /* TwoPointerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwoPointerViewController.m; sourceTree = "<group>"; };
-		CD56598A25A443C30010B0F3 /* TwoPointerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TwoPointerViewController.xib; sourceTree = "<group>"; };
 		CD56598B25A443C30010B0F3 /* TwoPointerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwoPointerViewController.h; sourceTree = "<group>"; };
 		CD56599025A4442C0010B0F3 /* HuisuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuisuViewController.h; sourceTree = "<group>"; };
 		CD56599125A4442C0010B0F3 /* HuisuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuisuViewController.m; sourceTree = "<group>"; };
@@ -77,6 +76,8 @@
 		CD833E2625A4D80700BE801A /* ListNodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ListNodeViewController.m; sourceTree = "<group>"; };
 		CD833E2B25A4E36600BE801A /* MyLinkedList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyLinkedList.h; sourceTree = "<group>"; };
 		CD833E2C25A4E36600BE801A /* MyLinkedList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyLinkedList.m; sourceTree = "<group>"; };
+		CD833E3025A60D6700BE801A /* HashViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HashViewController.h; sourceTree = "<group>"; };
+		CD833E3125A60D6700BE801A /* HashViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HashViewController.m; sourceTree = "<group>"; };
 		CDF99E4025A4D15C00657964 /* CTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTestViewController.h; sourceTree = "<group>"; };
 		CDF99E4125A4D15C00657964 /* CTestViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CTestViewController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -149,11 +150,12 @@
 			isa = PBXGroup;
 			children = (
 				CD56598F25A4442C0010B0F3 /* 回溯算法 */,
-				CD56598825A443C30010B0F3 /* 双指针 */,
 				CD56597E25A4425A0010B0F3 /* 二叉树 */,
 				CD56596E25A442240010B0F3 /* 辅助数据结构 */,
 				CD56597725A442300010B0F3 /* 数组 */,
 				CD833E2425A4D7EA00BE801A /* 链表 */,
+				CD833E2F25A60D1800BE801A /* 哈希表 */,
+				CD56598825A443C30010B0F3 /* 双指针 */,
 			);
 			path = "模块学习";
 			sourceTree = "<group>";
@@ -195,7 +197,6 @@
 			children = (
 				CD56598B25A443C30010B0F3 /* TwoPointerViewController.h */,
 				CD56598925A443C30010B0F3 /* TwoPointerViewController.m */,
-				CD56598A25A443C30010B0F3 /* TwoPointerViewController.xib */,
 			);
 			path = "双指针";
 			sourceTree = "<group>";
@@ -219,6 +220,15 @@
 				CD833E2C25A4E36600BE801A /* MyLinkedList.m */,
 			);
 			path = "链表";
+			sourceTree = "<group>";
+		};
+		CD833E2F25A60D1800BE801A /* 哈希表 */ = {
+			isa = PBXGroup;
+			children = (
+				CD833E3025A60D6700BE801A /* HashViewController.h */,
+				CD833E3125A60D6700BE801A /* HashViewController.m */,
+			);
+			path = "哈希表";
 			sourceTree = "<group>";
 		};
 		CDF99E3F25A4D13D00657964 /* C++测试 */ = {
@@ -291,7 +301,6 @@
 				CD56595025A43E730010B0F3 /* Assets.xcassets in Resources */,
 				CD56599425A4442C0010B0F3 /* HuisuViewController.xib in Resources */,
 				CD56594E25A43E710010B0F3 /* Main.storyboard in Resources */,
-				CD56598D25A443C30010B0F3 /* TwoPointerViewController.xib in Resources */,
 				CD56599C25A444520010B0F3 /* LeetCodeListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -318,6 +327,7 @@
 				CD56599B25A444520010B0F3 /* LeetCodeListViewController.m in Sources */,
 				CD56599D25A444520010B0F3 /* LeetCodeAnswer.m in Sources */,
 				CD56597B25A442300010B0F3 /* LeetCodeArrayViewController.m in Sources */,
+				CD833E3225A60D6700BE801A /* HashViewController.m in Sources */,
 				CD56594825A43E710010B0F3 /* SceneDelegate.m in Sources */,
 				CD56598525A4425B0010B0F3 /* BinaryTreeViewController.m in Sources */,
 				CD56598C25A443C30010B0F3 /* TwoPointerViewController.m in Sources */,
