@@ -6,11 +6,11 @@
 //  Copyright © 2020 CNLive_张建军. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "LeetCodeBaseController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface BinaryTreeViewController : UIViewController
+@interface BinaryTreeViewController : LeetCodeBaseController
 
 @end
 
