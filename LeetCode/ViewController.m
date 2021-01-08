@@ -52,6 +52,31 @@
 
 @implementation ViewController
 
+#warning OC 算法的注意点 当递归遇到 array add subArray时 subArray 一定要copy
+
+/*
+ 常用api
+ - 排序:
+ NSArray *nums = @[@(-1), @(0), @(1), @(2), @(-1), @(-4)];
+ // 升序
+ nums = [nums sortedArrayUsingSelector:@selector(compare:)];
+ // 降序
+ nums = [[nums reverseObjectEnumerator] allObjects];
+ 
+ - 数组/字符串 互转
+ string = [array componentsJoinedByString:@"->"];
+ array = [string componentsSeparatedByString:@"->"];
+ 
+ // 字符串 按字符 转 数组
+ NSMutableArray *arr = [NSMutableArray arrayWithCapacity:0];
+ for (int i = 0; i < str.length; i++) {
+     NSString *sub = [str substringWithRange:NSMakeRange(i, 1)];
+     if (![arr containsObject:sub]) {
+         [arr addObject:sub];
+     }
+ }
+ */
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -97,7 +122,13 @@
     [self.view addSubview:self.tableView];
     
     [self configData];
+    
+    NSArray *nums = @[@(-1), @(0), @(1), @(2), @(-1), @(-4)];
+    nums = [nums sortedArrayUsingSelector:@selector(compare:)];
+    nums = [[nums reverseObjectEnumerator] allObjects];
+    
 }
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {

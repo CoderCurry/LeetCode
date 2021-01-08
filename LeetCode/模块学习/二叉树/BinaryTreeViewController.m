@@ -21,6 +21,13 @@
  */
 
 /*
+ 二叉树主要有两种遍历方式：
+- 深度优先遍历：先往深走，遇到叶子节点再往回走。包括 前序 中序 后序 这里前中后，其实指的就是中间节点的遍历顺序
+- 广度优先遍历：一层一层的去遍历。 包括 层侧
+ 
+ */
+
+/*
   ** 递归方法论 **
 
  1. 确定递归函数的参数和返回值：确定哪些参数是递归的过程中需要处理的，那么就在递归函数里加上这个参数， 并且还要明确每次递归的返回值是什么进而确定递归函数的返回类型。
@@ -42,9 +49,11 @@
                             @"翻转二叉树",
                             @"对称二叉树",
                             @"二叉树的最大深度",
+                            @"二叉树的最小深度",
                             @"完全二叉树的节点个数",
                             @"平衡二叉树",
                             @"二叉树的所有路径",
+                            @"左叶子之和",
     ]];
     
 }
@@ -84,6 +93,9 @@
             break;
         case 10:
             [self action10];
+            break;
+        case 11:
+            [self action11];
             break;
             
         default:
@@ -151,14 +163,17 @@
 // 层次遍历
 - (void)levelNode:(TreeNode *)root
 {
+    // 每一层的节点数
     NSMutableArray *nodeArray = [NSMutableArray arrayWithCapacity:0];
     NSMutableArray *result = [NSMutableArray arrayWithCapacity:0];
     if (root.value != 0) {
         [nodeArray addObject:root];
     }
-    
+    // 这一层还有节点
     while (nodeArray.count != 0) {
+        // 获取当层的节点数 将节点值将入集合 并且将此节点的子节点推入队列中
         NSInteger size = nodeArray.count;
+        // 每一层节点的值
         NSMutableArray *subResult = [NSMutableArray arrayWithCapacity:0];
         
         for (int i = 0; i < size; i++) {
@@ -175,8 +190,8 @@
             }
         }
         [result addObject:subResult];
-        NSLog(@"%@", result);
     }
+    NSLog(@"%@", result);
 }
 
 - (void)action4
@@ -274,6 +289,25 @@
             15   7
      返回 2
      */
+    TreeNode *node4 = [TreeNode nodeValue:7 left:nil right:nil];
+    TreeNode *node3 = [TreeNode nodeValue:15 left:nil right:nil];
+    TreeNode *node2 = [TreeNode nodeValue:20 left:node3 right:node4];
+    TreeNode *node1 = [TreeNode nodeValue:9 left:nil right:nil];
+    TreeNode *head = [TreeNode nodeValue:3 left:node1 right:node2];
+    NSInteger depth = [self deepTreeNode:head];
+    NSLog(@"%ld", depth);
+}
+
+- (NSInteger)deepTreeNode:(TreeNode *)node
+{
+    if (node.value == 0) {
+        return 0;
+    }
+    NSInteger leftDepth = [self deepTreeNode:node.left];
+    NSInteger rightDepth = [self deepTreeNode:node.right];
+    NSInteger nodeDepth = MAX(leftDepth, rightDepth) + 1;
+    // 加1 是当前node的高度 leftDeep只是从 node.left 开始计算
+    return nodeDepth;
 }
 
 - (void)action7
@@ -288,7 +322,33 @@
             15   7
      返回 2
      */
+    TreeNode *node4 = [TreeNode nodeValue:7 left:nil right:nil];
+    TreeNode *node3 = [TreeNode nodeValue:15 left:nil right:nil];
+    TreeNode *node2 = [TreeNode nodeValue:20 left:node3 right:node4];
+    TreeNode *node1 = [TreeNode nodeValue:9 left:nil right:nil];
+    TreeNode *head = [TreeNode nodeValue:3 left:node1 right:node2];
+    NSInteger depth = [self minTreeNode:head];
+    NSLog(@"%ld", depth);
+}
 
+- (NSInteger)minTreeNode:(TreeNode *)node
+{
+    if (node.value == 0) {
+        return 0;
+    }
+    
+    NSInteger leftDepth = [self deepTreeNode:node.left];
+    NSInteger rightDepth = [self deepTreeNode:node.right];
+    if (node.left == 0 && node.right > 0) {
+        return 1 + rightDepth;
+    }
+    
+    if (node.right == 0 && node.left > 0) {
+        return 1 + leftDepth;
+    }
+    
+    NSInteger nodeDepth = MIN(leftDepth, rightDepth) + 1;
+    return nodeDepth;
 }
 
 - (void)action8
@@ -303,6 +363,23 @@
         4  5 6
      输出6
      */
+    TreeNode *node5 = [TreeNode nodeValue:6 left:nil right:nil];
+    TreeNode *node4 = [TreeNode nodeValue:5 left:nil right:nil];
+    TreeNode *node3 = [TreeNode nodeValue:4 left:nil right:nil];
+    TreeNode *node2 = [TreeNode nodeValue:3 left:node5 right:nil];
+    TreeNode *node1 = [TreeNode nodeValue:2 left:node3 right:node4];
+    TreeNode *head = [TreeNode nodeValue:1 left:node1 right:node2];
+    NSInteger count = [self countTreeNode:head];
+    NSLog(@"- %ld", count);
+}
+// 第一种直接层次遍历
+// 第二种 不讲武德
+- (NSInteger)countTreeNode:(TreeNode *)node
+{
+    if (node.value == 0) {
+        return 0;
+    }
+    return [self countTreeNode:node.left] + [self countTreeNode:node.right] + 1;
 }
 
 - (void)action9
@@ -327,7 +404,10 @@
       4    4
      返回 NO
      */
+    
+    
 }
+
 
 - (void)action10
 {
@@ -342,6 +422,83 @@
      返回 ["1->2->5", "1->3]
      */
     
+    
+    TreeNode *node3 = [TreeNode nodeValue:5 left:nil right:nil];
+    TreeNode *node2 = [TreeNode nodeValue:3 left:nil right:nil];
+    TreeNode *node1 = [TreeNode nodeValue:2 left:nil right:node3];
+    TreeNode *head = [TreeNode nodeValue:1 left:node1 right:node2];
+    
+    NSMutableArray *result = [NSMutableArray array];
+    NSMutableArray *path = [NSMutableArray array];
+    [self traversal:head path:path pathArray:result];
+    NSLog(@"%@", result);
+}
+
+- (void)traversal:(TreeNode *)cur path:(NSMutableArray *)path pathArray:(NSMutableArray *)result
+{
+    [path addObject:@(cur.value)];
+    // 找到叶子节点
+    if (!cur.left && !cur.right) {
+        // 终止
+        NSString *sPath = @"";
+        for (int i = 0; i < path.count; i++) {
+            sPath = [path componentsJoinedByString:@"->"];
+        }
+        [result addObject:sPath];
+//        [result addObject:path.copy];
+        return;
+    }
+    
+    if (cur.left) {
+        [self traversal:cur.left path:path pathArray:result];
+        [path removeLastObject];
+    }
+    
+    if (cur.right) {
+        [self traversal:cur.right path:path pathArray:result];
+        [path removeLastObject];
+    }
+}
+
+/*
+ 1. 确定递归参数及返回值
+ - (void)traversal:(TreeNode *)cur path:(NSMutableArray *)path pathArray:(NSMutableArray *)result
+ 2. 确定终止条件
+ // 找到叶子节点 记录路径
+ if (!cur.left && !cur.right) {
+     // 终止
+     [result addObject:path.copy];
+     return;
+ }
+ 3. 确定单层递归逻辑 回溯要和递归放在一起
+ if (cur.left) {
+     [self traversal:cur.left path:path pathArray:result];
+     [path removeLastObject];
+ }
+ 
+ if (cur.right) {
+     [self traversal:cur.right path:path pathArray:result];
+     [path removeLastObject];
+ }
+ */
+
+- (void)action11
+{
+    // 404. 左叶子之和
+    // 计算给定二叉树的所有左叶子之和。
+    /*
+            3
+           / \
+          9   20
+             /  \
+            15   7
+     返回 24
+     */
+    TreeNode *node4 = [TreeNode nodeValue:7 left:nil right:nil];
+    TreeNode *node3 = [TreeNode nodeValue:15 left:nil right:nil];
+    TreeNode *node2 = [TreeNode nodeValue:20 left:node3 right:node4];
+    TreeNode *node1 = [TreeNode nodeValue:9 left:nil right:nil];
+    TreeNode *head = [TreeNode nodeValue:3 left:node1 right:node2];
 }
 
 #pragma mark - tools
