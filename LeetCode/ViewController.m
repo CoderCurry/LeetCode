@@ -94,8 +94,8 @@
                 kLeetCodeModuleArray,
                 kLeetCodeModuleListNode,
                 kLeetCodeModuleHash,
-                kLeetCodeModuleTree,
                 kLeetCodeModulePointer,
+                kLeetCodeModuleTree,
                 kLeetCodeModuleBackTracking,
                 kBack],
         kBack:@[
@@ -122,11 +122,6 @@
     [self.view addSubview:self.tableView];
     
     [self configData];
-    
-    NSArray *nums = @[@(-1), @(0), @(1), @(2), @(-1), @(-4)];
-    nums = [nums sortedArrayUsingSelector:@selector(compare:)];
-    nums = [[nums reverseObjectEnumerator] allObjects];
-    
 }
 
 

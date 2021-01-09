@@ -15,6 +15,65 @@
 
 @implementation BinaryTreeViewController
 
+#pragma mark - tools
+- (TreeNode *)getNormalHead
+{
+    /*
+            5
+           / \
+          4   6
+         / \ / \
+        1  2 7  8
+     
+     前 5412678
+     中 1425768
+     后 1247865
+    */
+    NSArray *arr = @[@(5), @(4), @(6), @(1), @(2), @(7), @(8)];
+    TreeNode *head = [self createTreeWithValues:arr];
+    return head;
+}
+
+- (TreeNode *)createTreeWithValues:(NSArray <NSNumber *>*)values
+{
+    if (values.count == 0) {
+        return nil;
+    }
+    
+    TreeNode *rootNode = nil;
+    TreeNode *curNode = nil;
+    NSMutableArray *nodeArray = [NSMutableArray arrayWithCapacity:0];
+    for (NSInteger i = 0; i < values.count; i++) {
+        
+        if (i == 0) {
+            curNode = [TreeNode new];
+            curNode.value = values[i].integerValue;
+            rootNode = curNode;
+            [nodeArray addObject:curNode];
+        }
+
+        curNode = nodeArray[i];
+        
+        NSInteger leftIndex = 2 * i + 1;
+        TreeNode *left = [TreeNode new];
+        if (leftIndex < values.count && values[leftIndex].integerValue > 0) {
+            left.value = values[leftIndex].integerValue;
+            curNode.left = left;
+        }
+        [nodeArray addObject:left];
+        
+        NSInteger rightIndex = 2 * i + 2;
+        TreeNode *right = [TreeNode new];
+        if (rightIndex < values.count && values[rightIndex].integerValue > 0) {
+            right.value = values[rightIndex].integerValue;
+            curNode.right = right;
+        }
+        [nodeArray addObject:right];
+    }
+    
+    return rootNode;
+}
+
 /*
  满二叉树: 如果一棵二叉树只有度为0的结点和度为2的结点，并且度为0的结点在同一层上，则这棵二叉树为满二叉树
  叶子节点: 是指没有子节点的节点
@@ -54,6 +113,10 @@
                             @"平衡二叉树",
                             @"二叉树的所有路径",
                             @"左叶子之和",
+                            @"找树左下角的值",
+                            @"路径总和",
+                            @"从中序与后序遍历序列构造二叉树"
+                            
     ]];
     
 }
@@ -96,6 +159,15 @@
             break;
         case 11:
             [self action11];
+            break;
+        case 12:
+            [self action12];
+            break;
+        case 13:
+            [self action13];
+            break;
+        case 14:
+            [self action14];
             break;
             
         default:
@@ -175,7 +247,7 @@
         NSInteger size = nodeArray.count;
         // 每一层节点的值
         NSMutableArray *subResult = [NSMutableArray arrayWithCapacity:0];
-        
+        // 当前层的节点加入队列 并且当前节点的子节点进队
         for (int i = 0; i < size; i++) {
             TreeNode *node = nodeArray.firstObject;
             [nodeArray removeObjectAtIndex:0];
@@ -486,6 +558,7 @@
 {
     // 404. 左叶子之和
     // 计算给定二叉树的所有左叶子之和。
+    // 左叶子: 如果左节点不为空，且左节点没有左右孩子，那么这个节点就是左叶子
     /*
             3
            / \
@@ -499,64 +572,164 @@
     TreeNode *node2 = [TreeNode nodeValue:20 left:node3 right:node4];
     TreeNode *node1 = [TreeNode nodeValue:9 left:nil right:nil];
     TreeNode *head = [TreeNode nodeValue:3 left:node1 right:node2];
+    NSInteger sum = [self leftSum:head];
+    NSLog(@"sum %ld", sum);
 }
 
-#pragma mark - tools
-- (TreeNode *)getNormalHead
+- (NSInteger)leftSum:(TreeNode *)node
 {
+    NSInteger sum = 0;
+    // 节点的左存在 并且左节点没有左右孩子 成为左节点
+    if (node.left) {
+        sum = [self isLeafNode:node.left] ? node.left.value : [self leftSum:node.left];
+    }
+    
+    if (node.right && ![self isLeafNode:node.right]) {
+        sum += [self leftSum:node.right];
+    }
+    return sum;
+}
+
+- (BOOL)isLeafNode:(TreeNode *)node
+{
+    return !node.left && !node.right;
+}
+
+- (void)action12
+{
+    // 513. 找树左下角的值
+    /*
+            1
+           / \
+          2   3
+         /   / \
+        4   5   6
+           /
+          7
+     返回 7
+     */
+    TreeNode *node6 = [TreeNode nodeValue:7 left:nil right:nil];
+    TreeNode *node5 = [TreeNode nodeValue:6 left:nil right:nil];
+    TreeNode *node4 = [TreeNode nodeValue:5 left:node6 right:nil];
+    TreeNode *node3 = [TreeNode nodeValue:4 left:nil right:nil];
+    TreeNode *node2 = [TreeNode nodeValue:3 left:node4 right:node5];
+    TreeNode *node1 = [TreeNode nodeValue:2 left:node3 right:nil];
+    TreeNode *head = [TreeNode nodeValue:1 left:node1 right:node2];
+    NSInteger value = [self lastLeftNodeValue:head];
+    NSLog(@"%ld", value);
+}
+
+- (NSInteger)lastLeftNodeValue:(TreeNode *)head
+{
+    NSMutableArray *nodeQueue = [NSMutableArray array];
+    NSInteger result = head.value;
+    [nodeQueue addObject:head];
+    
+    while (nodeQueue.count > 0) {
+        NSInteger size = nodeQueue.count;
+        for (int i = 0; i < size; i++) {
+            TreeNode *node = nodeQueue.firstObject;
+            [nodeQueue removeObject:node];
+            if (i == 0) {
+                result = node.value;
+            }
+            if (node.left) {
+                [nodeQueue addObject:node.left];
+            }
+            if (node.right) {
+                [nodeQueue addObject:node.right];
+            }
+        }
+    }
+    return result;
+}
+
+- (void)action13
+{
+    // 112 路径总和
+    // 给定一个二叉树和一个目标和，判断该树中是否存在根节点到叶子节点的路径，这条路径上所有节点值相加等于目标和。
     /*
             5
            / \
-          4   6
-         / \ / \
-        1  2 7  8
-     
-     前 5412678
-     中 1425768
-     后 1247865
-    */
-    NSArray *arr = @[@(5), @(4), @(6), @(1), @(2), @(7), @(8)];
-    TreeNode *head = [self createTreeWithValues:arr];
-    return head;
+          4   8
+         /   / \
+        11  13  4
+       / \       \
+      7   2       1
+     返回 7
+     */
+    TreeNode *node8 = [TreeNode nodeValue:1 left:nil right:nil];
+    TreeNode *node7 = [TreeNode nodeValue:2 left:nil right:nil];
+    TreeNode *node6 = [TreeNode nodeValue:7 left:nil right:nil];
+    TreeNode *node5 = [TreeNode nodeValue:4 left:nil right:node8];
+    TreeNode *node4 = [TreeNode nodeValue:13 left:nil right:nil];
+    TreeNode *node3 = [TreeNode nodeValue:11 left:node6 right:node7];
+    TreeNode *node2 = [TreeNode nodeValue:8 left:node4 right:node5];
+    TreeNode *node1 = [TreeNode nodeValue:4 left:node3 right:nil];
+    TreeNode *head = [TreeNode nodeValue:5 left:node1 right:node2];
+    
+    NSMutableArray *path = [NSMutableArray array];
+    BOOL result = [self traversal1:head path:path target:22];
+    NSLog(@"%@", result ? @"yes" : @"no");
 }
 
-- (TreeNode *)createTreeWithValues:(NSArray <NSNumber *>*)values
+- (BOOL)traversal1:(TreeNode *)cur path:(NSMutableArray *)path target:(NSInteger)target
 {
-    if (values.count == 0) {
-        return nil;
+    [path addObject:@(cur.value)];
+    
+    if (!cur.left && !cur.right) {
+        NSInteger count = 0;
+        for (int i = 0; i < path.count; i++) {
+            count += [path[i] integerValue];
+        }
+        if (count == target) {
+            NSLog(@"%@", path);
+            return YES;
+        }
+        return NO;
     }
     
-    TreeNode *rootNode = nil;
-    TreeNode *curNode = nil;
-    NSMutableArray *nodeArray = [NSMutableArray arrayWithCapacity:0];
-    for (NSInteger i = 0; i < values.count; i++) {
-        
-        if (i == 0) {
-            curNode = [TreeNode new];
-            curNode.value = values[i].integerValue;
-            rootNode = curNode;
-            [nodeArray addObject:curNode];
+    if (cur.left) {
+        if ([self traversal1:cur.left path:path target:target]) {
+            return YES;
+        } else {
+            [self traversal1:cur.left path:path target:target];
         }
-
-        curNode = nodeArray[i];
         
-        NSInteger leftIndex = 2 * i + 1;
-        TreeNode *left = [TreeNode new];
-        if (leftIndex < values.count && values[leftIndex].integerValue > 0) {
-            left.value = values[leftIndex].integerValue;
-            curNode.left = left;
-        }
-        [nodeArray addObject:left];
-        
-        NSInteger rightIndex = 2 * i + 2;
-        TreeNode *right = [TreeNode new];
-        if (rightIndex < values.count && values[rightIndex].integerValue > 0) {
-            right.value = values[rightIndex].integerValue;
-            curNode.right = right;
-        }
-        [nodeArray addObject:right];
+        [path removeObject:@(cur.left.value)];
     }
     
-    return rootNode;
+    if (cur.right) {
+        if ([self traversal1:cur.right path:path target:target]) {
+            return YES;
+        } else {
+            [self traversal1:cur.right path:path target:target];
+        }
+    }
+    return NO;
 }
+
+- (void)action14
+{
+    // 106 从中序与后序遍历序列构造二叉树
+    // 根据一棵树的中序遍历与后序遍历构造二叉树。
+    // 注意: 你可以假设树中没有重复的元素。
+    /*
+            1
+           / \
+          2   3
+         / \ / \
+        4  5 6  7
+          / \ \
+         8   9 10
+     返回 7
+     */
+    // 三种遍历方式构造二叉树
+    NSArray *inorder = @[@(4), @(2), @(8), @(5), @(9), @(1), @(6), @(10), @(3), @(7)];
+    NSArray *postorder = @[@(4), @(8), @(9), @(5), @(2), @(10), @(6), @(7), @(3), @(1)];
+    
+}
+
+
+
 @end
