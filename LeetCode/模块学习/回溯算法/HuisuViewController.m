@@ -20,7 +20,7 @@
  - 回溯算法是在一棵树上的 深度优先遍历（因为要找所有的解，所以需要遍历）；
  - 组合问题，相对于排列问题而言，不计较一个组合内元素的顺序性（即 [1, 2, 3] 与 [1, 3, 2] 认为是同一个组合），因此很多时候需要按某种顺序展开搜索，这样才能做到不重不漏。
 
- 回溯算法首先需要画出递归树，不同的树决定了不同的代码实现。
+ 回溯算法首先需要画出递归树，不同的树决定了不同的代码实现。 横向是for 纵向是递归
  回溯法，一般可以解决如下几种问题：
 
  组合问题：N个数里面按一定规则找出k个数的集合
@@ -52,6 +52,9 @@
     
     [self configRowTitles:@[@"组合问题",
                             @"组合总和III",
+                            @"电话号码的字母组合",
+                            @"组合总和",
+                            @"组合总和II"
     ]];
 }
 
@@ -64,7 +67,16 @@
         case 1:
             [self action1];
             break;
-
+        case 2:
+            [self action2];
+            break;
+        case 3:
+            [self action3];
+            break;
+        case 4:
+            [self action4];
+            break;
+           
         default:
             break;
     }
@@ -119,6 +131,7 @@
     }
 }
 
+static NSInteger sum = 0;
 - (void)action1
 {
     // 216 组合总和III
@@ -132,7 +145,198 @@
      输入: k = 3, n = 9
      输出: [[1,2,6], [1,3,5], [2,3,4]]
      */
+    NSMutableArray *result = [NSMutableArray array];
+    NSMutableArray *path = [NSMutableArray array];
+    [self result:result path:path target:7 numCount:3 startIndex:1];
+    NSLog(@"result:%@", result);
+}
+
+- (void)result:(NSMutableArray *)result
+          path:(NSMutableArray *)path
+        target:(NSInteger)n
+      numCount:(NSInteger)k
+    startIndex:(NSInteger)startIndex
+{
+    // 剪纸 当sum已经大于n时不必再进行下去了
+    if (sum >= n) {
+        return;
+    }
+
+    if (path.count == k) {
+        if (sum == n) {
+            [result addObject:path.copy];
+        }
+        return;
+    }
+    for (NSInteger i = startIndex; i <= 9; i++) {
+        sum += i;
+        [path addObject:@(i)];
+        [self result:result path:path target:n numCount:k startIndex:i+1];
+        sum -= i;
+        [path removeObject:@(i)];
+    }
+}
+
+- (void)action2
+{
+    // 17 电话号码的字母组合
+    // 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+    /*
+     示例:
+     输入："23"
+     输出：["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+     */
+    NSMutableArray *result = [NSMutableArray array];
+    NSMutableArray *path = [NSMutableArray array];
+    NSArray *nums = @[@(2), @(3)];
+    NSDictionary *map = @{
+        @"0": @[],
+        @"1": @[],
+        @"2": @[@"a", @"b", @"c"],
+        @"3": @[@"d", @"e", @"f"],
+        @"4": @[@"g", @"h", @"i"],
+        @"5": @[@"j", @"k", @"l"],
+        @"6": @[@"m", @"n", @"o"],
+        @"7": @[@"p", @"q", @"r", @"s"],
+        @"8": @[@"t", @"u", @"v"],
+        @"9": @[@"w", @"x", @"y", @"z"],
+    };
     
+    [self result:result nums:nums path:path map:map index:0];
+    NSLog(@"result %@", result);
+}
+
+- (void)result:(NSMutableArray *)result
+          nums:(NSArray *)nums
+          path:(NSMutableArray *)path
+           map:(NSDictionary *)map
+         index:(NSInteger)index
+{
+    if (index == nums.count) {
+        [result addObject:path.copy];
+        return;
+    }
+
+    NSArray *letters =  map[[nums[index] stringValue]];
+    for (int i = 0; i < letters.count; i++) {
+        [path addObject:letters[i]];            // 处理
+        [self result:result nums:nums path:path map:map index:index+1]; // 递归，注意index+1，一下层要处理下一个数字了
+        [path removeLastObject];                       // 回溯
+    }
+}
+
+- (void)action3
+{
+    // 39. 组合总和
+    // 给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。 candidates 中的数字可以无限制重复被选取。
+    /*
+     示例 1：
+     输入：candidates = [2,3,6,7], target = 7,
+     所求解集为：
+     [
+     [7],
+     [2,2,3]
+     ]
+
+     示例 2：
+     输入：candidates = [2,3,5], target = 8,
+     所求解集为：
+     [
+       [2,2,2,2],
+       [2,3,3],
+       [3,5]
+     ]
+     */
+    NSMutableArray *result = [NSMutableArray array];
+    NSMutableArray *path = [NSMutableArray array];
+    NSArray *nums = @[@(2), @(3), @(6), @(7)];
+    NSInteger target = 7;
+//    NSArray *nums = @[@(2), @(3), @(5)];
+//    NSInteger target = 8;
+    
+    [self action3Result:result path:path nums:nums target:target startIndex:0];
+    NSLog(@"result %@", result);
+}
+
+- (void)action3Result:(NSMutableArray *)result
+                 path:(NSMutableArray <NSNumber *>*)path
+                 nums:(NSArray <NSNumber *>*)nums
+               target:(NSInteger)target
+           startIndex:(NSInteger)startIndex
+{
+    if (sum > target) {
+        return;
+    }
+    
+    if (sum == target) {
+        [result addObject:path.copy];
+        return;
+    }
+    
+    for (NSInteger i = startIndex; i < nums.count; i++) {
+        [path addObject:nums[i]];
+        sum += nums[i].integerValue;
+        // 可重复使用元素 startIndex 不用+1
+        [self action3Result:result path:path nums:nums target:target startIndex:i];
+        [path removeLastObject];
+        sum -= nums[i].integerValue;
+    }
+}
+
+- (void)action4
+{
+    // 40.组合总和II
+    /*
+     给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+     candidates 中的每个数字在每个组合中只能使用一次。
+
+     说明：
+     所有数字（包括目标数）都是正整数。
+     解集不能包含重复的组合。
+
+     示例 1:
+     输入: candidates = [10,1,2,7,6,1,5], target = 8,
+     所求解集为:
+     [
+     [1, 7],
+     [1, 2, 5],
+     [2, 6],
+     [1, 1, 6]
+     ]
+
+     示例 2:
+     输入: candidates = [2,5,2,1,2], target = 5,
+     所求解集为:
+     [
+       [1,2,2],
+       [5]
+     ]
+     */
+    
+    
+    // 要去重的是“同一树层上的使用过
+    NSMutableArray *result = [NSMutableArray array];
+    NSMutableArray *path = [NSMutableArray array];
+    NSMutableArray *used = [NSMutableArray array];
+    NSArray *nums = @[@(10), @(1), @(2), @(7), @(6), @(1), @(5)];
+    NSInteger target = 8;
+//    NSArray *nums = @[@(2), @(3), @(5)];
+//    NSInteger target = 8;
+    for (int i = 0; i < nums.count; i++) {
+        [used addObject:@(NO)];
+    }
+    [self action4Result:result path:path nums:nums used:used target:target startIndex:0];
+    NSLog(@"result %@", result);
+}
+
+- (void)action4Result:(NSMutableArray *)result
+                 path:(NSMutableArray <NSNumber *>*)path
+                 nums:(NSArray <NSNumber *>*)nums
+                 used:(NSMutableArray <NSNumber *>*)used
+               target:(NSInteger)target
+           startIndex:(NSInteger)startIndex
+{
+
 }
 
 @end

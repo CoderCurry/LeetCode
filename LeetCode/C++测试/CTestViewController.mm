@@ -13,11 +13,18 @@ using namespace std;
 
 @end
 
+
+
 @implementation CTestViewController
 // 用来测试C++代码
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
+
 }
+
+
+
+
 @end

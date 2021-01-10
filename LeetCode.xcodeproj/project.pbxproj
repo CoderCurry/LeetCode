@@ -13,7 +13,7 @@
 		CD56594E25A43E710010B0F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD56594C25A43E710010B0F3 /* Main.storyboard */; };
 		CD56595025A43E730010B0F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD56594F25A43E730010B0F3 /* Assets.xcassets */; };
 		CD56595325A43E730010B0F3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD56595125A43E730010B0F3 /* LaunchScreen.storyboard */; };
-		CD56595625A43E730010B0F3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56595525A43E730010B0F3 /* main.m */; };
+		CD56595625A43E730010B0F3 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD56595525A43E730010B0F3 /* main.mm */; };
 		CD56595F25A441570010B0F3 /* LeetCodeBaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56595E25A441570010B0F3 /* LeetCodeBaseController.m */; };
 		CD56596425A441C40010B0F3 /* LeetCodeModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56596325A441C40010B0F3 /* LeetCodeModel.m */; };
 		CD56597325A442240010B0F3 /* ListNode.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56596F25A442240010B0F3 /* ListNode.m */; };
@@ -43,7 +43,7 @@
 		CD56594F25A43E730010B0F3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CD56595225A43E730010B0F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD56595425A43E730010B0F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CD56595525A43E730010B0F3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CD56595525A43E730010B0F3 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		CD56595D25A441570010B0F3 /* LeetCodeBaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeetCodeBaseController.h; sourceTree = "<group>"; };
 		CD56595E25A441570010B0F3 /* LeetCodeBaseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeetCodeBaseController.m; sourceTree = "<group>"; };
 		CD56596225A441C40010B0F3 /* LeetCodeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeetCodeModel.h; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 				CD56594F25A43E730010B0F3 /* Assets.xcassets */,
 				CD56595125A43E730010B0F3 /* LaunchScreen.storyboard */,
 				CD56595425A43E730010B0F3 /* Info.plist */,
-				CD56595525A43E730010B0F3 /* main.m */,
+				CD56595525A43E730010B0F3 /* main.mm */,
 			);
 			path = LeetCode;
 			sourceTree = "<group>";
@@ -315,7 +315,7 @@
 				CD56597325A442240010B0F3 /* ListNode.m in Sources */,
 				CD56594525A43E710010B0F3 /* AppDelegate.m in Sources */,
 				CD56595F25A441570010B0F3 /* LeetCodeBaseController.m in Sources */,
-				CD56595625A43E730010B0F3 /* main.m in Sources */,
+				CD56595625A43E730010B0F3 /* main.mm in Sources */,
 				CD56599325A4442C0010B0F3 /* HuisuViewController.m in Sources */,
 				CD56599B25A444520010B0F3 /* LeetCodeListViewController.m in Sources */,
 				CD56599D25A444520010B0F3 /* LeetCodeAnswer.m in Sources */,
