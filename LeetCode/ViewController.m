@@ -11,8 +11,8 @@
 #import "LeetCodeListViewController.h"
 #import "BinaryTreeViewController.h"
 #import "TwoPointerViewController.h"
-#import "HuisuViewController.h"
-#import "LeetCodeArrayViewController.h"
+#import "BacktrackingController.h"
+#import "ArrayViewController.h"
 #import "CTestViewController.h"
 #import "ListNodeViewController.h"
 #import "HashViewController.h"
@@ -106,12 +106,12 @@
     
     self.jumpConfig = @{
         kLeetCodeMM:NSStringFromClass(CTestViewController.class),
-        kLeetCodeModuleArray:NSStringFromClass(LeetCodeArrayViewController.class),
+        kLeetCodeModuleArray:NSStringFromClass(ArrayViewController.class),
         kLeetCodeModuleListNode:NSStringFromClass(ListNodeViewController.class),
         kLeetCodeModuleHash:NSStringFromClass(HashViewController.class),
         kLeetCodeModuleTree:NSStringFromClass(BinaryTreeViewController.class),
         kLeetCodeModulePointer:NSStringFromClass(TwoPointerViewController.class),
-        kLeetCodeModuleBackTracking:NSStringFromClass(HuisuViewController.class),
+        kLeetCodeModuleBackTracking:NSStringFromClass(BacktrackingController.class),
         kLeetCodeSetEasy:NSStringFromClass(LeetCodeListViewController.class),
         kLeetCodeSetMedium:NSStringFromClass(LeetCodeListViewController.class),
         kLeetCodeSetHard:NSStringFromClass(LeetCodeListViewController.class),

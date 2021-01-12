@@ -19,7 +19,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self configRowTitles:@[@"移除链表元素", @"链表设计", @"反转链表", @"环形链表II"]];
+    [self configRowTitles:@[@"移除链表元素",
+                            @"链表设计",
+                            @"反转链表",
+                            @"环形链表II"]];
 }
 
 - (void)didSelectRowAtIndex:(NSInteger)index

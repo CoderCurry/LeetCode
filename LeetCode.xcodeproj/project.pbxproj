@@ -17,10 +17,10 @@
 		CD56595F25A441570010B0F3 /* LeetCodeBaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56595E25A441570010B0F3 /* LeetCodeBaseController.m */; };
 		CD56596425A441C40010B0F3 /* LeetCodeModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56596325A441C40010B0F3 /* LeetCodeModel.m */; };
 		CD56597325A442240010B0F3 /* ListNode.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56596F25A442240010B0F3 /* ListNode.m */; };
-		CD56597B25A442300010B0F3 /* LeetCodeArrayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56597825A442300010B0F3 /* LeetCodeArrayViewController.m */; };
+		CD56597B25A442300010B0F3 /* ArrayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56597825A442300010B0F3 /* ArrayViewController.m */; };
 		CD56598525A4425B0010B0F3 /* BinaryTreeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56598125A4425A0010B0F3 /* BinaryTreeViewController.m */; };
 		CD56598C25A443C30010B0F3 /* TwoPointerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56598925A443C30010B0F3 /* TwoPointerViewController.m */; };
-		CD56599325A4442C0010B0F3 /* HuisuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56599125A4442C0010B0F3 /* HuisuViewController.m */; };
+		CD56599325A4442C0010B0F3 /* BacktrackingController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56599125A4442C0010B0F3 /* BacktrackingController.m */; };
 		CD56599B25A444520010B0F3 /* LeetCodeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56599825A444520010B0F3 /* LeetCodeListViewController.m */; };
 		CD56599C25A444520010B0F3 /* LeetCodeListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD56599925A444520010B0F3 /* LeetCodeListViewController.xib */; };
 		CD56599D25A444520010B0F3 /* LeetCodeAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56599A25A444520010B0F3 /* LeetCodeAnswer.m */; };
@@ -51,14 +51,14 @@
 		CD56596325A441C40010B0F3 /* LeetCodeModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeetCodeModel.m; sourceTree = "<group>"; };
 		CD56596F25A442240010B0F3 /* ListNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListNode.m; sourceTree = "<group>"; };
 		CD56597125A442240010B0F3 /* ListNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListNode.h; sourceTree = "<group>"; };
-		CD56597825A442300010B0F3 /* LeetCodeArrayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeetCodeArrayViewController.m; sourceTree = "<group>"; };
-		CD56597925A442300010B0F3 /* LeetCodeArrayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeetCodeArrayViewController.h; sourceTree = "<group>"; };
+		CD56597825A442300010B0F3 /* ArrayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayViewController.m; sourceTree = "<group>"; };
+		CD56597925A442300010B0F3 /* ArrayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayViewController.h; sourceTree = "<group>"; };
 		CD56597F25A4425A0010B0F3 /* BinaryTreeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BinaryTreeViewController.h; sourceTree = "<group>"; };
 		CD56598125A4425A0010B0F3 /* BinaryTreeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BinaryTreeViewController.m; sourceTree = "<group>"; };
 		CD56598925A443C30010B0F3 /* TwoPointerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwoPointerViewController.m; sourceTree = "<group>"; };
 		CD56598B25A443C30010B0F3 /* TwoPointerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwoPointerViewController.h; sourceTree = "<group>"; };
-		CD56599025A4442C0010B0F3 /* HuisuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuisuViewController.h; sourceTree = "<group>"; };
-		CD56599125A4442C0010B0F3 /* HuisuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuisuViewController.m; sourceTree = "<group>"; };
+		CD56599025A4442C0010B0F3 /* BacktrackingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BacktrackingController.h; sourceTree = "<group>"; };
+		CD56599125A4442C0010B0F3 /* BacktrackingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BacktrackingController.m; sourceTree = "<group>"; };
 		CD56599625A444520010B0F3 /* LeetCodeAnswer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeetCodeAnswer.h; sourceTree = "<group>"; };
 		CD56599725A444520010B0F3 /* LeetCodeListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeetCodeListViewController.h; sourceTree = "<group>"; };
 		CD56599825A444520010B0F3 /* LeetCodeListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeetCodeListViewController.m; sourceTree = "<group>"; };
@@ -173,8 +173,8 @@
 		CD56597725A442300010B0F3 /* 数组 */ = {
 			isa = PBXGroup;
 			children = (
-				CD56597925A442300010B0F3 /* LeetCodeArrayViewController.h */,
-				CD56597825A442300010B0F3 /* LeetCodeArrayViewController.m */,
+				CD56597925A442300010B0F3 /* ArrayViewController.h */,
+				CD56597825A442300010B0F3 /* ArrayViewController.m */,
 			);
 			path = "数组";
 			sourceTree = "<group>";
@@ -200,8 +200,8 @@
 		CD56598F25A4442C0010B0F3 /* 回溯算法 */ = {
 			isa = PBXGroup;
 			children = (
-				CD56599025A4442C0010B0F3 /* HuisuViewController.h */,
-				CD56599125A4442C0010B0F3 /* HuisuViewController.m */,
+				CD56599025A4442C0010B0F3 /* BacktrackingController.h */,
+				CD56599125A4442C0010B0F3 /* BacktrackingController.m */,
 			);
 			path = "回溯算法";
 			sourceTree = "<group>";
@@ -322,10 +322,10 @@
 				CD56594525A43E710010B0F3 /* AppDelegate.m in Sources */,
 				CD56595F25A441570010B0F3 /* LeetCodeBaseController.m in Sources */,
 				CD56595625A43E730010B0F3 /* main.mm in Sources */,
-				CD56599325A4442C0010B0F3 /* HuisuViewController.m in Sources */,
+				CD56599325A4442C0010B0F3 /* BacktrackingController.m in Sources */,
 				CD56599B25A444520010B0F3 /* LeetCodeListViewController.m in Sources */,
 				CD56599D25A444520010B0F3 /* LeetCodeAnswer.m in Sources */,
-				CD56597B25A442300010B0F3 /* LeetCodeArrayViewController.m in Sources */,
+				CD56597B25A442300010B0F3 /* ArrayViewController.m in Sources */,
 				CD565B7F25A727460010B0F3 /* TreeNode.m in Sources */,
 				CD833E3225A60D6700BE801A /* HashViewController.m in Sources */,
 				CD56594825A43E710010B0F3 /* SceneDelegate.m in Sources */,

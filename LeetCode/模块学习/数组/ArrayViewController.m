@@ -1,24 +1,31 @@
 //
-//  LeetCodeArrayViewController.m
+//  ArrayViewController.m
 //  BaseProjectFramework
 //
 //  Created by curry on 2021/1/4.
 //  Copyright © 2021 CNLive_张建军. All rights reserved.
 //
 
-#import "LeetCodeArrayViewController.h"
+#import "ArrayViewController.h"
 #import "ListNode.h"
-@interface LeetCodeArrayViewController ()
+@interface ArrayViewController ()
 
 @end
 
-@implementation LeetCodeArrayViewController
+@implementation ArrayViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self configRowTitles:@[@"搜索插入位置", @"移除元素", @"三数之和", @"四数之和", @"反转链表", @"环形链表II", @"长度最小的子数组", @"螺旋矩阵II"]];
+    [self configRowTitles:@[@"搜索插入位置",
+                            @"移除元素",
+                            @"三数之和",
+                            @"四数之和",
+                            @"反转链表",
+                            @"环形链表II",
+                            @"长度最小的子数组",
+                            @"螺旋矩阵II"]];
 }
 
 - (void)didSelectRowAtIndex:(NSInteger)index

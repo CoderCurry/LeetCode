@@ -26,7 +26,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self configRowTitles:@[@"有效的字母异位词", @"快乐数", @"两数之和", @"四数相加II", @"赎金信", @"三数之和", @"四数之和"]];
+    [self configRowTitles:@[@"有效的字母异位词",
+                            @"快乐数",
+                            @"两数之和",
+                            @"四数相加II",
+                            @"赎金信",
+                            @"三数之和",
+                            @"四数之和"]];
 }
 
 - (void)didSelectRowAtIndex:(NSInteger)index

@@ -18,7 +18,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self configRowTitles:@[@"移除元素", @"反转字符串", @"替换空格", @"翻转字符串里的单词", @"反转链表", @"环形链表II", @"三数之和", @"四数之和"]];
+    [self configRowTitles:@[@"移除元素",
+                            @"反转字符串",
+                            @"替换空格",
+                            @"翻转字符串里的单词",
+                            @"反转链表",
+                            @"环形链表II",
+                            @"三数之和",
+                            @"四数之和"]];
 }
 
 - (void)didSelectRowAtIndex:(NSInteger)index
