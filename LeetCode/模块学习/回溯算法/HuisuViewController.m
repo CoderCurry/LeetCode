@@ -54,11 +54,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self configRowTitles:@[@"组合问题",
-                            @"组合总和III",
+    [self configRowTitles:@[@"组合问题-所给集合求k个数的组合",
+                            @"组合总和III-所给集合不含重复元素, 元素不可重复使用",
                             @"电话号码的字母组合",
-                            @"组合总和",
-                            @"组合总和II",
+                            @"组合总和-所给集合不含重复元素, 元素可重复使用, 解集不能包含重复组合",
+                            @"组合总和II-所给集合有重复元素, 解集不能包含重复组合",
                             @"分割回文串",
                             @"复原IP地址",
                             @"子集",
@@ -121,37 +121,50 @@
     
     NSMutableArray *result = [NSMutableArray arrayWithCapacity:0];
     NSMutableArray *path = [NSMutableArray arrayWithCapacity:0];
-    
-    [self backtrackingn:4 k:2 startIndex:1 resultArray:result pathArray:path];
-    NSLog(@"result:%@, path:%@", result, path);
+    NSInteger n = 4;
+    NSInteger k = 2;
+    [self action1BacktrackingMax:n
+                           count:k
+                      startIndex:1
+                     resultArray:result
+                       pathArray:path];
+    NSLog(@"result:%@", result);
 }
 
-- (void)backtrackingn:(NSInteger)n
-                    k:(NSInteger)k
-           startIndex:(NSInteger)startIndex
-          resultArray:(NSMutableArray *)result
-            pathArray:(NSMutableArray *)path
+- (void)action1BacktrackingMax:(NSInteger)max
+                         count:(NSInteger)count
+                  startIndex:(NSInteger)startIndex
+                 resultArray:(NSMutableArray *)result
+                   pathArray:(NSMutableArray *)path
 {
-    if (path.count == k) {
+    if (path.count == count) {
         [result addObject:path.copy];
         return;
     }
     // for 循环是横向遍历 递归是纵向遍历
-    // 剪枝处理
-    // for (int i = startIndex; i <= n - (k - path.size()) + 1; i++)
-    for (NSInteger i = startIndex; i <= n; i++)
-    {
-        [path addObject:@(i)];// 处理节点
-        [self backtrackingn:n
-                          k:k
-                 startIndex:i+1
-                resultArray:result
-                  pathArray:path]; // 递归
-        [path removeObject:@(i)];// 回溯，撤销处理的节点
+    // 剪枝:如果for循环选择的起始位置之后的元素个数 已经不足 我们需要的元素个数了，那么就没有必要搜索了
+    /*
+     1. 已选择元素: path.count
+     2. 还剩的长度: n - i + 1
+     3. 需要的长度: k - path.count
+     需要的长度 <= 还剩的长度
+     k - path.count <= n - i + 1
+     i <= n - (k - path.count) + 1
+     */
+
+    for (NSInteger i = startIndex; i <= max - (count - path.count) + 1; i++) {
+        [path addObject:@(i)];
+        // 递归纵向遍历
+        [self action1BacktrackingMax:max
+                               count:count
+                          startIndex:i + 1
+                         resultArray:result
+                           pathArray:path];
+        // 回溯
+        [path removeLastObject];
     }
 }
 
-static NSInteger sum = 0;
 - (void)action1
 {
     // 216 组合总和III
@@ -165,35 +178,50 @@ static NSInteger sum = 0;
      输入: k = 3, n = 9
      输出: [[1,2,6], [1,3,5], [2,3,4]]
      */
+    NSInteger sum = 0;
     NSMutableArray *result = [NSMutableArray array];
     NSMutableArray *path = [NSMutableArray array];
-    [self result:result path:path target:7 numCount:3 startIndex:1];
+//    NSInteger n = 7;
+//    NSInteger k = 3;
+    NSInteger n = 9;
+    NSInteger k = 3;
+    [self action2Sum:sum
+              target:n
+               count:k
+          startIndex:1
+              result:result
+                path:path];
     NSLog(@"result:%@", result);
 }
 
-- (void)result:(NSMutableArray *)result
-          path:(NSMutableArray *)path
-        target:(NSInteger)n
-      numCount:(NSInteger)k
-    startIndex:(NSInteger)startIndex
+- (void)action2Sum:(NSInteger)sum
+            target:(NSInteger)target
+             count:(NSInteger)count
+        startIndex:(NSInteger)startIndex
+            result:(NSMutableArray *)result
+              path:(NSMutableArray *)path
 {
-    // 剪纸 当sum已经大于n时不必再进行下去了
-    if (sum >= n) {
+    // 剪纸
+    if (sum > target) {
         return;
     }
-
-    if (path.count == k) {
-        if (sum == n) {
-            [result addObject:path.copy];
-        }
+    
+    if (sum == target && path.count == count) {
+        [result addObject:path.copy];
         return;
     }
+    
     for (NSInteger i = startIndex; i <= 9; i++) {
         sum += i;
         [path addObject:@(i)];
-        [self result:result path:path target:n numCount:k startIndex:i+1];
+        [self action2Sum:sum
+                  target:target
+                   count:count
+              startIndex:i + 1
+                  result:result
+                    path:path];
         sum -= i;
-        [path removeObject:@(i)];
+        [path removeLastObject];
     }
 }
 
@@ -206,9 +234,21 @@ static NSInteger sum = 0;
      输入："23"
      输出：["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
      */
+    
+    NSString *string = @"23";
     NSMutableArray *result = [NSMutableArray array];
-    NSMutableArray *path = [NSMutableArray array];
-    NSArray *nums = @[@(2), @(3)];
+    [self action2NumsString:string result:result];
+    NSLog(@"result %@", result);
+}
+
+- (void)action2NumsString:(NSString *)numsString result:(NSMutableArray *)result
+{
+    NSMutableArray *nums = [NSMutableArray array];
+    for (NSInteger i = 0; i < numsString.length; i++) {
+        NSString *sub = [numsString substringWithRange:NSMakeRange(i, 1)];
+        [nums addObject:sub];
+    }
+    
     NSDictionary *map = @{
         @"0": @[],
         @"1": @[],
@@ -222,26 +262,37 @@ static NSInteger sum = 0;
         @"9": @[@"w", @"x", @"y", @"z"],
     };
     
-    [self result:result nums:nums path:path map:map index:0];
-    NSLog(@"result %@", result);
+    NSMutableArray *path = [NSMutableArray array];
+    
+    [self action2Nums:nums
+                  map:map
+           startIndex:0
+               result:result
+                 path:path];
 }
 
-- (void)result:(NSMutableArray *)result
-          nums:(NSArray *)nums
-          path:(NSMutableArray *)path
-           map:(NSDictionary *)map
-         index:(NSInteger)index
+- (void)action2Nums:(NSArray *)nums
+                map:(NSDictionary *)map
+         startIndex:(NSInteger)startIndex
+             result:(NSMutableArray *)result
+               path:(NSMutableArray *)path
 {
-    if (index == nums.count) {
+    if (path.count == nums.count) {
         [result addObject:path.copy];
         return;
     }
-
-    NSArray *letters =  map[[nums[index] stringValue]];
-    for (int i = 0; i < letters.count; i++) {
-        [path addObject:letters[i]];            // 处理
-        [self result:result nums:nums path:path map:map index:index+1]; // 递归，注意index+1，一下层要处理下一个数字了
-        [path removeLastObject];                       // 回溯
+    
+    NSString *key = nums[startIndex];
+    NSArray *array = map[key];
+    
+    for (NSInteger i = 0; i < array.count; i++) {
+        [path addObject:array[i]];
+        [self action2Nums:nums
+                      map:map
+               startIndex:startIndex + 1
+                   result:result
+                     path:path];
+        [path removeLastObject];
     }
 }
 
@@ -269,20 +320,27 @@ static NSInteger sum = 0;
      */
     NSMutableArray *result = [NSMutableArray array];
     NSMutableArray *path = [NSMutableArray array];
-    NSArray *nums = @[@(2), @(3), @(6), @(7)];
-    NSInteger target = 7;
-//    NSArray *nums = @[@(2), @(3), @(5)];
-//    NSInteger target = 8;
+    NSInteger sum = 0;
+//    NSArray *nums = @[@(2), @(3), @(6), @(7)];
+//    NSInteger target = 7;
+    NSArray *nums = @[@(2), @(3), @(5)];
+    NSInteger target = 8;
     
-    [self action3Result:result path:path nums:nums target:target startIndex:0];
+    [self action3Sum:sum
+              target:target
+                nums:nums
+          startIndex:0
+              result:result
+                path:path];
     NSLog(@"result %@", result);
 }
 
-- (void)action3Result:(NSMutableArray *)result
-                 path:(NSMutableArray <NSNumber *>*)path
-                 nums:(NSArray <NSNumber *>*)nums
-               target:(NSInteger)target
-           startIndex:(NSInteger)startIndex
+- (void)action3Sum:(NSInteger)sum
+            target:(NSInteger)target
+              nums:(NSArray <NSNumber *>*)nums
+        startIndex:(NSInteger)startIndex
+            result:(NSMutableArray *)result
+              path:(NSMutableArray <NSNumber *>*)path
 {
     if (sum > target) {
         return;
@@ -294,12 +352,17 @@ static NSInteger sum = 0;
     }
     
     for (NSInteger i = startIndex; i < nums.count; i++) {
-        [path addObject:nums[i]];
         sum += nums[i].integerValue;
-        // 可重复使用元素 startIndex 不用+1
-        [self action3Result:result path:path nums:nums target:target startIndex:i];
-        [path removeLastObject];
+        [path addObject:nums[i]];
+        // 树枝中数字重复选取 i 不用+1
+        [self action3Sum:sum
+                  target:target
+                    nums:nums
+              startIndex:i
+                  result:result
+                    path:path];
         sum -= nums[i].integerValue;
+        [path removeLastObject];
     }
 }
 
@@ -336,28 +399,79 @@ static NSInteger sum = 0;
     
     // 要去重的是“同一树层上的使用过
     NSMutableArray *result = [NSMutableArray array];
-    NSMutableArray *path = [NSMutableArray array];
-    NSMutableArray *used = [NSMutableArray array];
     NSArray *nums = @[@(10), @(1), @(2), @(7), @(6), @(1), @(5)];
     NSInteger target = 8;
 //    NSArray *nums = @[@(2), @(3), @(5)];
 //    NSInteger target = 8;
-    for (int i = 0; i < nums.count; i++) {
-        [used addObject:@(NO)];
-    }
-    [self action4Result:result path:path nums:nums used:used target:target startIndex:0];
+    
+    [self action4Nums:nums target:target result:result];
     NSLog(@"result %@", result);
 }
 
-- (void)action4Result:(NSMutableArray *)result
-                 path:(NSMutableArray <NSNumber *>*)path
-                 nums:(NSArray <NSNumber *>*)nums
-                 used:(NSMutableArray <NSNumber *>*)used
-               target:(NSInteger)target
-           startIndex:(NSInteger)startIndex
+- (void)action4Nums:(NSArray <NSNumber *>*)nums
+             target:(NSInteger)target
+             result:(NSMutableArray *)result
 {
-
+    NSArray *numsSort = [nums sortedArrayUsingSelector:@selector(compare:)];
+    NSInteger sum = 0;
+    NSMutableArray *path = [NSMutableArray array];
+    NSMutableArray *used = [NSMutableArray array];
+    for (int i = 0; i < nums.count; i++) {
+        [used addObject:@(NO)];
+    }
+    
+    [self action4Nums:numsSort
+                  sum:sum
+               target:target
+           startIndex:0
+                 used:used
+               result:result
+                 path:path];
 }
+
+- (void)action4Nums:(NSArray <NSNumber *>*)nums
+                sum:(NSInteger)sum
+             target:(NSInteger)target
+         startIndex:(NSInteger)startIndex
+               used:(NSMutableArray <NSNumber *>*)used
+             result:(NSMutableArray *)result
+               path:(NSMutableArray <NSNumber *>*)path
+{
+    if (sum > target) {
+        return;
+    }
+    
+    if (sum == target) {
+        [result addObject:path.copy];
+        return;
+    }
+    
+    for (NSInteger i = startIndex; i < nums.count; i++) {
+        // https://mp.weixin.qq.com/s/_1zPYk70NvHsdY8UWVGXmQ
+        // 因为nums是排序的 所以直接对比i 和 i - 1 这两个重复值
+        // used[i - 1] == true，说明同一树支candidates[i - 1]使用过
+        // used[i - 1] == false，说明前一个树枝使用过 也就是同一树层candidates[i - 1]使用过
+        
+        if (i > 0 && nums[i] == nums[i - 1] && used[i - 1].boolValue == NO) {
+            continue;
+        }
+        
+        sum += nums[i].integerValue;
+        [path addObject:nums[i]];
+        used[i] = @(YES);
+        [self action4Nums:nums
+                      sum:sum
+                   target:target
+               startIndex:i + 1
+                     used:used
+                   result:result
+                     path:path];
+        used[i] = @(NO);
+        sum -= nums[i].integerValue;
+        [path removeLastObject];
+    }
+}
+
 
 - (void)action5
 {

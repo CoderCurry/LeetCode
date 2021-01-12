@@ -7,7 +7,7 @@
 //
 
 #import "LeetCodeBaseController.h"
-
+#import "LeetBaseCell.h"
 @interface LeetCodeBaseController ()<UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
@@ -45,6 +45,11 @@
     NSLog(@"子类实现");
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [LeetBaseCell heightWithSource:self.dataArray[indexPath.row]];
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.dataArray.count;
@@ -52,8 +57,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(UITableViewCell.class) forIndexPath:indexPath];
-    cell.textLabel.text = self.dataArray[indexPath.row];
+    LeetBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(LeetBaseCell.class) forIndexPath:indexPath];
+    [cell configWithSource:self.dataArray[indexPath.row]];
     return cell;
 }
 
@@ -69,7 +74,7 @@
         _tableView.dataSource = self;
         _tableView.delegate = self;
         _tableView.rowHeight = 44;
-        [_tableView registerClass:UITableViewCell.class forCellReuseIdentifier:NSStringFromClass(UITableViewCell.class)];
+        [_tableView registerClass:LeetBaseCell.class forCellReuseIdentifier:NSStringFromClass(LeetBaseCell.class)];
     }
     return _tableView;
 }

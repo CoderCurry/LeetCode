@@ -28,6 +28,7 @@
 		CD833E2725A4D80700BE801A /* ListNodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD833E2625A4D80700BE801A /* ListNodeViewController.m */; };
 		CD833E2D25A4E36600BE801A /* MyLinkedList.m in Sources */ = {isa = PBXBuildFile; fileRef = CD833E2C25A4E36600BE801A /* MyLinkedList.m */; };
 		CD833E3225A60D6700BE801A /* HashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD833E3125A60D6700BE801A /* HashViewController.m */; };
+		CD833E3925AE1D4400BE801A /* LeetBaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD833E3825AE1D4400BE801A /* LeetBaseCell.m */; };
 		CDF99E4225A4D15C00657964 /* CTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CDF99E4125A4D15C00657964 /* CTestViewController.mm */; };
 /* End PBXBuildFile section */
 
@@ -71,6 +72,8 @@
 		CD833E2C25A4E36600BE801A /* MyLinkedList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyLinkedList.m; sourceTree = "<group>"; };
 		CD833E3025A60D6700BE801A /* HashViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HashViewController.h; sourceTree = "<group>"; };
 		CD833E3125A60D6700BE801A /* HashViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HashViewController.m; sourceTree = "<group>"; };
+		CD833E3725AE1D4400BE801A /* LeetBaseCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeetBaseCell.h; sourceTree = "<group>"; };
+		CD833E3825AE1D4400BE801A /* LeetBaseCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LeetBaseCell.m; sourceTree = "<group>"; };
 		CDF99E4025A4D15C00657964 /* CTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTestViewController.h; sourceTree = "<group>"; };
 		CDF99E4125A4D15C00657964 /* CTestViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CTestViewController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -110,6 +113,8 @@
 				CD56596125A441B70010B0F3 /* 刷题本 */,
 				CD56595D25A441570010B0F3 /* LeetCodeBaseController.h */,
 				CD56595E25A441570010B0F3 /* LeetCodeBaseController.m */,
+				CD833E3725AE1D4400BE801A /* LeetBaseCell.h */,
+				CD833E3825AE1D4400BE801A /* LeetBaseCell.m */,
 				CD56594325A43E710010B0F3 /* AppDelegate.h */,
 				CD56594425A43E710010B0F3 /* AppDelegate.m */,
 				CD56594625A43E710010B0F3 /* SceneDelegate.h */,
@@ -311,6 +316,7 @@
 				CDF99E4225A4D15C00657964 /* CTestViewController.mm in Sources */,
 				CD56594B25A43E710010B0F3 /* ViewController.m in Sources */,
 				CD833E2D25A4E36600BE801A /* MyLinkedList.m in Sources */,
+				CD833E3925AE1D4400BE801A /* LeetBaseCell.m in Sources */,
 				CD833E2725A4D80700BE801A /* ListNodeViewController.m in Sources */,
 				CD56597325A442240010B0F3 /* ListNode.m in Sources */,
 				CD56594525A43E710010B0F3 /* AppDelegate.m in Sources */,
