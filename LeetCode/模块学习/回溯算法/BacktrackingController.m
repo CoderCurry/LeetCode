@@ -55,14 +55,21 @@
     // Do any additional setup after loading the view from its nib.
     
     [self configRowTitles:@[@"组合问题-所给集合求k个数的组合",
-                            @"组合总和III-所给集合不含重复元素, 元素不可重复使用",
+                            @"组合总和III-集合不含重复元素, 元素不可重复使用",
                             @"电话号码的字母组合",
-                            @"组合总和-所给集合不含重复元素, 元素可重复使用, 解集不能包含重复组合",
-                            @"组合总和II-所给集合有重复元素, 解集不能包含重复组合",
+                            @"组合总和-集合不含重复元素, 元素可重复使用, 解集不能包含重复组合",
+                            @"组合总和II-集合有重复元素, 解集不能包含重复组合",
                             @"分割回文串",
                             @"复原IP地址",
-                            @"子集",
-                            @"子集II"
+                            @"子集-集合不含重复元素, 解集不能包含重复子集",
+                            @"子集II-集合有重复元素, 解集不能包含重复子集",
+                            @"递增子序列",
+                            @"全排列-不含重复元素",
+                            @"全排列II-包含重复",
+                            @"重新安排行程",
+                            @"N皇后",
+                            @"解数独"
+                            
     ]];
 }
 
@@ -95,6 +102,24 @@
             break;
         case 8:
             [self action8];
+            break;
+        case 9:
+            [self action9];
+            break;
+        case 10:
+            [self action10];
+            break;
+        case 11:
+            [self action11];
+            break;
+        case 12:
+            [self action12];
+            break;
+        case 13:
+            [self action13];
+            break;
+        case 14:
+            [self action14];
             break;
            
         default:
@@ -486,25 +511,29 @@
      ["a","a","b"]
      ]
      */
+    
     NSString *s = @"aab";
     NSMutableArray *result = [NSMutableArray array];
     NSMutableArray *path = [NSMutableArray array];
-    [self action5Result:result path:path s:s startIndex:0];
+    [self action5S:s
+        startIndex:0
+            result:result
+              path:path];
     NSLog(@"--%@", result);
     
 }
 
-- (void)action5Result:(NSMutableArray *)result
-                 path:(NSMutableArray <NSString *>*)path
-                    s:(NSString *)s
-           startIndex:(NSInteger)startIndex
+- (void)action5S:(NSString *)s
+      startIndex:(NSInteger)startIndex
+          result:(NSMutableArray  *)result
+            path:(NSMutableArray <NSString *>*)path
 {
     if (startIndex >= s.length) {
         [result addObject:path.copy];
         return;
     }
     
-    for (NSInteger i = startIndex; i < s.length ; i++) {
+    for (NSInteger i = startIndex; i < s.length; i++) {
         
         if ([self isPalindrome:s start:startIndex end:i]) {
             NSString *subs = [s substringWithRange:NSMakeRange(startIndex, i - startIndex + 1)];
@@ -512,8 +541,10 @@
         } else {
             continue;
         }
-        
-        [self action5Result:result path:path s:s startIndex:i + 1];
+        [self action5S:s
+            startIndex:i + 1
+                result:result
+                  path:path];
         [path removeLastObject];
     }
 }
@@ -560,22 +591,30 @@
      s 仅由数字组成
      */
     
-//    NSString *s = @"25525511135";
-//    NSString *s = @"0000";
-//    NSString *s = @"1111";
-//    NSString *s = @"010010";
-    NSString *s = @"101023";
-    NSMutableArray *result = [NSMutableArray array];
-    NSMutableArray *path = [NSMutableArray array];
+    NSString *s0 = @"25525511135";
+    NSString *s1 = @"0000";
+    NSString *s2 = @"1111";
+    NSString *s3 = @"010010";
+    NSString *s4 = @"101023";
+    NSArray *arr = @[s0, s1, s2, s3, s4];
     
-    [self action6S:s res:result path:path startIndex:0];
-    NSLog(@"%@", result);
+    for (NSInteger i = 0; i < arr.count; i++) {
+        NSString *s = arr[i];
+        NSMutableArray *result = [NSMutableArray array];
+        NSMutableArray *path = [NSMutableArray array];
+        
+        [self action6S:s res:result path:path startIndex:0];
+        NSLog(@"%@", result);
+    }
 }
 
 - (void)action6S:(NSString *)s res:(NSMutableArray <NSString *>*)res path:(NSMutableArray <NSString *>*)path startIndex:(NSInteger)startIndex
 {
+    if (startIndex >= s.length) {
+        return;
+    }
     // 当已经截取三个的时候 第四个必须是合法的才算ip地址 且截取点要小于s长度
-    if (path.count == 3 && startIndex < s.length) {
+    if (path.count == 3) {
         NSString *last = [s substringWithRange:NSMakeRange(startIndex, s.length - startIndex)];
         
         if ([self legalCommit:last]) {
@@ -588,17 +627,11 @@
     
     for (NSInteger i = startIndex; i < s.length; i++) {
         NSString *sub = [s substringWithRange:NSMakeRange(startIndex, i - startIndex + 1)];
-        NSInteger length = sub.length;
-        if ((length == 3 && sub.integerValue > 255) || length > 4) {
-            return;
-        }
-        
         if ([self legalCommit:sub]) {
             [path addObject:sub];
         } else {
             break;
         }
-        
         [self action6S:s res:res path:path startIndex:i + 1];
         [path removeLastObject];
     }
@@ -606,14 +639,16 @@
 
 - (BOOL)legalCommit:(NSString *)commit
 {
+    NSInteger commitInt = commit.integerValue;
+    // 0开头 多于一位
     if (commit.length > 1 && [commit hasPrefix:@"0"]) {
         return NO;
     }
-    NSInteger commitInt = commit.integerValue;
-    if (commitInt >= 0 && commitInt <= 255) {
-        return YES;
+    
+    if (commitInt > 255) {
+        return NO;
     }
-    return NO;
+    return YES;
 }
 
 - (void)action7
@@ -639,24 +674,24 @@
     NSMutableArray *result = [NSMutableArray array];
     NSMutableArray *path = [NSMutableArray array];
     NSArray *nums = @[@(1),@(2),@(3)];
-    [self action7nums:nums res:result path:path startIndex:0];
+    [self action7nums:nums startIndex:0 result:result path:path];
     NSLog(@"%@", result);
 }
 
 - (void)action7nums:(NSArray <NSNumber *>*)nums
-                res:(NSMutableArray <NSNumber *>*)res
-               path:(NSMutableArray <NSNumber *>*)path
          startIndex:(NSInteger)startIndex
+             result:(NSMutableArray <NSNumber *>*)result
+               path:(NSMutableArray <NSNumber *>*)path
+         
 {
-    [res addObject:path.copy];
-    if (startIndex == nums.count) {
+    [result addObject:path.copy];
+    if (startIndex >= nums.count) {
         return;
     }
     
     for (NSInteger i = startIndex; i < nums.count; i++) {
         [path addObject:nums[i]];
-        NSLog(@"%@", path);
-        [self action7nums:nums res:res path:path startIndex:i+1];
+        [self action7nums:nums startIndex:i + 1 result:result path:path];
         [path removeLastObject];
     }
 }
@@ -679,6 +714,299 @@
      [1,2],
      []
      ]
+     */
+    NSMutableArray <NSNumber *>*result = [NSMutableArray array];
+    NSArray *nums = @[@(1),@(2),@(2)];
+    [self action8nums:nums result:result];
+    NSLog(@"result %@", result);
+}
+
+- (void)action8nums:(NSArray <NSNumber *>*)nums result:(NSMutableArray <NSNumber *>*)result
+{
+    NSArray <NSNumber *>*sortNums = [nums sortedArrayUsingSelector:@selector(compare:)];
+    NSMutableArray <NSNumber *>*path = [NSMutableArray array];
+    NSMutableArray <NSNumber *>*used = [NSMutableArray array];
+    for (NSInteger i = 0; i < sortNums.count; i++) {
+        [used addObject:@(NO)];
+    }
+    
+    [self action8nums:sortNums startIndex:0 used:used result:result path:path];
+}
+
+- (void)action8nums:(NSArray <NSNumber *>*)sortNums
+         startIndex:(NSInteger)startIndex
+               used:(NSMutableArray <NSNumber *>*)used
+             result:(NSMutableArray <NSNumber *>*)result
+               path:(NSMutableArray <NSNumber *>*)path
+         
+{
+    [result addObject:path.copy];
+    if (startIndex >= sortNums.count) {
+        return;
+    }
+    
+    for (NSInteger i = startIndex; i < sortNums.count; i++) {
+        
+        if (i > 0 && sortNums[i] == sortNums[i - 1] && used[i - 1].boolValue == NO) {
+            continue;
+        }
+
+        [path addObject:sortNums[i]];
+        used[i] = @(YES);
+        [self action8nums:sortNums startIndex:i + 1 used:used result:result path:path];
+        [path removeLastObject];
+        used[i] = @(NO);
+    }
+}
+
+- (void)action9
+{
+    // 491 递增子序列
+    // 给定一个整型数组, 你的任务是找到所有该数组的递增子序列，递增子序列的长度至少是2。
+    /*
+     示例:
+
+     输入: [4, 6, 7, 7] 输出: [[4, 6], [4, 7], [4, 6, 7], [4, 6, 7, 7], [6, 7], [6, 7, 7], [7,7], [4,7,7]]
+
+     说明:
+
+     给定数组的长度不会超过15。
+     数组中的整数范围是 [-100,100]。
+     给定数组中可能包含重复数字，相等的数字应该被视为递增的一种情况。
+     */
+    NSMutableArray *result = [NSMutableArray array];
+    NSArray *nums = @[@(4),@(6),@(7),@(7)];
+    [self action9Nums:nums result:result];
+    NSLog(@"result %@", result);
+}
+
+- (void)action9Nums:(NSArray <NSNumber *>*)nums result:(NSMutableArray <NSNumber *>*)result
+{
+    NSArray <NSNumber *>*sortNums = [nums sortedArrayUsingSelector:@selector(compare:)];
+    NSMutableArray *path = [NSMutableArray array];
+    NSMutableArray <NSNumber *>*used = [NSMutableArray array];
+    for (NSInteger i = 0; i < sortNums.count; i++) {
+        [used addObject:@(NO)];
+    }
+    
+    [self action9Nums:sortNums startIndex:0 used:used result:result path:path];
+}
+
+- (void)action9Nums:(NSArray <NSNumber *>*)sortNums
+         startIndex:(NSInteger)startIndex
+               used:(NSMutableArray <NSNumber *>*)used
+             result:(NSMutableArray <NSNumber *>*)result
+               path:(NSMutableArray <NSNumber *>*)path
+{
+    if (path.count >= 2) {
+        [result addObject:path.copy];
+    }
+
+    if (startIndex >= sortNums.count) {
+        return;
+    }
+    
+    for (NSInteger i = startIndex; i < sortNums.count; i++) {
+        
+        if (i > 0 && sortNums[i] == sortNums[i-1] && used[i-1].boolValue == NO) {
+            continue;
+        }
+        
+        [path addObject:sortNums[i]];
+        used[i] = @(YES);
+        [self action9Nums:sortNums startIndex:i + 1 used:used result:result path:path];
+        used[i] = @(NO);
+        [path removeLastObject];
+    }
+}
+
+- (void)action10
+{
+    // 46 全排列
+    // 排列问题就不用使用startIndex了, 但排列问题需要一个used数组，标记已经选择的元素
+    /*
+     给定一个 没有重复 数字的序列，返回其所有可能的全排列。
+     示例:
+     输入: [1,2,3]
+     输出:
+     [
+     [1,2,3],
+     [1,3,2],
+     [2,1,3],
+     [2,3,1],
+     [3,1,2],
+     [3,2,1]
+     ]
+     */
+    
+    NSMutableArray *result = [NSMutableArray array];
+    NSArray *nums = @[@(1),@(2),@(3)];
+    [self action10Nums:nums result:result];
+    NSLog(@"result %@", result);
+}
+
+- (void)action10Nums:(NSArray <NSNumber *>*)nums result:(NSMutableArray <NSNumber *>*)result
+{
+    NSMutableArray *path = [NSMutableArray array];
+    NSMutableArray <NSNumber *>*used = [NSMutableArray array];
+    for (NSInteger i = 0; i < nums.count; i++) {
+        [used addObject:@(NO)];
+    }
+    
+    [self action10Nums:nums used:used result:result path:path];
+}
+
+- (void)action10Nums:(NSArray <NSNumber *>*)nums
+                used:(NSMutableArray <NSNumber *>*)used
+              result:(NSMutableArray <NSNumber *>*)result
+                path:(NSMutableArray <NSNumber *>*)path
+{
+    if (path.count == nums.count) {
+        [result addObject:path.copy];
+        return;
+    }
+    
+    for (NSInteger i = 0; i < nums.count; i++) {
+        if (used[i].boolValue) {
+            continue;
+        }
+        used[i] = @(YES);
+        [path addObject:nums[i]];
+        [self action10Nums:nums used:used result:result path:path];
+        used[i] = @(NO);
+        [path removeLastObject];
+    }
+}
+- (void)action11
+{
+    // 47.全排列 II
+    // 给定一个可包含重复数字的序列 nums ，按任意顺序 返回所有不重复的全排列。
+    /*
+     示例 1：
+     输入：nums = [1,1,2]
+     输出：
+     [[1,1,2],
+     [1,2,1],
+     [2,1,1]]
+     
+     示例 2：
+     输入：nums = [1,2,3]
+     输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+     
+     提示：
+     
+     1 <= nums.length <= 8
+     -10 <= nums[i] <= 10
+     */
+ 
+    NSArray *nums0 = @[@(1),@(1),@(2)];
+    NSArray *nums1 = @[@(1),@(2),@(3)];
+    NSArray *array = @[nums0, nums1];
+    for (NSArray *nums in array) {
+        NSMutableArray *result = [NSMutableArray array];
+        [self action11Nums:nums result:result];
+        NSLog(@"result %@", result);
+    }
+}
+
+- (void)action11Nums:(NSArray <NSNumber *>*)nums result:(NSMutableArray <NSNumber *>*)result
+{
+    NSMutableArray *path = [NSMutableArray array];
+    NSMutableArray <NSNumber *>*used = [NSMutableArray array];
+    for (NSInteger i = 0; i < nums.count; i++) {
+        [used addObject:@(NO)];
+    }
+    
+    [self action11Nums:nums used:used result:result path:path];
+}
+
+- (void)action11Nums:(NSArray <NSNumber *>*)nums
+                used:(NSMutableArray <NSNumber *>*)used
+              result:(NSMutableArray <NSNumber *>*)result
+                path:(NSMutableArray <NSNumber *>*)path
+{
+    if (path.count == nums.count) {
+        [result addObject:path.copy];
+        return;
+    }
+    
+    for (NSInteger i = 0; i < nums.count; i++) {
+        if (i > 0 && nums[i] == nums[i - 1] && used[i - 1].boolValue == NO) {
+            continue;
+        }
+        
+        if (used[i].boolValue == NO) {
+            used[i] = @(YES);
+            [path addObject:nums[i]];
+            [self action11Nums:nums used:used result:result path:path];
+            used[i] = @(NO);
+            [path removeLastObject];
+        }
+    }
+}
+
+- (void)action12
+{
+    // 332.重新安排行程
+    /*
+     给定一个机票的字符串二维数组 [from, to]，子数组中的两个成员分别表示飞机出发和降落的机场地点，对该行程进行重新规划排序。所有这些机票都属于一个从 JFK（肯尼迪国际机场）出发的先生，所以该行程必须从 JFK 开始。
+
+     提示：
+
+     如果存在多种有效的行程，请你按字符自然排序返回最小的行程组合。例如，行程 ["JFK", "LGA"] 与 ["JFK", "LGB"] 相比就更小，排序更靠前
+     所有的机场都用三个大写字母表示（机场代码）。
+     假定所有机票至少存在一种合理的行程。
+     所有的机票必须都用一次 且 只能用一次。
+     示例 1：
+     输入：[["MUC", "LHR"], ["JFK", "MUC"], ["SFO", "SJC"], ["LHR", "SFO"]]
+     输出：["JFK", "MUC", "LHR", "SFO", "SJC"]
+
+     示例 2：
+     输入：[["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]
+     输出：["JFK","ATL","JFK","SFO","ATL","SFO"]
+     解释：另一种有效的行程是 ["JFK","SFO","ATL","JFK","ATL","SFO"]。但是它自然排序更大更靠后。
+     */
+}
+
+- (void)action13
+{
+    // 第51题. N皇后
+    // n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
+    /*
+     给定一个整数 n，返回所有不同的 n 皇后问题的解决方案。
+
+     每一种解法包含一个明确的 n 皇后问题的棋子放置方案，该方案中 'Q' 和 '.' 分别代表了皇后和空位。
+
+     示例: 输入: 4
+     输出: [
+     [".Q..",  // 解法 1
+     "...Q",
+     "Q...",
+     "..Q."],
+
+     ["..Q.",  // 解法 2
+     "Q...",
+     "...Q",
+     ".Q.."]
+     ]
+     解释: 4 皇后问题存在两个不同的解法。
+
+     提示：
+     皇后，是国际象棋中的棋子，意味着国王的妻子。皇后只做一件事，那就是“吃子”。当她遇见可以吃的棋子时，就迅速冲上去吃掉棋子。当然，她横、竖、斜都可走一到七步，可进可退。（引用自 百度百科 - 皇后 ）*/
+    
+}
+
+- (void)action14
+{
+    // 37. 解数独
+    /*
+     编写一个程序，通过填充空格来解决数独问题。
+
+     一个数独的解法需遵循如下规则：
+     数字 1-9 在每一行只能出现一次。
+     数字 1-9 在每一列只能出现一次。
+     数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+     空白格用 '.' 表示。
      */
 }
 
