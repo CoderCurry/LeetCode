@@ -16,6 +16,7 @@
 #import "CTestViewController.h"
 #import "ListNodeViewController.h"
 #import "HashViewController.h"
+#import "TanxinViewController.h"
 
 #define kLeetCodeSet @"leetCode题集"
 #define kLeetCodeSetEasy @"easy"
@@ -24,12 +25,13 @@
 #define kLeetCodeSetAll @"all"
 
 #define kLeetCodeModule @"leetCode模块复习"
-#define kLeetCodeModuleTree @"二叉树"
-#define kLeetCodeModulePointer @"双指针"
-#define kLeetCodeModuleBackTracking @"回溯算法"
 #define kLeetCodeModuleArray @"数组"
 #define kLeetCodeModuleListNode @"链表"
 #define kLeetCodeModuleHash @"哈希表"
+#define kLeetCodeModulePointer @"双指针"
+#define kLeetCodeModuleTree @"二叉树"
+#define kLeetCodeModuleBackTracking @"回溯算法"
+#define kLeetCodeModuleTanxin @"贪心算法"
 
 
 #define kLeetCodeMM @"leetCodeC++代码"
@@ -97,6 +99,7 @@
                 kLeetCodeModulePointer,
                 kLeetCodeModuleTree,
                 kLeetCodeModuleBackTracking,
+                kLeetCodeModuleTanxin,
                 kBack],
         kBack:@[
 //                kLeetCodeSet,
@@ -112,6 +115,7 @@
         kLeetCodeModuleTree:NSStringFromClass(BinaryTreeViewController.class),
         kLeetCodeModulePointer:NSStringFromClass(TwoPointerViewController.class),
         kLeetCodeModuleBackTracking:NSStringFromClass(BacktrackingController.class),
+        kLeetCodeModuleTanxin:NSStringFromClass(TanxinViewController.class),
         kLeetCodeSetEasy:NSStringFromClass(LeetCodeListViewController.class),
         kLeetCodeSetMedium:NSStringFromClass(LeetCodeListViewController.class),
         kLeetCodeSetHard:NSStringFromClass(LeetCodeListViewController.class),

@@ -974,7 +974,6 @@
     // n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
     /*
      给定一个整数 n，返回所有不同的 n 皇后问题的解决方案。
-
      每一种解法包含一个明确的 n 皇后问题的棋子放置方案，该方案中 'Q' 和 '.' 分别代表了皇后和空位。
 
      示例: 输入: 4
@@ -992,9 +991,79 @@
      解释: 4 皇后问题存在两个不同的解法。
 
      提示：
-     皇后，是国际象棋中的棋子，意味着国王的妻子。皇后只做一件事，那就是“吃子”。当她遇见可以吃的棋子时，就迅速冲上去吃掉棋子。当然，她横、竖、斜都可走一到七步，可进可退。（引用自 百度百科 - 皇后 ）*/
+     皇后们的约束条件：
+     不能同行
+     不能同列
+     不能同斜线
+     */
     
+    NSInteger n = 4;
+    [self action13N:n];
 }
+
+- (void)action13N:(NSInteger)n
+{
+    NSMutableArray <NSMutableArray <NSString *>*>*chessboard = [NSMutableArray array];
+    for (NSInteger row = 0; row < n; row++) {
+        NSMutableArray <NSString *>* rowArray = [NSMutableArray array];
+        for (NSInteger col = 0; col < n; col++) {
+            [rowArray addObject:@"."];
+        }
+        [chessboard addObject:rowArray];
+    }
+    [self action13N:n row:0 chessboard:chessboard];
+}
+
+/// @param n 棋盘大小
+/// @param row 当前递归到棋牌的第几行了
+/// @param chessboard 棋盘
+- (void)action13N:(NSInteger)n
+              row:(NSInteger)row
+       chessboard:(NSMutableArray <NSMutableArray <NSString *>*>*)chessboard
+{
+    if (row == n) {
+        NSLog(@"result\n%@", chessboard);
+        return;
+    }
+    
+    for (NSInteger col = 0; col < n; col++) {
+        BOOL isValid = [self action13IsValid:n row:row col:col chessboard:chessboard];
+        if (isValid) { // 验证合法就可以放
+            chessboard[row][col] = @"Q"; // 放置皇后
+            [self action13N:n row:row + 1 chessboard:chessboard];
+            chessboard[row][col] = @"."; // 回溯，撤销皇后
+        }
+    }
+}
+
+- (BOOL)action13IsValid:(NSInteger)n
+                    row:(NSInteger)row
+                    col:(NSInteger)col
+             chessboard:(NSMutableArray <NSMutableArray <NSString *>*>*)chessboard
+{
+    // 检查列
+    for (NSInteger i = 0; i < row; i++) {
+        if ([chessboard[i][col] isEqualToString:@"Q"]) {
+            return NO;
+        }
+    }
+    
+    //判断当前坐标的右上角有没有皇后 135度
+    for (NSInteger i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
+        if ([chessboard[i][j] isEqualToString:@"Q"]) {
+            return NO;
+        }
+    }
+    
+    //判断当前坐标的左上角有没有皇后 45度
+    for (NSInteger i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+        if ([chessboard[i][j] isEqualToString:@"Q"]) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 
 - (void)action14
 {

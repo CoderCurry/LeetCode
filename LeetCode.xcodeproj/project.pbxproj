@@ -29,6 +29,7 @@
 		CD833E2D25A4E36600BE801A /* MyLinkedList.m in Sources */ = {isa = PBXBuildFile; fileRef = CD833E2C25A4E36600BE801A /* MyLinkedList.m */; };
 		CD833E3225A60D6700BE801A /* HashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD833E3125A60D6700BE801A /* HashViewController.m */; };
 		CD833E3925AE1D4400BE801A /* LeetBaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD833E3825AE1D4400BE801A /* LeetBaseCell.m */; };
+		CD8AC41025B0B60500D3601A /* TanxinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD8AC40F25B0B60500D3601A /* TanxinViewController.m */; };
 		CDF99E4225A4D15C00657964 /* CTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CDF99E4125A4D15C00657964 /* CTestViewController.mm */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +75,8 @@
 		CD833E3125A60D6700BE801A /* HashViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HashViewController.m; sourceTree = "<group>"; };
 		CD833E3725AE1D4400BE801A /* LeetBaseCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeetBaseCell.h; sourceTree = "<group>"; };
 		CD833E3825AE1D4400BE801A /* LeetBaseCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LeetBaseCell.m; sourceTree = "<group>"; };
+		CD8AC40E25B0B60500D3601A /* TanxinViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TanxinViewController.h; sourceTree = "<group>"; };
+		CD8AC40F25B0B60500D3601A /* TanxinViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TanxinViewController.m; sourceTree = "<group>"; };
 		CDF99E4025A4D15C00657964 /* CTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTestViewController.h; sourceTree = "<group>"; };
 		CDF99E4125A4D15C00657964 /* CTestViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CTestViewController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -155,6 +158,7 @@
 				CD565B7725A6FD4F0010B0F3 /* 栈与队列 */,
 				CD56597E25A4425A0010B0F3 /* 二叉树 */,
 				CD56598F25A4442C0010B0F3 /* 回溯算法 */,
+				CD8AC40D25B0B59900D3601A /* 贪心算法 */,
 			);
 			path = "模块学习";
 			sourceTree = "<group>";
@@ -231,6 +235,15 @@
 				CD833E3125A60D6700BE801A /* HashViewController.m */,
 			);
 			path = "哈希表";
+			sourceTree = "<group>";
+		};
+		CD8AC40D25B0B59900D3601A /* 贪心算法 */ = {
+			isa = PBXGroup;
+			children = (
+				CD8AC40E25B0B60500D3601A /* TanxinViewController.h */,
+				CD8AC40F25B0B60500D3601A /* TanxinViewController.m */,
+			);
+			path = "贪心算法";
 			sourceTree = "<group>";
 		};
 		CDF99E3F25A4D13D00657964 /* C++测试 */ = {
@@ -314,6 +327,7 @@
 			files = (
 				CD56596425A441C40010B0F3 /* LeetCodeModel.m in Sources */,
 				CDF99E4225A4D15C00657964 /* CTestViewController.mm in Sources */,
+				CD8AC41025B0B60500D3601A /* TanxinViewController.m in Sources */,
 				CD56594B25A43E710010B0F3 /* ViewController.m in Sources */,
 				CD833E2D25A4E36600BE801A /* MyLinkedList.m in Sources */,
 				CD833E3925AE1D4400BE801A /* LeetBaseCell.m in Sources */,
