@@ -35,7 +35,9 @@
                             @"最大子序和",
                             @"买卖股票的最佳时机II",
                             @"跳跃游戏",
-                            @"跳跃游戏II"]];
+                            @"跳跃游戏II",
+                            @"K次取反后最大化的数组和",
+                            @"加油站"]];
 }
 
 - (void)didSelectRowAtIndex:(NSInteger)index
@@ -59,7 +61,12 @@
         case 5:
             [self action5];
             break;
-            
+        case 6:
+            [self action6];
+            break;
+        case 7:
+            [self action7];
+            break;
         default:
             break;
     }
@@ -295,17 +302,103 @@
     // 45 跳跃游戏II
     /*
      给定一个非负整数数组，你最初位于数组的第一个位置。
+
      数组中的每个元素代表你在该位置可以跳跃的最大长度。
+
      你的目标是使用最少的跳跃次数到达数组的最后一个位置。
 
      示例:
+
      输入: [2,3,1,1,4]
      输出: 2
-     解释: 跳到最后一个位置的最小跳跃数是 2。从下标为 0 跳到下标为 1 的位置，跳 1 步，然后跳 3 步到达数组的最后一个位置。
-
-     说明:
-     假设你总是可以到达数组的最后一个位置。
+     解释: 跳到最后一个位置的最小跳跃数是 2。
+          从下标为 0 跳到下标为 1 的位置，跳 1 步，然后跳 3 步到达数组的最后一个位置。
      */
+    NSArray *arr = @[@(2), @(3), @(1), @(1), @(4)];
+    NSInteger step = [self action5Nums:arr];
+    NSLog(@"%ld", step);
 }
+
+// https://leetcode-cn.com/problems/jump-game-ii/solution/45-by-ikaruga/
+- (NSInteger)action5Nums:(NSArray <NSNumber *>*)nums
+{
+    NSInteger ans = 0;
+    NSInteger start = 0;
+    NSInteger end = 1;
+    while (end < nums.count)
+    {
+        NSInteger maxPos = 0;
+        for (NSInteger i = start; i < end; i++)
+        {
+            // 能跳到最远的距离
+            maxPos = MAX(maxPos, i + nums[i].integerValue);
+        }
+        start = end;      // 下一次起跳点范围开始的格子
+        end = maxPos + 1; // 下一次起跳点范围结束的格子
+        ans++;            // 跳跃次数
+    }
+    return ans;
+}
+
+- (void)action6
+{
+    
+}
+
+- (void)action7
+{
+    // 134 加油站
+    /*
+     在一条环路上有 N 个加油站，其中第 i 个加油站有汽油 gas[i] 升。
+
+     你有一辆油箱容量无限的的汽车，从第 i 个加油站开往第 i+1 个加油站需要消耗汽油 cost[i] 升。你从其中的一个加油站出发，开始时油箱为空。
+
+     如果你可以绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1。
+     
+     输入:
+     gas  = [1,2,3,4,5]
+     cost = [3,4,5,1,2]
+     输出: 3
+     
+     gas  = [2,3,4]
+     cost = [3,4,3]
+     输出: -1
+     */
+
+    NSArray <NSNumber *>*gas = @[@(1), @(2), @(3), @(4), @(5)];
+    NSArray <NSNumber *>*cost = @[@(3), @(4), @(5), @(1), @(2)];
+    NSInteger result = [self action7Gas:gas cost:cost];
+    NSLog(@"%ld", result);
+    
+    NSArray <NSNumber *>*gas1 = @[@(2), @(3), @(4)];
+    NSArray <NSNumber *>*cost1 = @[@(3), @(4), @(3)];
+    NSInteger result1 = [self action7Gas:gas1 cost:cost1];
+    NSLog(@"%ld", result1);
+}
+
+- (NSInteger)action7Gas:(NSArray <NSNumber *>*)gas cost:(NSArray <NSNumber *>*)cost
+{
+    for (NSInteger i = 0; i < gas.count; i++) {
+        // 寻找触发点
+        if (gas[i].integerValue >= cost[i].integerValue) {
+            // i 可以作为触发点
+            NSInteger cur = gas[i].integerValue;
+            NSInteger startIndex = i;
+            NSInteger end = (startIndex + 1 <= gas.count - 1) ? startIndex + 1 : 0 ;
+            while (end != i) {
+                if (cur - cost[startIndex].integerValue > 0) {
+                    cur = cur - cost[startIndex].integerValue + gas[end].integerValue;
+                    startIndex = startIndex + 1 <= gas.count - 1 ? startIndex + 1 : 0 ;
+                    end = startIndex + 1 <= gas.count - 1 ? startIndex + 1 : 0 ;
+                } else {
+                    return -1;
+                }
+            }
+            return i;
+        }
+    }
+    return -1;
+}
+
 
 @end
