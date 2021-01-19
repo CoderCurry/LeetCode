@@ -28,6 +28,7 @@
      前 5412678
      中 1425768
      后 1247865
+     层次 [[5], [4,6], [1,2,7,8]]
     */
     NSArray *arr = @[@(5), @(4), @(6), @(1), @(2), @(7), @(8)];
     TreeNode *head = [self createTreeWithValues:arr];
@@ -101,10 +102,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self configRowTitles:@[@"二叉树前序遍历",
-                            @"二叉树中序遍历",
-                            @"二叉树后序遍历",
-                            @"层次遍历",
+    [self configRowTitles:@[@"二叉树前序遍历-深度搜索",
+                            @"二叉树中序遍历-深度搜索",
+                            @"二叉树后序遍历-深度搜索",
+                            @"层次遍历-广度搜索",
                             @"翻转二叉树",
                             @"对称二叉树",
                             @"二叉树的最大深度",
