@@ -32,7 +32,9 @@
     
     [self configRowTitles:@[@"分发饼干",
                             @"摆动序列",
-                            @"最大子序和", @"", @"",
+                            @"最大子序和",
+                            @"买卖股票的最佳时机II",
+                            @"跳跃游戏",
                             @"跳跃游戏II",
                             @"K次取反后最大化的数组和",
                             @"加油站"]];
@@ -174,15 +176,125 @@
      输出: 6
      解释: 连续子数组 [4,-1,2,1] 的和最大，为 6。
      */
+    NSMutableArray *nums = @[@(-2), @(1), @(-3), @(4), @(-1), @(2), @(1), @(-5), @(4)].mutableCopy;
+    NSInteger result = [self action2MaxSubArray:nums];
+    NSLog(@"%ld", (long)result);
 }
+
+- (NSInteger)action2MaxSubArray:(NSMutableArray <NSNumber *>*)nums
+{
+    NSInteger result = 0;
+    NSInteger count = 0;
+    for (NSInteger i = 0; i < nums.count; i++) {
+        count += nums[i].integerValue;
+        // 取区间累计的最大值（相当于不断确定最大子序终止位置）
+        if (count > result) {
+            result = count;
+        }
+        // 相当于重置最大子序起始位置，因为遇到负数一定是拉低总和
+        if (count < 0) {
+            count = 0;
+        }
+    }
+    return result;
+}
+
 - (void)action3
 {
+    // 122 买卖股票的最佳时机II
+    /*
+     给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+
+     设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
+
+     注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+     示例 1:
+     输入: [7,1,5,3,6,4]
+     输出: 7
+     解释: 在第 2 天（股票价格 = 1）的时候买入，在第 3 天（股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4。随后，在第 4 天（股票价格 = 3）的时候买入，在第 5 天（股票价格 = 6）的时候卖出, 这笔交易所能获得利润 = 6-3 = 3 。
+
+     示例 2:
+     输入: [1,2,3,4,5]
+     输出: 4
+     解释: 在第 1 天（股票价格 = 1）的时候买入，在第 5 天 （股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。注意你不能在第 1 天和第 2 天接连购买股票，之后再将它们卖出。因为这样属于同时参与了多笔交易，你必须在再次购买前出售掉之前的股票。
+
+     示例 3:
+     输入: [7,6,4,3,1]
+     输出: 0
+     解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。
+     */
     
+    NSArray *array = @[
+    @[@(7), @(1), @(5), @(3), @(6), @(4)],
+    @[@(1), @(2), @(3), @(4), @(5)],
+    @[@(7), @(6), @(4), @(3), @(1)]];
+    
+    [array enumerateObjectsUsingBlock:^(NSArray <NSNumber *>* num, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSInteger max = [self action3MaxProfit:num];
+        NSLog(@"max %ld", max);
+    }];
+    
+}
+//「局部最优：收集每天的正利润 -> 全局最优：求得最大利润」。
+- (NSInteger)action3MaxProfit:(NSArray <NSNumber *>*)num
+{
+    NSInteger result = 0;
+    for (NSInteger i = 1; i < num.count; i++) {
+        result += MAX(num[i].integerValue - num[i - 1].integerValue, 0);
+    }
+    return result;
 }
 
 - (void)action4
 {
+    // 55 跳跃游戏
+    /*
+     给定一个非负整数数组，你最初位于数组的第一个位置。
+
+     数组中的每个元素代表你在该位置可以跳跃的最大长度。
+
+     判断你是否能够到达最后一个位置。
+
+     示例 1:
+     输入: [2,3,1,1,4]
+     输出: true
+     解释: 我们可以先跳 1 步，从位置 0 到达 位置 1, 然后再从位置 1 跳 3 步到达最后一个位置。
+
+     示例 2:
+     输入: [3,2,1,0,4]
+     输出: false
+     解释: 无论怎样，你总会到达索引为 3 的位置。但该位置的最大跳跃长度是 0 ， 所以你永远不可能到达最后一个位置。
+     */
+    NSArray *array = @[
+    @[@(2), @(3), @(1), @(1), @(4)],
+    @[@(3), @(2), @(1), @(0), @(4)]];
     
+    [array enumerateObjectsUsingBlock:^(NSArray <NSNumber *>* num, NSUInteger idx, BOOL * _Nonnull stop) {
+        BOOL win = [self action4JumpGame:num];
+        NSLog(@"%@", win ? @"yes" : @"no");
+    }];
+}
+/*
+ 解题思路：
+
+ 如果某一个作为 起跳点 的格子可以跳跃的距离是 3，那么表示后面 3 个格子都可以作为 起跳点。
+ 可以对每一个能作为 起跳点 的格子都尝试跳一次，把 能跳到最远的距离 不断更新。
+ 如果可以一直跳到最后，就成功了。
+ */
+- (BOOL)action4JumpGame:(NSArray <NSNumber *>*)nums
+{
+    // k 代表能跳到的最远距离
+    NSInteger k = 0;
+    // i 代表当前的位置 遍历所有的位置 查看能不能到达
+    for (NSInteger i = 0; i < nums.count; i++)
+    {
+        // 当前位置 超过 能到达的最远位置 返回NO
+        if (i > k) return NO;
+        // 当前位置每次移动 更新能到达的最远距离
+        k = MAX(k, i + nums[i].integerValue);
+    }
+    return true;
 }
 
 - (void)action5
