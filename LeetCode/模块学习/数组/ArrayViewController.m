@@ -201,8 +201,16 @@
 - (void)action3
 {
     // 18. 四数之和
-    //
-    // [1, 0, -1, 0, -2, 2]  target = 0
+    /*
+     给定数组 nums = [1, 0, -1, 0, -2, 2]，和 target = 0。
+
+     满足要求的四元组集合为：
+     [
+       [-1,  0, 0, 1],
+       [-2, -1, 1, 2],
+       [-2,  0, 0, 2]
+     ]
+     */
     NSArray <NSNumber *>*nums = @[@(1), @(0), @(-1), @(0), @(-2), @(2)];
     NSArray *result = [self action3Nums:nums target:0];
     NSLog(@"result :%@", result);
@@ -289,40 +297,45 @@
     ListNode *node2 = [ListNode nodeValue:2 next:node3];
     ListNode *node1 = [ListNode nodeValue:1 next:node2];
     
-    ListNode *reverseNode = [self reverseListNode:node1];
+    ListNode *reverseNode = [self action4ReverseListNode:node1];
     NSLog(@"%@", reverseNode);
 }
 
-- (ListNode *)reverseListNode:(ListNode *)root
+- (ListNode *)action4ReverseListNode:(ListNode *)head
 {
     ListNode *pre = nil;
-    ListNode *cur = root;
+    ListNode *cur = head;
     
-    while (cur != nil) {
+    while (cur) {
         ListNode *temp = cur.next;
         cur.next = pre;
         pre = cur;
         cur = temp;
-    };
+    }
     return pre;
 }
 
 - (void)action5
 {
     // 第142题.环形链表II
-    // 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
-    
+    /*
+     给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+     
+     输入：head = [3,2,0,-4], pos = 1
+     输出：返回索引为 1 的链表节点
+     解释：链表中有一个环，其尾部连接到第二个节点。
+     */
     ListNode *node3 = [ListNode nodeValue:4 next:nil];
     ListNode *node2 = [ListNode nodeValue:0 next:node3];
     ListNode *node1 = [ListNode nodeValue:2 next:node2];
     ListNode *head = [ListNode nodeValue:3 next:node1];
     node3.next = node1;
     
-    ListNode *cycleNode = [self findCycleNode:head];
+    ListNode *cycleNode = [self action5FindCycleNode:head];
     NSLog(@"%@", cycleNode);
 }
 
-- (ListNode *)findCycleNode:(ListNode *)head
+- (ListNode *)action5FindCycleNode:(ListNode *)head
 {
     ListNode *fast = head;
     ListNode *slow = head;
@@ -357,31 +370,27 @@
      解释：子数组 [4,3] 是该条件下的长度最小的子数组。
      */
     NSArray *array = @[@(2), @(3), @(1), @(2), @(4), @(3)];
-    NSInteger length = [self minSubArrayLength:array target:7];
+    NSInteger length = [self action6MinSubArrayLength:array target:7];
     NSLog(@"length %ld", length);
 }
 
 // 时间复杂度O(n) 因为begin 和 end最多各移动n次
-- (NSInteger)minSubArrayLength:(NSArray <NSNumber *>*)nums target:(NSInteger)target
+- (NSInteger)action6MinSubArrayLength:(NSArray <NSNumber *>*)nums target:(NSInteger)target
 {
-    if (nums.count == 0) {
-        return 0;
-    }
-        
-    NSInteger begin = 0;
-    NSInteger end = 0;
+    NSInteger left = 0;
+    NSInteger right = 0;
     NSInteger length = NSIntegerMax;
     NSInteger sum = 0;
-    while ((end < nums.count)) {
-        sum += nums[end].integerValue;
-        // 当sum大于target时 更新length 并减掉begin 移动begin和end
-        // 当sum小于target时 移动end
+    
+    while (right < nums.count) {
+        sum += nums[right].integerValue;
+        
         while (sum >= target) {
-            length = MIN(length, end - begin + 1);
-            sum -= nums[begin].integerValue;
-            begin++;
+            length = MIN(length, right - left + 1);
+            sum -= nums[left].integerValue;
+            left++;
         }
-        end++;
+        right++;
     }
     // 如果没有匹配值 length = NSIntegerMax 返回0
     return (length == NSIntegerMax) ? 0 : length;
@@ -414,7 +423,7 @@
         [matrix addObject:rowArray];
     }
     
-    // 上下左右
+    // 上下左右 - num自增转圈思想
     NSInteger l = 0, r = n - 1, t = 0, b = n - 1;
     NSInteger num = 1, tar = n * n;
     while(num <= tar){
