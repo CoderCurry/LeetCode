@@ -6,9 +6,8 @@
 //
 
 #import "ViewController.h"
-#import "LeetCodeModel.h"
 
-#import "LeetCodeListViewController.h"
+// 模块学习
 #import "BinaryTreeViewController.h"
 #import "TwoPointerViewController.h"
 #import "BacktrackingController.h"
@@ -18,11 +17,8 @@
 #import "HashViewController.h"
 #import "TanxinViewController.h"
 
-#define kLeetCodeSet @"leetCode题集"
-#define kLeetCodeSetEasy @"easy"
-#define kLeetCodeSetMedium @"medium"
-#define kLeetCodeSetHard @"hard"
-#define kLeetCodeSetAll @"all"
+// LeetCodeTop
+#import "LeetCodeTopViewController.h"
 
 #define kLeetCodeModule @"leetCode模块复习"
 #define kLeetCodeModuleArray @"数组"
@@ -34,16 +30,13 @@
 #define kLeetCodeModuleTanxin @"贪心算法"
 
 
+#define kLeetCodeTopModule @"LeetCodeTop"
+
 #define kLeetCodeMM @"leetCodeC++代码"
 
 #define kBack @"返回"
 
 @interface ViewController ()<UITableViewDelegate, UITableViewDataSource>
-
-@property (nonatomic, strong) NSArray <LeetCodeModel *>*allArray;
-@property (nonatomic, strong) NSMutableArray <LeetCodeModel *>*easyArray;
-@property (nonatomic, strong) NSMutableArray <LeetCodeModel *>*mediumArray;
-@property (nonatomic, strong) NSMutableArray <LeetCodeModel *>*hardArray;
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *dataArray;
@@ -86,12 +79,6 @@
     self.navigationItem.title = @"LeetCode";
 
     self.homeConfig = @{
-        kLeetCodeSet:@[
-                kLeetCodeSetEasy,
-                kLeetCodeSetMedium,
-                kLeetCodeSetHard,
-                kLeetCodeSetAll,
-                kBack],
         kLeetCodeModule:@[
                 kLeetCodeModuleArray,
                 kLeetCodeModuleListNode,
@@ -102,8 +89,8 @@
                 kLeetCodeModuleTanxin,
                 kBack],
         kBack:@[
-//                kLeetCodeSet,
                 kLeetCodeModule,
+                kLeetCodeTopModule,
                 kLeetCodeMM]
     };
     
@@ -116,16 +103,11 @@
         kLeetCodeModulePointer:NSStringFromClass(TwoPointerViewController.class),
         kLeetCodeModuleBackTracking:NSStringFromClass(BacktrackingController.class),
         kLeetCodeModuleTanxin:NSStringFromClass(TanxinViewController.class),
-        kLeetCodeSetEasy:NSStringFromClass(LeetCodeListViewController.class),
-        kLeetCodeSetMedium:NSStringFromClass(LeetCodeListViewController.class),
-        kLeetCodeSetHard:NSStringFromClass(LeetCodeListViewController.class),
-        kLeetCodeSetAll:NSStringFromClass(LeetCodeListViewController.class),
+        kLeetCodeTopModule:NSStringFromClass(LeetCodeTopViewController.class),
     };
     
     self.dataArray = self.homeConfig[kBack];
-    [self.view addSubview:self.tableView];
-    
-    [self configData];
+    [self.view addSubview:self.tableView];    
 }
 
 
@@ -153,58 +135,6 @@
         UIViewController *vc = [[cls alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }
-    
-    
-//    if ([self.config[key] isKindOfClass:NSArray.class]) {
-//        self.dataArray = self.config[key];
-//        [self.tableView reloadData];
-//    } else {
-//        if ([key isEqualToString:kLeetCodeSetEasy]) {
-//            [self popToList:@"简单" data:self.easyArray];
-//        } else if ([key isEqualToString:kLeetCodeSetMedium]) {
-//            [self popToList:@"中等" data:self.mediumArray];
-//        } else if ([key isEqualToString:kLeetCodeSetHard]) {
-//            [self popToList:@"困难" data:self.hardArray];
-//        } else if ([key isEqualToString:kLeetCodeSetAll]) {
-//            [self popToList:@"全部" data:self.allArray];
-//        } else {
-//            Class cls = NSClassFromString(self.config[key]);
-//            UIViewController *vc = [[cls alloc] init];
-//            [self.navigationController pushViewController:vc animated:YES];
-//        }
-//    }
-}
-
-- (void)popToList:(NSString *)title data:(NSArray <LeetCodeModel *>*)array
-{
-    LeetCodeListViewController *vc = [[LeetCodeListViewController alloc] init];
-    vc.title = title;
-    vc.array = array;
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (void)configData
-{
-    self.allArray = @[
-        [LeetCodeModel modelWithTitle:@"两数之和" num:1 type:LeetCodeTypeEasy],
-        [LeetCodeModel modelWithTitle:@"两数相加" num:2 type:LeetCodeTypeNormal],
-        [LeetCodeModel modelWithTitle:@"无重复字符的最长子串" num:3 type:LeetCodeTypeNormal],
-        [LeetCodeModel modelWithTitle:@"寻找两个正序数组的中位数" num:4 type:LeetCodeTypeHard],
-        [LeetCodeModel modelWithTitle:@"最长回文子串" num:5 type:LeetCodeTypeNormal],
-        [LeetCodeModel modelWithTitle:@"Z字形变换" num:6 type:LeetCodeTypeNormal],
-        [LeetCodeModel modelWithTitle:@"整数反转" num:7 type:LeetCodeTypeEasy],
-        [LeetCodeModel modelWithTitle:@"字符串转整数(atoi)" num:8 type:LeetCodeTypeNormal],
-    ];
-    
-    [self.allArray enumerateObjectsUsingBlock:^(LeetCodeModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (obj.type == LeetCodeTypeEasy) {
-            [self.easyArray addObject:obj];
-        } else if (obj.type == LeetCodeTypeNormal) {
-            [self.mediumArray addObject:obj];
-        } else if (obj.type == LeetCodeTypeHard) {
-            [self.hardArray addObject:obj];
-        }
-    }];
 }
 
 - (UITableView *)tableView
@@ -219,27 +149,4 @@
     return _tableView;
 }
 
-- (NSMutableArray<LeetCodeModel *> *)easyArray
-{
-    if (!_easyArray) {
-        _easyArray = [NSMutableArray arrayWithCapacity:0];
-    }
-    return _easyArray;
-}
-
-- (NSMutableArray<LeetCodeModel *> *)mediumArray
-{
-    if (!_mediumArray) {
-        _mediumArray = [NSMutableArray arrayWithCapacity:0];
-    }
-    return _mediumArray;
-}
-
-- (NSMutableArray<LeetCodeModel *> *)hardArray
-{
-    if (!_hardArray) {
-        _hardArray = [NSMutableArray arrayWithCapacity:0];
-    }
-    return _hardArray;
-}
 @end
