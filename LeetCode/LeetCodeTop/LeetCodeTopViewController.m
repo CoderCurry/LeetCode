@@ -6,6 +6,7 @@
 //
 
 #import "LeetCodeTopViewController.h"
+#import "ListNode.h"
 
 @interface LeetCodeTopViewController ()
 
@@ -20,7 +21,11 @@
         @"200.岛屿数量",
         @"463.岛屿的周长",
         @"695.岛屿的最大面积",
-        @"827.最大人工岛"
+        @"827.最大人工岛",
+        
+        @"53. 最大子序和",
+        @"25. K个一组翻转链表",
+        @"5. 最长回文子串",
     ]];
 }
 
@@ -39,6 +44,15 @@
             break;
         case 3:
             [self action3];
+            break;
+        case 4:
+            [self action4];
+            break;
+        case 5:
+            [self action5];
+            break;
+        case 6:
+            [self action6];
             break;
             
         default:
@@ -240,6 +254,176 @@
 {
     // 827 填海造陆问题
     
+}
+
+- (void)action4
+{
+    // 53. 最大子序和
+    /*
+     给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+
+     示例:
+
+     输入: [-2,1,-3,4,-1,2,1,-5,4]
+     输出: 6
+     解释: 连续子数组 [4,-1,2,1] 的和最大，为 6。
+     */
+    NSArray <NSNumber *>*nums = @[@(-2),@(1),@(-3),@(4),@(-1),@(2),@(1),@(-5),@(4)];
+    [self actiond4Nums:nums];
+    
+}
+
+- (void)actiond4Nums:(NSArray <NSNumber *>*)nums
+{
+    NSInteger sum = 0;
+    NSInteger temp = 0;
+    for (NSInteger i = 0; i < nums.count; i++) {
+        temp += nums[i].integerValue;
+        if (temp <= 0 ) {
+            temp = 0;
+        } else {
+            sum = MAX(sum, temp);
+        }
+    }
+    NSLog(@"sum %ld", sum);
+}
+
+- (void)action5
+{
+    // 25. K 个一组翻转链表
+    /*
+     给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
+     k 是一个正整数，它的值小于或等于链表的长度。
+     如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
+      
+     示例：
+     给你这个链表：1->2->3->4->5
+     当 k = 2 时，应当返回: 2->1->4->3->5
+     当 k = 3 时，应当返回: 3->2->1->4->5
+
+     说明：
+     你的算法只能使用常数的额外空间。
+     你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
+     */
+    NSInteger k = 2;
+//    NSInteger k = 3;
+    ListNode *node4 = [ListNode nodeValue:5 next:nil];
+    ListNode *node3 = [ListNode nodeValue:4 next:node4];
+    ListNode *node2 = [ListNode nodeValue:3 next:node3];
+    ListNode *node1 = [ListNode nodeValue:2 next:node2];
+    ListNode *node0 = [ListNode nodeValue:1 next:node1];
+    ListNode *head = [self action5reverseKGroup:node0 k:k];
+    NSLog(@"%@", head);
+}
+// https://leetcode-cn.com/problems/reverse-nodes-in-k-group/solution/tu-jie-kge-yi-zu-fan-zhuan-lian-biao-by-user7208t/
+- (ListNode *)action5reverseKGroup:(ListNode *)head k:(NSInteger)k
+{
+    // 头结点
+    ListNode *dummy = [ListNode nodeValue:0 next:head];
+    //待翻转链表的前驱
+    ListNode *pre = dummy;
+    //待翻转链表的末尾
+    ListNode *end = dummy;
+    
+    while (end.next != nil) {
+        // 循环k次，找到需要翻转的链表的结尾
+        for (int i = 0; i < k; i++)
+        {
+            end = end.next;
+        }
+        // end == nil 说明剩余部分不足k 不用翻转
+        if (end == nil) break;
+        // 获取待翻转链表头
+        ListNode *start = pre.next;
+        // 获取待翻转链表后驱
+        ListNode *next = end.next;
+        // 将待翻转链表尾部置nil 准备翻转
+        end.next = nil;
+        // 将前驱与翻转后链表头连接
+        pre.next = [self action5Reverse:start];
+        // 将后驱与翻转后链表尾连接
+        start.next = next;
+        // 重置前驱尾翻转后链表尾部 也就是start
+        pre = start;
+        // 重置新的链表尾部为前驱 pre end 还原成充实状态 重新进入循环
+        end = pre;
+    }
+    return dummy.next;
+}
+
+- (ListNode *)action5Reverse:(ListNode *)head
+{
+    ListNode *pre = nil;
+    ListNode *cur = head;
+    while (cur != nil) {
+        ListNode *next = cur.next;
+        cur.next = pre;
+        pre = cur;
+        cur = next;
+    }
+    return pre;
+}
+
+- (void)action6
+{
+    // 5. 最长回文子串
+    /*
+     给你一个字符串 s，找到 s 中最长的回文子串。
+     示例 1：
+
+     输入：s = "babad"
+     输出："bab"
+     解释："aba" 同样是符合题意的答案。
+     示例 2：
+
+     输入：s = "cbbd"
+     输出："bb"
+     示例 3：
+
+     输入：s = "a"
+     输出："a"
+     示例 4：
+
+     输入：s = "ac"
+     输出："a"
+     */
+    NSString *s = @"babad";
+    NSString *sub = [self action6LongestPalindrome:s];
+    NSLog(@"%@", sub);
+}
+
+// 中心扩散法
+- (NSString *)action6LongestPalindrome:(NSString *)s
+{
+    if (s.length < 1) {
+        return @"";
+    }
+    
+    NSInteger start = 0, end = 0;
+    for (NSInteger i = 0; i < s.length; i++) {
+        NSInteger len1 = [self action6ExpandAroundCenter:s left:i right:i];
+        NSInteger len2 = [self action6ExpandAroundCenter:s left:i right:i+1];
+        NSInteger len = MAX(len1, len2);
+        if (len > end - start) {
+            start = i - (len - 1) / 2;
+            end = i + len / 2;
+        }
+    }
+    return [s substringWithRange:NSMakeRange(start, end + 1 - start + 1)];
+}
+
+- (NSInteger)action6ExpandAroundCenter:(NSString *)s left:(NSInteger)left right:(NSInteger)right
+{
+    while (left >= 0 && right < s.length && [self action6CharAtIndex:left s:s] == [self action6CharAtIndex:right s:s]) {
+        --left;
+        ++right;
+    }
+    return right - left - 1;
+}
+
+- (NSString *)action6CharAtIndex:(NSInteger)index s:(NSString *)s
+{
+    return [s substringWithRange:NSMakeRange(index, 1)];
 }
 
 @end

@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 值
 @property (nonatomic, assign) NSInteger value;
 // 链表指向
-@property (nonatomic, strong) ListNode *next;
+@property (nonatomic, strong) ListNode * _Nullable next;
 
 + (instancetype)nodeValue:(NSInteger)value next:(ListNode * _Nullable)next;
 
