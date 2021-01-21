@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD31536D25B9E549006AF353 /* DynamicProgrammingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD31536C25B9E549006AF353 /* DynamicProgrammingViewController.m */; };
 		CD56594525A43E710010B0F3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56594425A43E710010B0F3 /* AppDelegate.m */; };
 		CD56594825A43E710010B0F3 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56594725A43E710010B0F3 /* SceneDelegate.m */; };
 		CD56594B25A43E710010B0F3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56594A25A43E710010B0F3 /* ViewController.m */; };
@@ -31,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CD31536B25B9E549006AF353 /* DynamicProgrammingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DynamicProgrammingViewController.h; sourceTree = "<group>"; };
+		CD31536C25B9E549006AF353 /* DynamicProgrammingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DynamicProgrammingViewController.m; sourceTree = "<group>"; };
 		CD56594025A43E710010B0F3 /* LeetCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeetCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD56594325A43E710010B0F3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CD56594425A43E710010B0F3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -84,6 +87,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CD31536A25B9E521006AF353 /* 动态规划 */ = {
+			isa = PBXGroup;
+			children = (
+				CD31536B25B9E549006AF353 /* DynamicProgrammingViewController.h */,
+				CD31536C25B9E549006AF353 /* DynamicProgrammingViewController.m */,
+			);
+			path = "动态规划";
+			sourceTree = "<group>";
+		};
 		CD56593725A43E710010B0F3 = {
 			isa = PBXGroup;
 			children = (
@@ -137,6 +149,7 @@
 				CD56597E25A4425A0010B0F3 /* 二叉树 */,
 				CD56598F25A4442C0010B0F3 /* 回溯算法 */,
 				CD8AC40D25B0B59900D3601A /* 贪心算法 */,
+				CD31536A25B9E521006AF353 /* 动态规划 */,
 			);
 			path = "模块学习";
 			sourceTree = "<group>";
@@ -313,6 +326,7 @@
 			files = (
 				CDF99E4225A4D15C00657964 /* CTestViewController.mm in Sources */,
 				CD8AC41025B0B60500D3601A /* TanxinViewController.m in Sources */,
+				CD31536D25B9E549006AF353 /* DynamicProgrammingViewController.m in Sources */,
 				CD56594B25A43E710010B0F3 /* ViewController.m in Sources */,
 				CD833E2D25A4E36600BE801A /* MyLinkedList.m in Sources */,
 				CD833E3925AE1D4400BE801A /* LeetBaseCell.m in Sources */,

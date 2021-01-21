@@ -16,7 +16,7 @@
 #import "ListNodeViewController.h"
 #import "HashViewController.h"
 #import "TanxinViewController.h"
-
+#import "DynamicProgrammingViewController.h"
 // LeetCodeTop
 #import "LeetCodeTopViewController.h"
 
@@ -28,6 +28,7 @@
 #define kLeetCodeModuleTree @"二叉树"
 #define kLeetCodeModuleBackTracking @"回溯算法"
 #define kLeetCodeModuleTanxin @"贪心算法"
+#define kLeetCodeModuleDP @"动态规划"
 
 
 #define kLeetCodeTopModule @"LeetCodeTop"
@@ -87,6 +88,7 @@
                 kLeetCodeModuleTree,
                 kLeetCodeModuleBackTracking,
                 kLeetCodeModuleTanxin,
+                kLeetCodeModuleDP,
                 kBack],
         kBack:@[
                 kLeetCodeModule,
@@ -104,6 +106,7 @@
         kLeetCodeModuleBackTracking:NSStringFromClass(BacktrackingController.class),
         kLeetCodeModuleTanxin:NSStringFromClass(TanxinViewController.class),
         kLeetCodeTopModule:NSStringFromClass(LeetCodeTopViewController.class),
+        kLeetCodeModuleDP:NSStringFromClass(DynamicProgrammingViewController.class),
     };
     
     self.dataArray = self.homeConfig[kBack];
