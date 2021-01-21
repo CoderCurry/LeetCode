@@ -26,6 +26,7 @@
         @"53. 最大子序和",
         @"25. K个一组翻转链表",
         @"5. 最长回文子串",
+        @"32. 最长有效括号",
     ]];
 }
 
@@ -53,6 +54,9 @@
             break;
         case 6:
             [self action6];
+            break;
+        case 7:
+            [self action7];
             break;
             
         default:
@@ -387,9 +391,14 @@
      输入：s = "ac"
      输出："a"
      */
-    NSString *s = @"babad";
-    NSString *sub = [self action6LongestPalindrome:s];
-    NSLog(@"%@", sub);
+    NSArray *array =@[@"babad", @"cbbd", @"a", @"ac"];
+    for (NSInteger i = 0; i < array.count; i++) {
+        NSString *s = array[i];
+        NSString *sub = [self action6LongestPalindrome:s];
+        NSLog(@"%@", sub);
+    }
+//    NSInteger len1 = [self action6ExpandAroundCenter:@"babad" left:3 right:3];
+    
 }
 
 // 中心扩散法
@@ -399,31 +408,64 @@
         return @"";
     }
     
-    NSInteger start = 0, end = 0;
-    for (NSInteger i = 0; i < s.length; i++) {
+    NSInteger maxLength = 1;
+    NSInteger begin = 0;
+    // 最后一个位置违法向右延伸 所以不用枚举
+    for (NSInteger i = 0; i < s.length - 1; i++) {
         NSInteger len1 = [self action6ExpandAroundCenter:s left:i right:i];
         NSInteger len2 = [self action6ExpandAroundCenter:s left:i right:i+1];
-        NSInteger len = MAX(len1, len2);
-        if (len > end - start) {
-            start = i - (len - 1) / 2;
-            end = i + len / 2;
+        NSInteger curMaxLength = MAX(len1, len2);
+        if (curMaxLength > maxLength) {
+            maxLength = curMaxLength;
+            begin = i - (maxLength - 1) / 2;
         }
     }
-    return [s substringWithRange:NSMakeRange(start, end + 1 - start + 1)];
+    return [s substringWithRange:NSMakeRange(begin, maxLength)];
 }
 
+/// 回文串长度
+/// @param s 字符串
+/// @param left 起始左
+/// @param right 起始右
 - (NSInteger)action6ExpandAroundCenter:(NSString *)s left:(NSInteger)left right:(NSInteger)right
 {
-    while (left >= 0 && right < s.length && [self action6CharAtIndex:left s:s] == [self action6CharAtIndex:right s:s]) {
-        --left;
-        ++right;
+    NSInteger i = left;
+    NSInteger j = right;
+    NSInteger maxLength = s.length;
+    while (i >= 0 && j < maxLength) {
+        if ([self action6CharAtIndex:i s:s] == [self action6CharAtIndex:j s:s]) {
+            i--;
+            j++;
+        } else {
+            break;
+        }
     }
-    return right - left - 1;
+    // j - 1 -( i + 1) + 1
+    return j - i - 1;
 }
 
 - (NSString *)action6CharAtIndex:(NSInteger)index s:(NSString *)s
 {
     return [s substringWithRange:NSMakeRange(index, 1)];
+}
+
+- (void)action7
+{
+    // 32. 最长有效括号
+    // 给你一个只包含 '(' 和 ')' 的字符串，找出最长有效（格式正确且连续）括号子串的长度。
+    /*
+     输入：s = "(()"
+     输出：2
+     解释：最长有效括号子串是 "()"
+
+     输入：s = ")()())"
+     输出：4
+     解释：最长有效括号子串是 "()()"
+
+     输入：s = ""
+     输出：0
+
+     */
 }
 
 @end
