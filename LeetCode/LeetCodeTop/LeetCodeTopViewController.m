@@ -27,6 +27,10 @@
         @"25. K个一组翻转链表",
         @"5. 最长回文子串",
         @"32. 最长有效括号",
+        @"443. 压缩字符串",
+        @"120. 三角形最小路径和",
+        @"146. LRU缓存机制",
+        @"165. 比较版本号"
     ]];
 }
 
@@ -58,6 +62,19 @@
         case 7:
             [self action7];
             break;
+        case 8:
+            [self action8];
+            break;
+        case 9:
+            [self action9];
+            break;
+        case 10:
+            [self action10];
+            break;
+        case 11:
+            [self action11];
+            break;
+            
             
         default:
             break;
@@ -458,14 +475,127 @@
      输出：2
      解释：最长有效括号子串是 "()"
 
-     输入：s = ")()())"
-     输出：4
-     解释：最长有效括号子串是 "()()"
+     输入：s = "()((()())"
+     输出：6
+     解释：最长有效括号子串是 "(()())"
 
-     输入：s = ""
-     输出：0
-
+     输入：s = "()(()())"
+     输出：8
      */
+    
+    NSArray *arr = @[
+    @[@"(", @"(", @")"],
+    @[@"(", @")", @"(", @"(", @"(", @")", @"(", @")", @")"],
+    @[@"(", @")", @"(", @"(", @")", @"(", @")", @")"]
+    ];
+    for (NSInteger i = 0; i < arr.count; i++) {
+        NSArray *s = arr[i];
+        NSInteger result = [self action7Arr:s];
+        NSLog(@"%ld", result);
+    }
+    
+}
+
+- (NSInteger)action7Arr:(NSArray <NSString *>*)s
+{
+    NSInteger maxLength = 0;
+    NSMutableArray <NSNumber *>*stack = [NSMutableArray array];
+    [stack addObject:@(-1)];
+    for (int i = 0; i < s.count; i++) {
+        if ([s[i] isEqualToString: @"("]) {
+            [stack addObject:@(i)];
+        } else {
+            [stack removeLastObject];
+            if (stack.count == 0) {
+                [stack addObject:@(i)];
+            } else {
+                maxLength = MAX(maxLength, i - stack.lastObject.integerValue);
+            }
+        }
+    }
+    return maxLength;
+}
+
+- (void)action8
+{
+    // 443. 压缩字符串
+    /*
+     输入：
+     ["a","a","b","b","c","c","c"]
+
+     输出：
+     返回 6 ，输入数组的前 6 个字符应该是：["a","2","b","2","c","3"]
+     
+     输入：
+     ["a"]
+
+     输出：
+     返回 1 ，输入数组的前 1 个字符应该是：["a"]
+     
+     输入：
+     ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
+
+     输出：
+     返回 4 ，输入数组的前4个字符应该是：["a","b","1","2"]。
+
+     解释：
+     由于字符 "a" 不重复，所以不会被压缩。"bbbbbbbbbbbb" 被 “b12” 替代。
+     注意每个数字在数组中都有它自己的位置。
+     */
+    NSArray <NSMutableArray <NSString *>*>*arr = @[
+    @[@"a",@"a",@"b",@"b",@"c",@"c",@"c"].mutableCopy,
+    @[@"a"].mutableCopy,
+    @[@"a",@"b",@"b",@"b",@"b",@"b",@"b",@"b",@"b",@"b",@"b",@"b",@"b"].mutableCopy,
+    ];
+    for (NSInteger i = 0; i < arr.count; i++) {
+        NSMutableArray <NSString *>*s = arr[i];
+        NSInteger result = [self action8LengthCompress:s];
+        NSLog(@"%ld", result);
+    }
+}
+
+- (NSInteger)action8LengthCompress:(NSMutableArray <NSString *>*)chars
+{
+    NSInteger anchor = 0, write = 0;
+    for (int read = 0; read < chars.count; read++) {
+        // read + 1 == chars.count : 最后一个数 开始压缩
+        // chars[read + 1] != chars[read] : 当前值 != 下一个值 开始压缩前一段
+        if (read + 1 == chars.count || chars[read + 1] != chars[read]) {
+            chars[write++] = chars[anchor];
+            if (read > anchor) {
+                
+                NSInteger count = read - anchor + 1;
+                NSString *countStr = @(count).stringValue;
+                
+                for (NSInteger i = 0; i < countStr.length; i++) {
+                    NSString *sub = [countStr substringWithRange:NSMakeRange(i, 1)];
+                    chars[write++] = sub;
+                }
+            }
+            anchor = read + 1;
+        }
+    }
+    // 最后有一个write++ 所以write就是长度 而不是write-1
+    return write;
+}
+
+- (void)action9
+{
+    // 120. 三角形最小路径和
+    /*
+     给定一个三角形 triangle ，找出自顶向下的最小路径和。
+     每一步只能移动到下一行中相邻的结点上。相邻的结点 在这里指的是 下标 与 上一层结点下标 相同或者等于 上一层结点下标 + 1 的两个结点。也就是说，如果正位于当前行的下标 i ，那么下一步可以移动到下一行的下标 i 或 i + 1 。
+     */
+}
+
+- (void)action10
+{
+    
+}
+
+- (void)action11
+{
+    
 }
 
 @end

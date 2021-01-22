@@ -338,6 +338,27 @@
          /     /       \                 \
         2     1         2                 3
      */
+    NSInteger result = [self action5Num:3];
+    NSLog(@"result %ld", result);
+}
+// dp[3] = dp[2] * dp[0] + dp[1] * dp[1] + dp[0] * dp[2]
+// 所以2层for下是+=
+- (NSInteger)action5Num:(NSInteger)n
+{
+    NSMutableArray <NSNumber *>*dp = [NSMutableArray array];
+    for (NSInteger i = 0; i <= n; i++) {
+        [dp addObject:@(0)];
+    }
+    // 0要给一个默认值 用于 1
+    // i 当前节点数 j 是i下的头结点
+    dp[0] = @(1);
+    
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= i; j++) {
+            dp[i] = @(dp[i].integerValue + dp[j - 1].integerValue * dp[i - j].integerValue);
+        }
+    }
+    return dp[n].integerValue;
 }
 
 @end
