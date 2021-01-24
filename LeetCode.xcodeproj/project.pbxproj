@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CD31536D25B9E549006AF353 /* DynamicProgrammingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD31536C25B9E549006AF353 /* DynamicProgrammingViewController.m */; };
+		CD3153B825BDEDF9006AF353 /* LeetCodeHotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD3153B725BDEDF9006AF353 /* LeetCodeHotViewController.m */; };
 		CD56594525A43E710010B0F3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56594425A43E710010B0F3 /* AppDelegate.m */; };
 		CD56594825A43E710010B0F3 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56594725A43E710010B0F3 /* SceneDelegate.m */; };
 		CD56594B25A43E710010B0F3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD56594A25A43E710010B0F3 /* ViewController.m */; };
@@ -34,6 +35,8 @@
 /* Begin PBXFileReference section */
 		CD31536B25B9E549006AF353 /* DynamicProgrammingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DynamicProgrammingViewController.h; sourceTree = "<group>"; };
 		CD31536C25B9E549006AF353 /* DynamicProgrammingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DynamicProgrammingViewController.m; sourceTree = "<group>"; };
+		CD3153B625BDEDF9006AF353 /* LeetCodeHotViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeetCodeHotViewController.h; sourceTree = "<group>"; };
+		CD3153B725BDEDF9006AF353 /* LeetCodeHotViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LeetCodeHotViewController.m; sourceTree = "<group>"; };
 		CD56594025A43E710010B0F3 /* LeetCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeetCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD56594325A43E710010B0F3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CD56594425A43E710010B0F3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -96,6 +99,15 @@
 			path = "动态规划";
 			sourceTree = "<group>";
 		};
+		CD3153B525BDEDDA006AF353 /* LeetCodeHot100 */ = {
+			isa = PBXGroup;
+			children = (
+				CD3153B625BDEDF9006AF353 /* LeetCodeHotViewController.h */,
+				CD3153B725BDEDF9006AF353 /* LeetCodeHotViewController.m */,
+			);
+			path = LeetCodeHot100;
+			sourceTree = "<group>";
+		};
 		CD56593725A43E710010B0F3 = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +127,7 @@
 		CD56594225A43E710010B0F3 /* LeetCode */ = {
 			isa = PBXGroup;
 			children = (
+				CD3153B525BDEDDA006AF353 /* LeetCodeHot100 */,
 				CD8AC42C25B7572D00D3601A /* LeetCodeTop */,
 				CDF99E3F25A4D13D00657964 /* C++测试 */,
 				CD56596625A441DB0010B0F3 /* 模块学习 */,
@@ -337,6 +350,7 @@
 				CD56595625A43E730010B0F3 /* main.mm in Sources */,
 				CD56599325A4442C0010B0F3 /* BacktrackingController.m in Sources */,
 				CD56597B25A442300010B0F3 /* ArrayViewController.m in Sources */,
+				CD3153B825BDEDF9006AF353 /* LeetCodeHotViewController.m in Sources */,
 				CD565B7F25A727460010B0F3 /* TreeNode.m in Sources */,
 				CD833E3225A60D6700BE801A /* HashViewController.m in Sources */,
 				CD56594825A43E710010B0F3 /* SceneDelegate.m in Sources */,

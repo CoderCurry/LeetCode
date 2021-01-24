@@ -17,6 +17,7 @@
 #import "HashViewController.h"
 #import "TanxinViewController.h"
 #import "DynamicProgrammingViewController.h"
+#import "LeetCodeHotViewController.h"
 // LeetCodeTop
 #import "LeetCodeTopViewController.h"
 
@@ -32,8 +33,9 @@
 
 
 #define kLeetCodeTopModule @"LeetCodeTop"
-
+#define kLeetCodeHotModule @"LeetCodeHot100"
 #define kLeetCodeMM @"leetCodeC++代码"
+#define kLeetCodeTransC @"使用C++编写"
 
 #define kBack @"返回"
 
@@ -93,7 +95,9 @@
         kBack:@[
                 kLeetCodeModule,
                 kLeetCodeTopModule,
-                kLeetCodeMM]
+                kLeetCodeHotModule,
+                kLeetCodeMM,
+                kLeetCodeTransC]
     };
     
     self.jumpConfig = @{
@@ -107,6 +111,7 @@
         kLeetCodeModuleTanxin:NSStringFromClass(TanxinViewController.class),
         kLeetCodeTopModule:NSStringFromClass(LeetCodeTopViewController.class),
         kLeetCodeModuleDP:NSStringFromClass(DynamicProgrammingViewController.class),
+        kLeetCodeHotModule:NSStringFromClass(LeetCodeHotViewController.class),
     };
     
     self.dataArray = self.homeConfig[kBack];

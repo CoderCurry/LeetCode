@@ -8,12 +8,142 @@
 #import "LeetCodeTopViewController.h"
 #import "ListNode.h"
 
+#pragma - LRUObj
+
+@interface DLinkedNode : NSObject
+
+@property (nonatomic, copy) NSString *key;
+
+@property (nonatomic, assign) NSInteger value;
+
+@property (nonatomic, strong) DLinkedNode *pre;
+
+@property (nonatomic, strong) DLinkedNode *next;
+
++ (instancetype)node:(NSString *)key
+               value:(NSInteger)value
+                 pre:(DLinkedNode *)pre
+                next:(DLinkedNode *)next;
+
+@end
+
+@implementation DLinkedNode
+
++ (instancetype)node:(NSString *)key
+               value:(NSInteger)value
+                 pre:(DLinkedNode *)pre
+                next:(DLinkedNode *)next
+{
+    DLinkedNode *node = [DLinkedNode new];
+    node.key = key;
+    node.value = value;
+    node.pre = pre;
+    node.next = next;
+    return node;
+}
+
+@end
+
+@interface LRUCache : NSObject
+
+@property (nonatomic, assign) NSInteger capacity;
+
+@property (nonatomic, strong) NSMutableDictionary *cache;
+
+@property (nonatomic, strong) DLinkedNode *head;
+
+@property (nonatomic, strong) DLinkedNode *tail;
+
+@end
+
+@implementation LRUCache
+
+- (instancetype)initWithCapacity:(NSInteger)capacity
+{
+    self = [super init];
+    if (self) {
+        _capacity = capacity;
+        _cache = [NSMutableDictionary dictionary];
+        _head = [DLinkedNode node:@"" value:0 pre:nil next:nil];
+        _tail = [DLinkedNode node:@"" value:0 pre:nil next:nil];
+        _head.next = _tail;
+        _tail.pre = _head;
+    }
+    return self;
+}
+
+- (NSInteger)getKey:(NSString *)key
+{
+    if (![self.cache.allKeys containsObject:key]) {
+        return -1;
+    }
+    // 如果 key 存在，先通过哈希表定位，再移到头部
+    DLinkedNode *node = self.cache[key];
+    [self nodeMoveToHead:node];
+    return node.value;
+}
+
+- (void)putKey:(NSString *)key value:(NSInteger)value
+{
+    if (![self.cache.allKeys containsObject:key]) {
+        // 如果 key 不存在，创建一个新的节点
+        DLinkedNode* node = [DLinkedNode node:key value:value pre:nil next:nil];
+        // 添加进哈希表
+        self.cache[key] = node;
+        // 添加至双向链表的头部
+        [self nodeAddToHead:node];
+        if (self.cache.allKeys.count > self.capacity) {
+            // 如果超出容量，删除双向链表的尾部节点
+            DLinkedNode *node = [self nodeRemoveLast];
+            [self.cache removeObjectForKey:node.key];
+        }
+    }
+    else {
+        // 如果 key 存在，先通过哈希表定位，再修改 value，并移到头部
+        DLinkedNode *node = self.cache[key];
+        node.value = value;
+        [self nodeMoveToHead:node];
+    }
+}
+
+#pragma mark - private
+
+- (void)nodeAddToHead:(DLinkedNode *)node
+{
+    node.pre = self.head;
+    node.next = self.head.next;
+    node.next.pre = node;
+    self.head.next = node;
+}
+
+- (void)nodeRemove:(DLinkedNode *)node
+{
+    node.pre.next = node.next;
+    node.next.pre = node.pre;
+}
+
+- (void)nodeMoveToHead:(DLinkedNode *)node
+{
+    [self nodeRemove:node];
+    [self nodeAddToHead:node];
+}
+
+- (DLinkedNode *)nodeRemoveLast
+{
+    DLinkedNode *node = self.tail.pre;
+    [self nodeRemove:node];
+    return node;
+}
+
+@end
+
 @interface LeetCodeTopViewController ()
 
 @end
 
 @implementation LeetCodeTopViewController
 
+#pragma mark - 题目
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -28,9 +158,13 @@
         @"5. 最长回文子串",
         @"32. 最长有效括号",
         @"443. 压缩字符串",
-        @"120. 三角形最小路径和",
+        @"120. 三角形最小路径和 - 动态规划的反向用法",
         @"146. LRU缓存机制",
-        @"165. 比较版本号"
+        @"165. 比较版本号",
+        @"82. 删除排序链表中的重复元素 II",
+        @"438. 找到字符串中所有字母异位词",
+        @"739. 每日温度",
+        @"2. 两数相加"
     ]];
 }
 
@@ -74,7 +208,18 @@
         case 11:
             [self action11];
             break;
-            
+        case 12:
+            [self action12];
+            break;
+        case 13:
+            [self action13];
+            break;
+        case 14:
+            [self action14];
+            break;
+        case 15:
+            [self action15];
+            break;
             
         default:
             break;
@@ -585,17 +730,404 @@
     /*
      给定一个三角形 triangle ，找出自顶向下的最小路径和。
      每一步只能移动到下一行中相邻的结点上。相邻的结点 在这里指的是 下标 与 上一层结点下标 相同或者等于 上一层结点下标 + 1 的两个结点。也就是说，如果正位于当前行的下标 i ，那么下一步可以移动到下一行的下标 i 或 i + 1 。
+     输入：triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]
+     输出：11
+     解释：如下面简图所示：
+        2
+       3 4
+      6 5 7
+     4 1 8 3
+     自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 = 11）。
      */
+    
+    NSArray <NSArray <NSNumber *>*>*t = @[
+    @[@(2)],
+    @[@(3), @(4)],
+    @[@(6), @(5), @(7)],
+    @[@(4), @(1), @(8), @(3)]];
+    
+    NSInteger result = [self action9Triangle1:t];
+    NSLog(@"%ld", result);
 }
+
+- (NSInteger)action9Triangle:(NSArray <NSArray <NSNumber *>*>*)t
+{
+    NSMutableArray <NSMutableArray <NSNumber *>*>*dp = [NSMutableArray array];
+    for (NSInteger i = 0; i <= t.count; i++) {
+        NSMutableArray <NSNumber *>* row = [NSMutableArray array];
+        NSInteger col = (i >= t.count)? t[i-1].count + 1 : t[i].count;
+        for (NSInteger j = 0; j < col; j++) {
+            [row addObject: @(0)];
+        }
+        [dp addObject:row];
+    }
+    
+    for (NSInteger i = t.count - 1; i >= 0; i--) {
+        for (NSInteger j = 0; j < t[i].count; j++) {
+            dp[i][j] = @(MIN(dp[i+1][j].integerValue, dp[i+1][j+1].integerValue) + t[i][j].integerValue);
+        }
+    }
+    return dp[0][0].integerValue;
+}
+
+// 空间优化版本
+- (NSInteger)action9Triangle1:(NSArray <NSArray <NSNumber *>*>*)t
+{
+    NSMutableArray <NSNumber *>*dp = [NSMutableArray array];
+    for (NSInteger i = 0; i <= t.lastObject.count; i++) {
+        [dp addObject:@(0)];
+    }
+    
+    for (NSInteger i = t.count - 1; i >= 0; i--) {
+        for (NSInteger j = 0; j < t[i].count; j++) {
+            dp[j] = @(MIN(dp[j].integerValue, dp[j+1].integerValue) + t[i][j].integerValue);
+        }
+    }
+    return dp[0].integerValue;
+}
+
 
 - (void)action10
 {
+    // 146. LRU缓存机制
+    /*
+     运用你所掌握的数据结构，设计和实现一个  LRU (最近最少使用) 缓存机制 。
+     实现 LRUCache 类：
+
+     LRUCache(int capacity) 以正整数作为容量 capacity 初始化 LRU 缓存
+     int get(int key)
+     如果关键字 key 存在于缓存中，则返回关键字的值，否则返回 -1 。
+     void put(int key, int value)
+     如果关键字已经存在，则变更其数据值；如果关键字不存在，则插入该组「关键字-值」。当缓存容量达到上限时，它应该在写入新数据之前删除最久未使用的数据值，从而为新的数据值留出空间。
+
+     输入
+     ["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]
+     [[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]
+     输出
+     [null, null, null, 1, null, -1, null, -1, 3, 4]
+
+     解释
+     LRUCache lRUCache = new LRUCache(2);
+     lRUCache.put(1, 1); // 缓存是 {1=1}
+     lRUCache.put(2, 2); // 缓存是 {1=1, 2=2}
+     lRUCache.get(1);    // 返回 1
+     lRUCache.put(3, 3); // 该操作会使得关键字 2 作废，缓存是 {1=1, 3=3}
+     lRUCache.get(2);    // 返回 -1 (未找到)
+     lRUCache.put(4, 4); // 该操作会使得关键字 1 作废，缓存是 {4=4, 3=3}
+     lRUCache.get(1);    // 返回 -1 (未找到)
+     lRUCache.get(3);    // 返回 3
+     lRUCache.get(4);    // 返回 4
+     */
+    
+    LRUCache *cache = [[LRUCache alloc] initWithCapacity:2];
+    [cache putKey:@"1" value:1];
+    [cache putKey:@"2" value:2];
+    NSInteger value0 = [cache getKey:@"1"];
+    [cache putKey:@"3" value:3];
+    NSInteger value1 = [cache getKey:@"2"];
+    [cache putKey:@"4" value:4];
+    NSInteger value2 = [cache getKey:@"1"];
+    NSInteger value3 = [cache getKey:@"3"];
+    NSInteger value4 = [cache getKey:@"4"];
+    NSLog(@"\nvalue0:%ld\nvalue1:%ld\nvalue2:%ld\nvalue3:%ld\nvalue4:%ld", value0, value1, value2, value3, value4);
     
 }
 
 - (void)action11
 {
+    // 165. 比较版本号
+    /*
+     给你两个版本号 version1 和 version2 ，请你比较它们。
+
+     版本号由一个或多个修订号组成，各修订号由一个 '.' 连接。每个修订号由 多位数字 组成，可能包含 前导零 。每个版本号至少包含一个字符。修订号从左到右编号，下标从 0 开始，最左边的修订号下标为 0 ，下一个修订号下标为 1 ，以此类推。例如，2.5.33 和 0.1 都是有效的版本号。
+
+     比较版本号时，请按从左到右的顺序依次比较它们的修订号。比较修订号时，只需比较 忽略任何前导零后的整数值 。也就是说，修订号 1 和修订号 001 相等 。如果版本号没有指定某个下标处的修订号，则该修订号视为 0 。例如，版本 1.0 小于版本 1.1 ，因为它们下标为 0 的修订号相同，而下标为 1 的修订号分别为 0 和 1 ，0 < 1 。
+
+     返回规则如下：
+
+     如果 version1 > version2 返回 1，
+     如果 version1 < version2 返回 -1，
+     除此之外返回 0。
+     
+     输入：version1 = "1.01", version2 = "1.001"
+     输出：0
+     解释：忽略前导零，"01" 和 "001" 都表示相同的整数 "1"
+
+     输入：version1 = "1.0", version2 = "1.0.0"
+     输出：0
+     解释：version1 没有指定下标为 2 的修订号，即视为 "0"
+
+     输入：version1 = "0.1", version2 = "1.1"
+     输出：-1
+     解释：version1 中下标为 0 的修订号是 "0"，version2 中下标为 0 的修订号是 "1" 。0 < 1，所以 version1 < version2
+
+     输入：version1 = "1.0.1", version2 = "1"
+     输出：1
+
+     输入：version1 = "7.5.2.4", version2 = "7.5.3"
+     输出：-1
+     */
     
+    NSArray <NSArray <NSString *>*>*array = @[
+    @[@"1.01", @"1.001"],
+    @[@"1.0", @"1.0.0"],
+    @[@"0.1", @"1.1"],
+    @[@"1.0.1", @"1"],
+    @[@"7.5.2.4", @"7.5.3"]
+    ];
+    
+    for (NSInteger i = 0; i < array.count; i++) {
+        NSArray <NSString *>*versions = array[i];
+        NSInteger result = [self action11CompareVersion1:versions[0] version2:versions[1]];
+        NSLog(@"\n%ld", result);
+    }
 }
 
+- (NSInteger)action11CompareVersion1:(NSString *)version1 version2:(NSString *)version2
+{
+    NSArray *nums1 = [version1 componentsSeparatedByString:@"."];
+    NSArray *nums2 = [version2 componentsSeparatedByString:@"."];
+    
+    int i = 0, j = 0;
+        while (i < nums1.count || j < nums2.count) {
+            //这个技巧经常用到，当一个已经遍历结束的话，我们将其赋值为 0
+            NSString *num1 = i < nums1.count ? nums1[i] : @"0";
+            NSString *num2 = j < nums2.count ? nums2[j] : @"0";
+            NSInteger res = [self action11Compare:num1 num2:num2];
+            if (res == 0) {
+                i++;
+                j++;
+            } else {
+                return res;
+            }
+        }
+        return 0;
+
+}
+
+- (NSInteger)action11Compare:(NSString *)num1 num2:(NSString *)num2
+{
+    NSInteger n1 = num1.integerValue;
+    NSInteger n2 = num2.integerValue;
+    if (n1 > n2) {
+        return 1;
+    } else if (n1 < n2) {
+        return -1;
+    } else {
+        return 0;
+    }
+}
+
+- (void)action12
+{
+    // 82. 删除排序链表中的重复元素 II
+    /*
+     给定一个排序链表，删除所有含有重复数字的节点，只保留原始链表中 没有重复出现 的数字。
+     输入: 1->2->3->3->4->4->5
+     输出: 1->2->5
+
+     输入: 1->1->1->2->3
+     输出: 2->3
+     */
+    
+    ListNode *node6 = [ListNode nodeValue:5 next:nil];
+    ListNode *node5 = [ListNode nodeValue:4 next:node6];
+    ListNode *node4 = [ListNode nodeValue:4 next:node5];
+    ListNode *node3 = [ListNode nodeValue:3 next:node4];
+    ListNode *node2 = [ListNode nodeValue:3 next:node3];
+    ListNode *node1 = [ListNode nodeValue:2 next:node2];
+    ListNode *node0 = [ListNode nodeValue:1 next:node1];
+    
+    ListNode *head = [self action12DeleteDuplicatesNode:node0];
+    NSLog(@"%@", head);
+}
+
+- (ListNode *)action12DeleteDuplicatesNode:(ListNode *)head
+{
+    // 判断参数安全 是好的习惯 其实不加也行
+    if (head == nil || head.next == nil) {
+        return head;
+    }
+    
+    if (head.value == head.next.value) {
+        while (head != nil && head.next != nil && head.value == head.next.value) {
+            head = head.next;
+        }
+        return [self action12DeleteDuplicatesNode:head.next];
+    } else {
+        head.next = [self action12DeleteDuplicatesNode:head.next];
+        return head;
+    }
+}
+
+- (void)action13
+{
+    // 438. 找到字符串中所有字母异位词
+    /*
+     给定一个字符串 s 和一个非空字符串 p，找到 s 中所有是 p 的字母异位词的子串，返回这些子串的起始索引
+     字符串只包含小写英文字母，并且字符串 s 和 p 的长度都不超过 20100。
+     
+     说明：
+     字母异位词指字母相同，但排列不同的字符串。
+     不考虑答案输出的顺序。
+
+     s: "cbaebabacd" p: "abc"
+     输出: [0, 6]
+     解释:
+     起始索引等于 0 的子串是 "cba", 它是 "abc" 的字母异位词。
+     起始索引等于 6 的子串是 "bac", 它是 "abc" 的字母异位词。
+     
+     s: "abab" p: "ab"
+     输出: [0, 1, 2]
+
+     解释:
+     起始索引等于 0 的子串是 "ab", 它是 "ab" 的字母异位词。
+     起始索引等于 1 的子串是 "ba", 它是 "ab" 的字母异位词。
+     起始索引等于 2 的子串是 "ab", 它是 "ab" 的字母异位词。
+
+     */
+    
+    NSArray *result = [self action13FindAnagrams:@"cbaebabacd" p:@"abc"];
+    NSLog(@"%@", result);
+    NSArray *result1 = [self action13FindAnagrams:@"abab" p:@"ab"];
+    NSLog(@"%@", result1);
+}
+
+- (NSArray <NSNumber *>*)action13FindAnagrams:(NSString *)s p:(NSString *)p
+{
+    NSArray <NSString *>*(^toCharArray)(NSString *) = ^(NSString *str) {
+        NSMutableArray *result = @[].mutableCopy;
+        for (NSInteger i = 0; i < str.length; i++) {
+            NSString *sub = [str substringWithRange:NSMakeRange(i, 1)];
+            [result addObject:sub];
+        }
+        return result.copy;
+    };
+    
+    NSArray <NSString *>*arrS = toCharArray(s);
+    NSArray <NSString *>*arrP = toCharArray(p);
+    NSMutableArray *result = [NSMutableArray array];
+    NSMutableDictionary <NSString *, NSNumber *>*window = [NSMutableDictionary dictionary];
+    NSMutableDictionary <NSString *, NSNumber *>*needs = [NSMutableDictionary dictionary];
+    
+    for (NSInteger i = 0; i < arrP.count; i++) {
+        NSString *key = arrP[i];
+        needs[key] = @(needs[key].integerValue + 1);
+    }
+    NSInteger left = 0, right = 0;
+    
+    while (right < arrS.count) {
+        NSString *rightChar = arrS[right];
+        right++;
+        window[rightChar] = @(window[rightChar].integerValue + 1);
+        
+        while (window[rightChar].integerValue > needs[rightChar].integerValue) {
+            NSString *leftChar = arrS[left];
+            left++;
+            window[leftChar] = @(window[leftChar].integerValue - 1);
+        }
+        
+        // 这里将所有符合要求的左窗口索引放入到了接收结果的 List 中
+        if (right - left == arrP.count) {
+            [result addObject:@(left)];
+        }
+    }
+    return result;
+}
+
+- (void)action14
+{
+    // 739. 每日温度
+    /*
+     请根据每日气温列表，重新生成一个列表。对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替。
+     例如，给定一个列表 temperatures = [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。
+     提示：气温 列表长度的范围是 [1, 30000]。每个气温的值的均为华氏度，都是在 [30, 100] 范围内的整数。
+
+     */
+    NSArray *result = [self action14dayTemperatures:@[@(73), @(74), @(75), @(71), @(69), @(72), @(76), @(73)]];
+    NSLog(@"%@", result);
+}
+
+- (NSArray *)action14dayTemperatures:(NSArray <NSNumber *>*)days
+{
+    NSMutableArray *result = [NSMutableArray array];
+    for (NSInteger i = 0; i < days.count; i++) {
+        [result addObject:@(0)];
+        NSInteger cur = days[i].integerValue;
+        for (NSInteger j = i + 1; j < days.count; j++) {
+            if (days[j].integerValue > cur) {
+                result[i] = @(j - i);
+                break;
+            }
+        }
+    }
+    return result;
+}
+
+- (void)action15
+{
+    // 2. 两数相加
+    /*
+     给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，并且每个节点只能存储 一位 数字。
+     请你将两个数相加，并以相同形式返回一个表示和的链表。
+     你可以假设除了数字 0 之外，这两个数都不会以 0 开头。
+
+     l1 = [2,4,3], l2 = [5,6,4]
+     输出：[7,0,8]
+     解释：342 + 465 = 807.
+     示例 2：
+
+     输入：l1 = [0], l2 = [0]
+     输出：[0]
+     示例 3：
+
+     输入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
+     输出：[8,9,9,9,0,0,0,1]
+     */
+    ListNode *l3 = [ListNode nodeValue:3 next:nil];
+    ListNode *l2 = [ListNode nodeValue:4 next:l3];
+    ListNode *l1 = [ListNode nodeValue:2 next:l2];
+    
+    ListNode *r3 = [ListNode nodeValue:4 next:nil];
+    ListNode *r2 = [ListNode nodeValue:6 next:r3];
+    ListNode *r1 = [ListNode nodeValue:5 next:r2];
+    
+    ListNode *head = [self action15ListAdd:l1 node1:r1];
+    NSLog(@"%@", head);
+}
+
+- (ListNode *)action15ListAdd:(ListNode *)l1 node1:(ListNode *)l2
+{
+    ListNode *pre = [ListNode nodeValue:0 next:nil];
+    ListNode *cur = pre;
+    NSInteger carry = 0;
+    while(l1 != nil || l2 != nil) {
+        NSInteger x = l1 == nil ? 0 : l1.value;
+        NSInteger y = l2 == nil ? 0 : l2.value;
+        NSInteger sum = x + y + carry;
+        
+        carry = sum / 10;
+        sum = sum % 10;
+        cur.next = [ListNode nodeValue:sum next:nil];
+        
+        cur = cur.next;
+        if(l1 != nil)
+            l1 = l1.next;
+        if(l2 != nil)
+            l2 = l2.next;
+    }
+    if(carry == 1) {
+        cur.next = [ListNode nodeValue:carry next:nil];
+    }
+    return pre.next;
+}
+
+
+
+
+
 @end
+
+
+
+
