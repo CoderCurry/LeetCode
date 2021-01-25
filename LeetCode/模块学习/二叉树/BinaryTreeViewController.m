@@ -343,7 +343,9 @@
         return NO;
     }
     // 左右相等 且 子树对称
-    if (left.value == right.value && [self compareTreeNode:left.left right:right.right] && [self compareTreeNode:left.right right:right.left]) {
+    if (left.value == right.value &&
+        [self compareTreeNode:left.left right:right.right] &&
+        [self compareTreeNode:left.right right:right.left]) {
         return YES;
     } else {
         return NO;
@@ -412,6 +414,8 @@
     
     NSInteger leftDepth = [self deepTreeNode:node.left];
     NSInteger rightDepth = [self deepTreeNode:node.right];
+    // 只有当左右节点都是nil的时候 才是最小深度
+    // 一边为空 另一边不为空 不是
     if (node.left == 0 && node.right > 0) {
         return 1 + rightDepth;
     }
@@ -449,9 +453,11 @@
 // 第二种 不讲武德
 - (NSInteger)countTreeNode:(TreeNode *)node
 {
+    // node nil 返回 0
     if (node.value == 0) {
         return 0;
     }
+    // 否则返回1 接着遍历左右节点
     return [self countTreeNode:node.left] + [self countTreeNode:node.right] + 1;
 }
 
@@ -477,8 +483,38 @@
       4    4
      返回 NO
      */
+    TreeNode *node5 = [TreeNode nodeValue:8 left:nil right:nil];
+    TreeNode *node4 = [TreeNode nodeValue:7 left:node5 right:nil];
+    TreeNode *node3 = [TreeNode nodeValue:15 left:nil right:nil];
+    TreeNode *node2 = [TreeNode nodeValue:20 left:node3 right:node4];
+    TreeNode *node1 = [TreeNode nodeValue:9 left:nil right:nil];
+    TreeNode *head = [TreeNode nodeValue:3 left:node1 right:node2];
+    BOOL isBal = [self action9isBalance:head];
+    NSLog(@"%@", isBal ? @"yes" : @"no");
+}
+
+- (BOOL)action9isBalance:(TreeNode *)node
+{
+    NSInteger depl = [self action9dep:node.left];
+    NSInteger depr = [self action9dep:node.right];
     
+    NSInteger cha = labs(depr - depl);
+    if (cha <= 1) {
+        return YES;
+    }
+    return NO;
+}
+
+- (NSInteger)action9dep:(TreeNode *)node
+{
+    if (!node) {
+        return 0;
+    }
     
+    NSInteger depl = [self action9dep:node.left];
+    NSInteger depr = [self action9dep:node.right];
+    
+    return MAX(depl, depr) + 1;
 }
 
 
@@ -507,7 +543,9 @@
     NSLog(@"%@", result);
 }
 
-- (void)traversal:(TreeNode *)cur path:(NSMutableArray *)path pathArray:(NSMutableArray *)result
+- (void)traversal:(TreeNode *)cur
+             path:(NSMutableArray *)path
+        pathArray:(NSMutableArray *)result
 {
     [path addObject:@(cur.value)];
     // 找到叶子节点
@@ -518,7 +556,7 @@
             sPath = [path componentsJoinedByString:@"->"];
         }
         [result addObject:sPath];
-//        [result addObject:path.copy];
+        //        [result addObject:path.copy];
         return;
     }
     
@@ -580,11 +618,11 @@
 - (NSInteger)leftSum:(TreeNode *)node
 {
     NSInteger sum = 0;
-    // 节点的左存在 并且左节点没有左右孩子 成为左节点
+    // 节点的左存在 并且左节点是叶子节点 记录值 否则查询左节点下的左节点值
     if (node.left) {
-        sum = [self isLeafNode:node.left] ? node.left.value : [self leftSum:node.left];
+        sum += [self isLeafNode:node.left] ? node.left.value : [self leftSum:node.left];
     }
-    
+    // 节点的右存在 并且右节点不是叶子节点 查询右节点下的左节点值
     if (node.right && ![self isLeafNode:node.right]) {
         sum += [self leftSum:node.right];
     }
@@ -669,45 +707,27 @@
     TreeNode *node1 = [TreeNode nodeValue:4 left:node3 right:nil];
     TreeNode *head = [TreeNode nodeValue:5 left:node1 right:node2];
     
-    NSMutableArray *path = [NSMutableArray array];
-    BOOL result = [self traversal1:head path:path target:22];
+    BOOL result =  [self action13Traversa:head sum:22];
     NSLog(@"%@", result ? @"yes" : @"no");
 }
 
-- (BOOL)traversal1:(TreeNode *)cur path:(NSMutableArray *)path target:(NSInteger)target
+- (BOOL)action13Traversa:(TreeNode *)cur sum:(NSInteger)sum
 {
-    [path addObject:@(cur.value)];
-    
-    if (!cur.left && !cur.right) {
-        NSInteger count = 0;
-        for (int i = 0; i < path.count; i++) {
-            count += [path[i] integerValue];
-        }
-        if (count == target) {
-            NSLog(@"%@", path);
-            return YES;
-        }
+    if(!cur){
         return NO;
     }
     
-    if (cur.left) {
-        if ([self traversal1:cur.left path:path target:target]) {
-            return YES;
-        } else {
-            [self traversal1:cur.left path:path target:target];
-        }
-        
-        [path removeObject:@(cur.left.value)];
+    if(cur.left == nil && cur.right == nil){
+        // 当cur为叶子节点时 cur的值 == 剩余值 则路径正好等于目标和
+        return cur.value == sum;
     }
     
-    if (cur.right) {
-        if ([self traversal1:cur.right path:path target:target]) {
-            return YES;
-        } else {
-            [self traversal1:cur.right path:path target:target];
-        }
-    }
-    return NO;
+    // 左节点 接着递归 需要的和是 sum - cur.value
+    BOOL left = [self action13Traversa:cur.left sum:sum - cur.value];
+    // 右节点 接着递归 需要的和是 sum - cur.value
+    BOOL right = [self action13Traversa:cur.right sum:sum - cur.value];
+    // 当有一个路径 符合即可
+    return left || right;
 }
 
 - (void)action14
@@ -728,7 +748,6 @@
     // 三种遍历方式构造二叉树
     NSArray *inorder = @[@(4), @(2), @(8), @(5), @(9), @(1), @(6), @(10), @(3), @(7)];
     NSArray *postorder = @[@(4), @(8), @(9), @(5), @(2), @(10), @(6), @(7), @(3), @(1)];
-    
 }
 
 

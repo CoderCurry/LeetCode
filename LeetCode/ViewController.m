@@ -51,6 +51,7 @@
 @implementation ViewController
 
 #warning OC 算法的注意点 当递归遇到 array add subArray时 subArray 一定要copy
+#warning OC 算法的注意点 当回溯里面用到int 是值传递 出来后不用做减操作
 
 /*
  常用api

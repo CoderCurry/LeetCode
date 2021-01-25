@@ -46,6 +46,9 @@
          回溯，撤销处理结果
      }
  }
+ 
+ for 负责横向 如果每次都从0开始  则i = 0 如果每次进1 则i = start
+ 递归里面 start 用来给 下一层for 选择集合 
 
  */
 
@@ -148,21 +151,21 @@
     NSMutableArray *path = [NSMutableArray arrayWithCapacity:0];
     NSInteger n = 4;
     NSInteger k = 2;
-    [self action1BacktrackingMax:n
-                           count:k
-                      startIndex:1
-                     resultArray:result
-                       pathArray:path];
+    [self action1N:n
+                 k:k
+             start:1
+              path:path
+            result:result];
     NSLog(@"result:%@", result);
 }
 
-- (void)action1BacktrackingMax:(NSInteger)max
-                         count:(NSInteger)count
-                  startIndex:(NSInteger)startIndex
-                 resultArray:(NSMutableArray *)result
-                   pathArray:(NSMutableArray *)path
+- (void)action1N:(NSInteger)n
+               k:(NSInteger)k
+           start:(NSInteger)start
+            path:(NSMutableArray *)path
+         result:(NSMutableArray *)result
 {
-    if (path.count == count) {
+    if (path.count == k) {
         [result addObject:path.copy];
         return;
     }
@@ -177,14 +180,14 @@
      i <= n - (k - path.count) + 1
      */
 
-    for (NSInteger i = startIndex; i <= max - (count - path.count) + 1; i++) {
+    for (NSInteger i = start; i <= n - (k - path.count) + 1; i++) {
         [path addObject:@(i)];
         // 递归纵向遍历
-        [self action1BacktrackingMax:max
-                               count:count
-                          startIndex:i + 1
-                         resultArray:result
-                           pathArray:path];
+        [self action1N:n
+                     k:k
+                 start:i+1
+                  path:path
+                result:result];
         // 回溯
         [path removeLastObject];
     }
@@ -210,42 +213,34 @@
 //    NSInteger k = 3;
     NSInteger n = 9;
     NSInteger k = 3;
-    [self action2Sum:sum
-              target:n
-               count:k
-          startIndex:1
-              result:result
-                path:path];
+    NSInteger start = 1;
+    [self action1Sum:sum n:n k:k start:start path:path result:result];
     NSLog(@"result:%@", result);
 }
 
-- (void)action2Sum:(NSInteger)sum
-            target:(NSInteger)target
-             count:(NSInteger)count
-        startIndex:(NSInteger)startIndex
-            result:(NSMutableArray *)result
+- (void)action1Sum:(NSInteger)sum
+                 n:(NSInteger)n
+                 k:(NSInteger)k
+             start:(NSInteger)start
               path:(NSMutableArray *)path
+            result:(NSMutableArray *)result
 {
-    // 剪纸
-    if (sum > target) {
+    if (sum > n) {
         return;
     }
     
-    if (sum == target && path.count == count) {
-        [result addObject:path.copy];
+    if (path.count == k) {
+        if (sum == n) {
+            [result addObject:path.copy];
+        }
         return;
     }
     
-    for (NSInteger i = startIndex; i <= 9; i++) {
-        sum += i;
+    for (NSInteger i = start; i <= 9; i++) {
+        sum+=i;
         [path addObject:@(i)];
-        [self action2Sum:sum
-                  target:target
-                   count:count
-              startIndex:i + 1
-                  result:result
-                    path:path];
-        sum -= i;
+        [self action1Sum:sum n:n k:k start:i+1 path:path result:result];
+        sum-=i;
         [path removeLastObject];
     }
 }
