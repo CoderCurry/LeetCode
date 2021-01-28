@@ -42,8 +42,20 @@
 
 - (void)didSelectRowAtIndex:(NSInteger)index
 {
-    NSLog(@"子类实现");
+    NSString *name = self.dataArray[index];
+    NSArray *path = [name componentsSeparatedByString:@"."];
+    NSString *num = path.firstObject;
+    NSString *selName = [NSString stringWithFormat:@"action%@", num];
+    SEL sel = NSSelectorFromString(selName);
+    if ([self respondsToSelector:sel]) {
+        IMP imp = [self methodForSelector:sel];
+        void (*func)(id, SEL) = (void *)imp;
+        func(self, sel);
+    } else {
+        NSAssert(NO, @"题号错误");
+    }
 }
+
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
