@@ -41,6 +41,7 @@
     if (array.count == 1) {
         self.leetTitle.text = array[0];
         self.leetTitle.frame = CGRectMake(20, 0, KScreenWidth - 40, [LeetBaseCell heightWithSource:text]);
+        self.leetSubTitle.text = @"";
     } else if (array.count == 2) {
         self.leetTitle.text = array[0];
         self.leetSubTitle.text = array[1];

@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configRowTitles:(NSArray <NSString *>*)titles;
 
+- (void)action;
+
 @end
 
 NS_ASSUME_NONNULL_END

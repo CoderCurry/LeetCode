@@ -7,6 +7,7 @@
 
 #import "LeetCodeTopViewController.h"
 #import "ListNode.h"
+#import "TreeNode.h"
 #import "LRUCache.h"
 
 #pragma - LRUObj
@@ -45,7 +46,18 @@
         @"7.整数反转",
         @"160.相交链表",
         @"3.无重复字符的最长子串",
-        @"445.两数相加 II"
+        @"445.两数相加 II",
+        @"1233.删除子文件夹",
+        @"1.两数之和",
+        @"20.有效的括号",
+        @"189.旋转数组",
+        @"767.重构字符串-未解题",
+        @"48.旋转图像",
+        @"101.对称二叉树",
+        @"151.翻转字符串里的单词",
+        @"33.搜索旋转排序数组",
+        @"86.分隔链表",
+        @"236.二叉树的最近公共祖先"
     ]];
 }
 
@@ -1146,22 +1158,564 @@
 {
     // 445. 两数相加 II
     /*
+     给你两个 非空 链表来代表两个非负整数。数字最高位位于链表开始位置。它们的每个节点只存储一位数字。将这两数相加会返回一个新的链表。
      如果输入链表不能修改该如何处理？换句话说，你不能对列表中的节点进行翻转。
 
      输入：(7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
      输出：7 -> 8 -> 0 -> 7
-
      */
+    ListNode *node04 = [ListNode nodeValue:3 next:nil];
+    ListNode *node03 = [ListNode nodeValue:4 next:node04];
+    ListNode *node02 = [ListNode nodeValue:2 next:node03];
+    ListNode *node01 = [ListNode nodeValue:7 next:node02];
     
+    ListNode *node13 = [ListNode nodeValue:4 next:nil];
+    ListNode *node12 = [ListNode nodeValue:6 next:node13];
+    ListNode *node11 = [ListNode nodeValue:5 next:node12];
+    
+    ListNode *result = [self action21Sum:node01 node:node11];
+    NSLog(@"%ld", result.value);
 }
 
-//- (ListNode *)action21Sum:(ListNode *)node0 node:(ListNode *)node1
-//{
-//    // 利用栈的思路
-//}
+- (ListNode *)action21Sum:(ListNode *)node0 node:(ListNode *)node1
+{
+    // 利用栈的思路
+    NSMutableArray <NSNumber *>*stack0 = [NSMutableArray array];
+    NSMutableArray <NSNumber *>*stack1 = [NSMutableArray array];
+    
+    ListNode *cur0 = node0;
+    while (cur0) {
+        [stack0 addObject:@(cur0.value)];
+        cur0 = cur0.next;
+    }
+    
+    ListNode *cur1 = node1;
+    while (cur1) {
+        [stack1 addObject:@(cur1.value)];
+        cur1 = cur1.next;
+    }
+    
+    NSInteger maxLength = MAX(stack0.count, stack1.count);
+    NSMutableArray <NSNumber *>*stack2 = [NSMutableArray array];
+    // 进位
+    BOOL carry = NO;
+    for (NSInteger i = 0; i < maxLength; i++) {
+        NSInteger num0 = 0;
+        if (stack0.count != 0) {
+            num0 = stack0.lastObject.integerValue;
+            [stack0 removeLastObject];
+        }
+        
+        NSInteger num1 = 0;
+        if (stack1.count != 0) {
+            num1 = stack1.lastObject.integerValue;
+            [stack1 removeLastObject];
+        }
+        
+        NSInteger num2 = num0 + num1 + (carry?1:0);
+        carry = NO;
+        
+        if (num2 > 9) {
+            num2 %= 10;
+            carry = YES;
+        }
+        
+        [stack2 addObject:@(num2)];
+    }
+    
+    if (carry) {
+        [stack2 addObject:@(1)];
+    }
+    
+    //
+    ListNode *cur = [ListNode nodeValue:0 next:nil];;
+    for (NSInteger i = 0; i < stack2.count; i++) {
+        ListNode *temp = [ListNode nodeValue:stack2[i].integerValue next:nil];
+        temp.next = cur;
+        cur = temp;
+    }
+    return cur;
+}
+
+- (void)action1233
+{
+    // 1233. 删除子文件夹
+    /*
+     你是一位系统管理员，手里有一份文件夹列表 folder，你的任务是要删除该列表中的所有 子文件夹，并以 任意顺序 返回剩下的文件夹。
+     我们这样定义「子文件夹」：
+     如果文件夹 folder[i] 位于另一个文件夹 folder[j] 下，那么 folder[i] 就是 folder[j] 的子文件夹。
+     文件夹的「路径」是由一个或多个按以下格式串联形成的字符串：
+     / 后跟一个或者多个小写英文字母。
+     例如，/leetcode 和 /leetcode/problems 都是有效的路径，而空字符串和 / 不是。
+     
+     输入：folder = ["/a","/a/b","/c/d","/c/d/e","/c/f"]
+     输出：["/a","/c/d","/c/f"]
+     解释："/a/b/" 是 "/a" 的子文件夹，而 "/c/d/e" 是 "/c/d" 的子文件夹。
+
+     输入：folder = ["/a","/a/b/c","/a/b/d"]
+     输出：["/a"]
+     解释：文件夹 "/a/b/c" 和 "/a/b/d/" 都会被删除，因为它们都是 "/a" 的子文件夹。
+
+     输入：folder = ["/a/b/c","/a/b/d","/a/b/ca"]
+     输出：["/a/b/c","/a/b/ca","/a/b/d"]
+     */
+    
+    NSArray *folders = @[@[@"/a",@"/a/b",@"/c/d",@"/c/d/e",@"/c/f"], @[@"/a",@"/a/b/c",@"/a/b/d"], @[@"/a/b/c",@"/a/b/d",@"/a/b/ca"]];
+    for (NSInteger i = 0; i < folders.count; i++) {
+        NSArray *result = [self action1233Nums:folders[i]];
+        NSLog(@"%@", result);
+    }
+}
+
+- (NSArray <NSString *>*)action1233Nums:(NSArray <NSString *>*)folders
+{
+    if (folders.count <= 1) {
+        return folders;
+    }
+    
+    NSMutableArray *sortFolders = [folders sortedArrayUsingSelector:@selector(compare:)].mutableCopy;
+    NSMutableArray *stack = [NSMutableArray array];
+    [stack addObject:sortFolders.firstObject];
+    
+    for (NSInteger i = 1; i < sortFolders.count; i++) {
+        
+        NSString *pre = [NSString stringWithFormat:@"%@/", stack.lastObject];
+        if ([sortFolders[i] hasPrefix:pre]) {
+            continue;
+        } else {
+            [stack addObject:sortFolders[i]];
+        }
+    }
+    return stack.copy;
+}
+
+- (void)action1
+{
+    // 1. 两数之和
+    /*
+     请你在该数组中找出 和为目标值 的那 两个 整数，并返回它们的数组下标。你可以假设每种输入只会对应一个答案。但是，数组中同一个元素不能使用两遍。
+     
+     输入：nums = [2,7,11,15], target = 9
+     输出：[0,1]
+     解释：因为 nums[0] + nums[1] == 9 ，返回 [0, 1] 。
+
+     输入：nums = [3,2,4], target = 6
+     输出：[1,2]
+
+     输入：nums = [3,3], target = 6
+     输出：[0,1]
+     */
+    NSArray *nums = @[
+    @[@(2),@(7),@(11),@(15)],
+    @[@(3),@(2),@(4)],
+    @[@(3),@(3)]
+    ];
+    NSArray <NSNumber *>*targets = @[@(9),@(6),@(6)];
+    for (NSInteger i = 0; i < nums.count; i++) {
+        NSArray *result = [self action1Nums:nums[i] target:targets[i].integerValue];
+        NSLog(@"%@", result);
+    }
+}
+
+- (NSArray <NSNumber *>*)action1Nums:(NSArray <NSNumber *>*)nums target:(NSInteger)target
+{
+    NSMutableDictionary *map = [NSMutableDictionary dictionary];
+    for (NSInteger i = 0; i < nums.count; i++) {
+        NSInteger key = target - nums[i].integerValue;
+        if ([map.allKeys containsObject:@(key).stringValue]) {
+            return @[map[@(key).stringValue], @(i)];
+        } else {
+            [map setValue:@(i) forKey:nums[i].stringValue];
+        }
+    }
+    return nil;
+}
+
+- (void)action20
+{
+    // 20. 有效的括号
+    /*
+     给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，判断字符串是否有效。
+     有效字符串需满足：
+
+     左括号必须用相同类型的右括号闭合。
+     左括号必须以正确的顺序闭合。
+     */
+    NSArray *arr = @[@"()", @"()[]{}", @"(]", @"([)]", @"{[]}"];
+    
+    for (NSString *s in arr) {
+        BOOL result = [self action20:s];
+        NSLog(@"%d", result);
+    }
+    NSLog(@"答案 true true false false ture");
+}
+
+- (BOOL)action20:(NSString *)s
+{
+    if (s.length == 0) {
+        return NO;
+    }
+    
+    NSString *sub = [s substringWithRange:NSMakeRange(0, 1)];
+    if ([@[@")", @"}", @"]"] containsObject:sub]) {
+        return NO;
+    }
+    
+    // get arr
+    NSMutableArray *sArray = [NSMutableArray array];
+    for (NSInteger i = 0; i < s.length; i++) {
+        NSString *sub = [s substringWithRange:NSMakeRange(i, 1)];
+        [sArray addObject:sub];
+    }
+        
+    NSMutableArray *stack = [NSMutableArray array];
+    for (NSInteger i = 0; i < sArray.count; i++) {
+        NSString *sub = sArray[i];
+        if ([sub isEqualToString:@"("]) {
+            [stack addObject:@")"];
+        } else if ([sub isEqualToString:@"["]) {
+            [stack addObject:@"]"];
+        } else if ([sub isEqualToString:@"{"]) {
+            [stack addObject:@"}"];
+        } else if (stack.count == 0) {
+            return NO;
+        } else {
+            if ([sub isEqualToString:stack.lastObject]) {
+                [stack removeLastObject];
+            } else {
+                return NO;
+            }
+        }
+    }
+    return !stack.count;
+}
+
+
+- (void)action189
+{
+    // 189. 旋转数组
+    /*
+     给定一个数组，将数组中的元素向右移动 k
+     输入: nums = [1,2,3,4,5,6,7], k = 3
+     输出: [5,6,7,1,2,3,4]位置，其中 k 是非负数。
+     */
+    NSArray *nums = @[@(1),@(2),@(3),@(4),@(5),@(6),@(7)];
+    NSArray *result = [self action189:nums targrt:3];
+    NSLog(@"%@", result);
+}
+
+- (NSArray <NSNumber *>*)action189:(NSArray <NSNumber *>*)nums targrt:(NSInteger)k
+{
+    NSMutableArray *mnums = nums.mutableCopy;
+    for (NSInteger i = 0; i < k; i++) {
+        NSNumber *temp = mnums.lastObject;
+        for (NSInteger j = mnums.count - 1; j > 0; j--) {
+            mnums[j] = mnums[j-1];
+        }
+        mnums[0] = temp;
+    }
+    return mnums;
+}
+
+- (void)action48
+{
+    // 48. 旋转图像
+    /*
+     给定一个 n × n 的二维矩阵 matrix 表示一个图像。请你将图像顺时针旋转 90 度。
+     你必须在 原地 旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要 使用另一个矩阵来旋转图像。
+     
+     matrix = [[1,2,3],[4,5,6],[7,8,9]]
+     输出：[[7,4,1],[8,5,2],[9,6,3]]
+     */
+    NSArray <NSMutableArray <NSNumber *>*>*matrix = @[@[@(1),@(2),@(3)].mutableCopy,
+                                                             @[@(4),@(5),@(6)].mutableCopy,
+                                                             @[@(7),@(8),@(9)].mutableCopy
+    ];
+    [self action48Rotate:matrix];
+    NSLog(@"%@", matrix);
+}
+
+// 先以对角线（左上<—>右下）为轴进行翻转，再对每行左右翻转即可
+// https://leetcode-cn.com/problems/rotate-image/solution/ji-qiao-ti-zai-zeng-song-yi-wei-xing-shi-377z/
+- (void)action48Rotate:(NSArray <NSMutableArray <NSNumber *>*>*)matrix
+{
+    NSInteger n = matrix.count;
+    // 先以对角线（左上-右下）为轴进行翻转
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            NSInteger tmp = matrix[i][j].integerValue;
+            matrix[i][j] = matrix[j][i];
+            matrix[j][i] = @(tmp);
+        }
+    }
+    
+    // 再对每一行以中点进行翻转
+    NSInteger mid = n >> 1;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < mid; j++) {
+            NSInteger tmp = matrix[i][j].integerValue;
+            matrix[i][j] = matrix[i][n - 1 - j];
+            matrix[i][n - 1 - j] = @(tmp);
+        }
+    }
+}
+
+- (void)action101
+{
+    // 101. 对称二叉树
+    /*
+     给定一个二叉树，检查它是否是镜像对称的。
+     例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+         1
+        / \
+       2   2
+      / \ / \
+     3  4 4  3
+     但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+
+         1
+        / \
+       2   2
+        \   \
+        3    3
+     */
+    TreeNode *node6 = [TreeNode nodeValue:3 left:nil right:nil];
+    TreeNode *node5 = [TreeNode nodeValue:4 left:nil right:nil];
+    TreeNode *node4 = [TreeNode nodeValue:4 left:nil right:nil];
+    TreeNode *node3 = [TreeNode nodeValue:3 left:nil right:nil];
+    TreeNode *node2 = [TreeNode nodeValue:2 left:node5 right:node6];
+    TreeNode *node1 = [TreeNode nodeValue:2 left:node3 right:node4];
+    TreeNode *head = [TreeNode nodeValue:1 left:node1 right:node2];
+    BOOL isCom = [self action101Node:head.left node:head.right];
+    NSLog(@"isCom %@", isCom ? @"yes" : @"no");
+}
+
+- (BOOL)action101Node:(TreeNode *)left node:(TreeNode *)right
+{
+    // 2边都为空 相等
+    if (!left && !right) {
+        return YES;
+    }
+    
+    // 2遍不等 返回NO
+    if (left.value != right.value) {
+        return NO;
+    }
+    
+    // 比较子树
+    BOOL same0 = [self action101Node:left.left node:right.right];
+    BOOL same1 = [self action101Node:left.right node:right.left];
+    return same0 && same1;
+}
+
+- (void)action151
+{
+    //151.翻转字符串里的单词
+    /*
+     给定一个字符串，逐个翻转字符串中的每个单词。
+
+     说明：
+     无空格字符构成一个 单词 。
+     输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+     如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+     输入："the sky is blue"
+     输出："blue is sky the"
+
+     输入："  hello world!  "
+     输出："world! hello"
+     解释：输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+
+     输入："a good   example"
+     输出："example good a"
+     解释：如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+
+     输入：s = "  Bob    Loves  Alice   "
+     输出："Alice Loves Bob"
+
+     输入：s = "Alice does not even like bob"
+     输出："bob like even not does Alice"
+     */
+    
+    NSArray *arr = @[@"the sky is blue",
+                     @"  hello world!  ",
+                     @"a good   example",
+                     @"  Bob    Loves  Alice   ",
+                     @"Alice does not even like bob"];
+    for (NSString *s in arr) {
+        NSString *result = [self action151ReverseWords:s];
+        NSLog(@"%@", result);
+    }
+}
+
+- (NSString *)action151ReverseWords:(NSString *)s
+{
+    s = [s stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet]; // 删除首尾空格
+    NSInteger j = s.length - 1, i = j;
+    NSString *res = @"";
+    while(i >= 0) {
+        while(i >= 0 && ![[s substringWithRange:NSMakeRange(i, 1)] isEqualToString:@" "])
+        {
+            i--; // 搜索首个空格
+        }
+        // 从空格后一个 开始截取字符串
+        NSString *sub = [s substringWithRange:NSMakeRange(i+1, j-(i+1)+1)];
+        if (res.length == 0) {
+            res = sub;
+        } else {
+            res = [NSString stringWithFormat:@"%@ %@", res, sub];
+        }
+        // 跳过单词间空格
+        while(i >= 0 && [[s substringWithRange:NSMakeRange(i, 1)] isEqualToString:@" "])
+        {
+            i--;
+        }
+        j = i; // j 指向下个单词的尾字符
+    }
+    return res; // 转化为字符串并返回
+}
+
+- (void)action33
+{
+    // 33. 搜索旋转排序数组
+    /*
+     升序排列的整数数组 nums 在预先未知的某个点上进行了旋转（例如， [0,1,2,4,5,6,7] 经旋转后可能变为 [4,5,6,7,0,1,2] ）。
+     请你在数组中搜索 target ，如果数组中存在这个目标值，则返回它的索引，否则返回 -1 。
+
+     输入：nums = [4,5,6,7,0,1,2], target = 0
+     输出：4
+
+     输入：nums = [4,5,6,7,0,1,2], target = 3
+     输出：-1
+
+     输入：nums = [1], target = 0
+     输出：-1
+     */
+    
+    NSInteger result = [self action33Nums:@[@(4), @(5), @(6), @(7), @(0), @(1), @(2)] target:0];
+    NSLog(@"%ld", result);
+}
+
+- (NSInteger)action33Nums:(NSArray <NSNumber *>*)nums target:(NSInteger)target
+{
+    NSInteger n = nums.count;
+    if (n == 0) {
+        return -1;
+    }
+    if (n == 1) {
+        return nums[0].integerValue == target ? 0 : -1;
+    }
+    
+    NSInteger left = 0;
+    NSInteger right = n - 1;
+    while (left <= right) {
+        NSInteger mid = (right - left + 1) >> 1;
+        
+        if (nums[mid].integerValue == target) return mid;
+        
+        // 找有序数组 用有序数组来判断区间
+        if (nums[0].integerValue <= nums[mid].integerValue) {
+            // 0 - mid 是有序的
+            if (nums[0].integerValue <= target && target < nums[mid].integerValue) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        } else {
+            // mid - n-1 是有序的
+            if (nums[mid].integerValue < target && target <= nums[n - 1].integerValue) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+    }
+    return -1;
+
+}
+
+- (void)action86
+{
+    // 86. 分隔链表
+    /*
+     给你一个链表和一个特定值 x ，请你对链表进行分隔，使得所有小于 x 的节点都出现在大于或等于 x 的节点之前。
+     你应当保留两个分区中每个节点的初始相对位置。
+
+     输入：head = 1->4->3->2->5->2, x = 3
+     输出：1->2->2->4->3->5
+     */
+    ListNode *node5 = [ListNode nodeValue:2 next:nil];
+    ListNode *node4 = [ListNode nodeValue:5 next:node5];
+    ListNode *node3 = [ListNode nodeValue:2 next:node4];
+    ListNode *node2 = [ListNode nodeValue:3 next:node3];
+    ListNode *node1 = [ListNode nodeValue:4 next:node2];
+    ListNode *node = [ListNode nodeValue:1 next:node1];
+    
+    ListNode *result = [self action86:node target:3];
+    NSLog(@"%@", result);
+}
+
+- (ListNode *)action86:(ListNode *)head target:(NSInteger)x
+{
+    ListNode* small = [ListNode nodeValue:0 next:nil];
+    ListNode* smallHead = small;
+    ListNode* large = [ListNode nodeValue:0 next:nil];
+    ListNode* largeHead = large;
+    while (head != nil) {
+        if (head.value < x) {
+            small.next = head;
+            small = small.next;
+        } else {
+            large.next = head;
+            large = large.next;
+        }
+        head = head.next;
+    }
+    large.next = nil;
+    small.next = largeHead.next;
+    return smallHead.next;
+}
+
+- (void)action236
+{
+    // 236. 二叉树的最近公共祖先
+    /*
+     给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+     输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+     输出: 3
+     解释: 节点 5 和节点 1 的最近公共祖先是节点 3。
+
+     输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+     输出: 5
+     */
+    
+    TreeNode *node8 = [TreeNode nodeValue:4 left:nil right:nil];
+    TreeNode *node7 = [TreeNode nodeValue:7 left:nil right:nil];
+    TreeNode *node6 = [TreeNode nodeValue:8 left:nil right:nil];
+    TreeNode *node5 = [TreeNode nodeValue:0 left:nil right:nil];
+    TreeNode *node4 = [TreeNode nodeValue:2 left:node7 right:node8];
+    TreeNode *node3 = [TreeNode nodeValue:6 left:nil right:nil];
+    TreeNode *node2 = [TreeNode nodeValue:1 left:node5 right:node6];
+    TreeNode *node1 = [TreeNode nodeValue:5 left:node3 right:node4];
+    TreeNode *node = [TreeNode nodeValue:3 left:node1 right:node2];
+    
+    TreeNode *common = [self action236TreeNode:node p:node1 q:node8];
+    NSLog(@"%ld", common.value);
+}
+
+- (TreeNode *)action236TreeNode:(TreeNode *)root p:(TreeNode *)p q:(TreeNode *)q
+{
+    if (root == nil || root == q || root == p) return root;
+    
+    TreeNode *left = [self action236TreeNode:root.left p:p q:q];
+    TreeNode *right = [self action236TreeNode:root.right p:p q:q];
+    // 说明左右子树 都不含pq 返回 nil
+    if(left == nil && right == nil) return nil;
+    // pq都在右子树中 返回right即可
+    if(left == nil) return right;
+    // pq都在左子树中 返回left即可
+    if(right == nil) return left;
+    // 左右都不为空 说明pq在两侧 直接返回root
+    return root;
+}
 
 @end
-
-
-
-

@@ -58,6 +58,10 @@
     }
 }
 
+- (void)action
+{
+    NSAssert(NO, @"子类实现");
+}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
