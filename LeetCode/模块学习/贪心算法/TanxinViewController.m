@@ -323,19 +323,17 @@
 - (NSInteger)action5Nums:(NSArray <NSNumber *>*)nums
 {
     NSInteger ans = 0;
-    NSInteger start = 0;
-    NSInteger end = 1;
-    while (end < nums.count)
+    NSInteger end = 0;
+    NSInteger maxPos = 0;
+    for (NSInteger i = 0; i < nums.count - 1; i++)
     {
-        NSInteger maxPos = 0;
-        for (NSInteger i = start; i < end; i++)
-        {
-            // 能跳到最远的距离
-            maxPos = MAX(maxPos, i + nums[i].integerValue);
+        // 更新能跳到最远的距离
+        maxPos = MAX(maxPos, i + nums[i].integerValue);
+        // 走到了当前最远距离 此时max已经在这个周期内 更新到了最大 刷新下一个end 和增加步数
+        if (i == end) {
+            end = maxPos; // 下一次起跳点范围结束的格子
+            ans++;            // 跳跃次数
         }
-        start = end;      // 下一次起跳点范围开始的格子
-        end = maxPos + 1; // 下一次起跳点范围结束的格子
-        ans++;            // 跳跃次数
     }
     return ans;
 }

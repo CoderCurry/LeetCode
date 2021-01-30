@@ -7,135 +7,10 @@
 
 #import "LeetCodeTopViewController.h"
 #import "ListNode.h"
+#import "LRUCache.h"
 
 #pragma - LRUObj
 
-@interface DLinkedNode : NSObject
-
-@property (nonatomic, copy) NSString *key;
-
-@property (nonatomic, assign) NSInteger value;
-
-@property (nonatomic, strong) DLinkedNode *pre;
-
-@property (nonatomic, strong) DLinkedNode *next;
-
-+ (instancetype)node:(NSString *)key
-               value:(NSInteger)value
-                 pre:(DLinkedNode *)pre
-                next:(DLinkedNode *)next;
-
-@end
-
-@implementation DLinkedNode
-
-+ (instancetype)node:(NSString *)key
-               value:(NSInteger)value
-                 pre:(DLinkedNode *)pre
-                next:(DLinkedNode *)next
-{
-    DLinkedNode *node = [DLinkedNode new];
-    node.key = key;
-    node.value = value;
-    node.pre = pre;
-    node.next = next;
-    return node;
-}
-
-@end
-
-@interface LRUCache : NSObject
-
-@property (nonatomic, assign) NSInteger capacity;
-
-@property (nonatomic, strong) NSMutableDictionary *cache;
-
-@property (nonatomic, strong) DLinkedNode *head;
-
-@property (nonatomic, strong) DLinkedNode *tail;
-
-@end
-
-@implementation LRUCache
-
-- (instancetype)initWithCapacity:(NSInteger)capacity
-{
-    self = [super init];
-    if (self) {
-        _capacity = capacity;
-        _cache = [NSMutableDictionary dictionary];
-        _head = [DLinkedNode node:@"" value:0 pre:nil next:nil];
-        _tail = [DLinkedNode node:@"" value:0 pre:nil next:nil];
-        _head.next = _tail;
-        _tail.pre = _head;
-    }
-    return self;
-}
-
-- (NSInteger)getKey:(NSString *)key
-{
-    if (![self.cache.allKeys containsObject:key]) {
-        return -1;
-    }
-    // 如果 key 存在，先通过哈希表定位，再移到头部
-    DLinkedNode *node = self.cache[key];
-    [self nodeMoveToHead:node];
-    return node.value;
-}
-
-- (void)putKey:(NSString *)key value:(NSInteger)value
-{
-    if (![self.cache.allKeys containsObject:key]) {
-        // 如果 key 不存在，创建一个新的节点
-        DLinkedNode* node = [DLinkedNode node:key value:value pre:nil next:nil];
-        // 添加进哈希表
-        self.cache[key] = node;
-        // 添加至双向链表的头部
-        [self nodeAddToHead:node];
-        if (self.cache.allKeys.count > self.capacity) {
-            // 如果超出容量，删除双向链表的尾部节点
-            DLinkedNode *node = [self nodeRemoveLast];
-            [self.cache removeObjectForKey:node.key];
-        }
-    }
-    else {
-        // 如果 key 存在，先通过哈希表定位，再修改 value，并移到头部
-        DLinkedNode *node = self.cache[key];
-        node.value = value;
-        [self nodeMoveToHead:node];
-    }
-}
-
-#pragma mark - private
-
-- (void)nodeAddToHead:(DLinkedNode *)node
-{
-    node.pre = self.head;
-    node.next = self.head.next;
-    node.next.pre = node;
-    self.head.next = node;
-}
-
-- (void)nodeRemove:(DLinkedNode *)node
-{
-    node.pre.next = node.next;
-    node.next.pre = node.pre;
-}
-
-- (void)nodeMoveToHead:(DLinkedNode *)node
-{
-    [self nodeRemove:node];
-    [self nodeAddToHead:node];
-}
-
-- (DLinkedNode *)nodeRemoveLast
-{
-    DLinkedNode *node = self.tail.pre;
-    [self nodeRemove:node];
-    return node;
-}
-
-@end
 
 @interface LeetCodeTopViewController ()
 
@@ -153,80 +28,28 @@
         @"695.岛屿的最大面积",
         @"827.最大人工岛",
         
-        @"53. 最大子序和",
-        @"25. K个一组翻转链表",
-        @"5. 最长回文子串",
-        @"32. 最长有效括号",
-        @"443. 压缩字符串",
-        @"120. 三角形最小路径和 - 动态规划的反向用法",
-        @"146. LRU缓存机制",
-        @"165. 比较版本号",
-        @"82. 删除排序链表中的重复元素 II",
-        @"438. 找到字符串中所有字母异位词",
-        @"739. 每日温度",
-        @"2. 两数相加"
+        @"53.最大子序和",
+        @"25.K个一组翻转链表",
+        @"5.最长回文子串",
+        @"32.最长有效括号",
+        @"443.压缩字符串",
+        @"120.三角形最小路径和 - 动态规划的反向用法",
+        @"146.LRU缓存机制",
+        @"165.比较版本号",
+        @"82.删除排序链表中的重复元素 II",
+        @"438.找到字符串中所有字母异位词",
+        @"739.每日温度",
+        @"2.两数相加",
+        @"71.简化路径",
+        @"162.寻找峰值",
+        @"7.整数反转",
+        @"160.相交链表",
+        @"3.无重复字符的最长子串",
+        @"445.两数相加 II"
     ]];
 }
 
-
-- (void)didSelectRowAtIndex:(NSInteger)index
-{
-    switch (index) {
-        case 0:
-            [self action0];
-            break;
-        case 1:
-            [self action1];
-            break;
-        case 2:
-            [self action2];
-            break;
-        case 3:
-            [self action3];
-            break;
-        case 4:
-            [self action4];
-            break;
-        case 5:
-            [self action5];
-            break;
-        case 6:
-            [self action6];
-            break;
-        case 7:
-            [self action7];
-            break;
-        case 8:
-            [self action8];
-            break;
-        case 9:
-            [self action9];
-            break;
-        case 10:
-            [self action10];
-            break;
-        case 11:
-            [self action11];
-            break;
-        case 12:
-            [self action12];
-            break;
-        case 13:
-            [self action13];
-            break;
-        case 14:
-            [self action14];
-            break;
-        case 15:
-            [self action15];
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (void)action0
+- (void)action200
 {
     // 200.岛屿数量
     /*
@@ -319,7 +142,7 @@
     return (0 <= row && row < grid.count && 0 <= col && col < grid[0].count);
 }
 
-- (void)action1
+- (void)action463
 {
     // 463 岛屿的周长
     NSMutableArray *grid = @[
@@ -367,7 +190,7 @@
     [self action2Area:grid row:row col:col+1];
 }
 
-- (void)action2
+- (void)action695
 {
     // 695 岛屿的最大面积
     
@@ -416,13 +239,13 @@
     [self action2Area:grid row:row col:col+1];
 }
 
-- (void)action3
+- (void)action827
 {
     // 827 填海造陆问题
     
 }
 
-- (void)action4
+- (void)action53
 {
     // 53. 最大子序和
     /*
@@ -454,7 +277,7 @@
     NSLog(@"sum %ld", sum);
 }
 
-- (void)action5
+- (void)action25
 {
     // 25. K 个一组翻转链表
     /*
@@ -530,7 +353,7 @@
     return pre;
 }
 
-- (void)action6
+- (void)action5
 {
     // 5. 最长回文子串
     /*
@@ -611,7 +434,7 @@
     return [s substringWithRange:NSMakeRange(index, 1)];
 }
 
-- (void)action7
+- (void)action32
 {
     // 32. 最长有效括号
     // 给你一个只包含 '(' 和 ')' 的字符串，找出最长有效（格式正确且连续）括号子串的长度。
@@ -661,7 +484,7 @@
     return maxLength;
 }
 
-- (void)action8
+- (void)action443
 {
     // 443. 压缩字符串
     /*
@@ -724,7 +547,7 @@
     return write;
 }
 
-- (void)action9
+- (void)action120
 {
     // 120. 三角形最小路径和
     /*
@@ -787,7 +610,7 @@
 }
 
 
-- (void)action10
+- (void)action146
 {
     // 146. LRU缓存机制
     /*
@@ -833,7 +656,7 @@
     
 }
 
-- (void)action11
+- (void)action165
 {
     // 165. 比较版本号
     /*
@@ -918,7 +741,7 @@
     }
 }
 
-- (void)action12
+- (void)action82
 {
     // 82. 删除排序链表中的重复元素 II
     /*
@@ -960,7 +783,7 @@
     }
 }
 
-- (void)action13
+- (void)action438
 {
     // 438. 找到字符串中所有字母异位词
     /*
@@ -1035,7 +858,7 @@
     return result;
 }
 
-- (void)action14
+- (void)action739
 {
     // 739. 每日温度
     /*
@@ -1064,7 +887,7 @@
     return result;
 }
 
-- (void)action15
+- (void)action2
 {
     // 2. 两数相加
     /*
@@ -1122,9 +945,220 @@
     return pre.next;
 }
 
+- (void)action71
+{
+    // 71. 简化路径
+    /*
+     以 Unix 风格给出一个文件的绝对路径，你需要简化它。或者换句话说，将其转换为规范路径。
 
+     输入："/home/"
+     输出："/home"
+     解释：注意，最后一个目录名后面没有斜杠。
 
+     输入："/../"
+     输出："/"
+     解释：从根目录向上一级是不可行的，因为根是你可以到达的最高级。
 
+     输入："/home//foo/"
+     输出："/home/foo"
+     解释：在规范路径中，多个连续斜杠需要用一个斜杠替换。
+
+     输入："/a/./b/../../c/"
+     输出："/c"
+
+     输入："/a/../../b/../c//.//"
+     输出："/c"
+
+     输入："/a//b////c/d//././/.."
+     输出："/a/b/c"
+
+     */
+    NSArray *arr = @[@"/home/", @"/../", @"/home//foo/", @"/a/./b/../../c/", @"/a/../../b/../c//.//", @"/a//b////c/d//././/.."];
+    
+    for (NSString *path in arr) {
+        NSString *result = [self action16SimplifyPath:path];
+        NSLog(@"%@", result);
+    }
+}
+
+- (NSString *)action16SimplifyPath:(NSString *)path
+{
+    NSMutableArray <NSString *>*pathArray = [path componentsSeparatedByString:@"/"].mutableCopy;
+    NSMutableArray *result = [NSMutableArray array];
+    
+    for (NSInteger i = 0; i < pathArray.count; i++) {
+        
+        NSString *node = pathArray[i];
+        if (node.length == 0 || [node isEqualToString:@"."]) {
+            continue;
+        }
+        
+        if ([node isEqualToString:@".."]) {
+            if (result.count != 0) {
+                [result removeLastObject];
+            }
+        } else {
+            [result addObject:node];
+        }
+    }
+    
+    NSString *resultString = @"";
+    for (NSString *node in result) {
+        resultString = [NSString stringWithFormat:@"%@/%@", resultString, node];
+    }
+    return resultString.length == 0 ? @"/" : resultString;
+}
+
+- (void)action162
+{
+    // 162. 寻找峰值
+    /*
+     峰值元素是指其值大于左右相邻值的元素。
+     给你一个输入数组 nums，找到峰值元素并返回其索引。数组可能包含多个峰值，在这种情况下，返回 任何一个峰值 所在位置即可。
+     你可以假设 nums[-1] = nums[n] = -∞ 。
+
+     输入：nums = [1,2,3,1]
+     输出：2
+     解释：3 是峰值元素，你的函数应该返回其索引 2。
+
+     输入：nums = [1,2,1,3,5,6,4]
+     输出：1 或 5
+     解释：你的函数可以返回索引 1，其峰值元素为 2；
+          或者返回索引 5， 其峰值元素为 6。
+     */
+    NSArray *arr = @[@[@(1), @(2), @(3), @(1)], @[@(1), @(2), @(1), @(3), @(5)]];
+    
+    for (NSArray *nums in arr) {
+        NSInteger index = [self action17Find:nums];
+        NSLog(@"%ld", index);
+    }
+
+}
+
+// 首先要注意题目条件，在题目描述中出现了 nums[-1] = nums[n] = -∞，这就代表着 2个边界是负无穷 所以从第一个值开始 只要大于右边的值 既是峰值
+
+- (NSInteger)action17Find:(NSArray <NSNumber *>*)nums
+{
+    for (int i = 0; i < nums.count - 1; i++) {
+        if (nums[i].integerValue > nums[i + 1].integerValue)
+            return i;
+    }
+    // 单独判断下最后一个值
+    return nums.count - 1;
+}
+
+- (void)action7
+{
+    //7. 整数反转
+    /*
+     给你一个 32 位的有符号整数 x ，返回 x 中每位上的数字反转后的结果。
+     如果反转后整数超过 32 位的有符号整数的范围 [−231,  231 − 1] ，就返回 0。
+     假设环境不允许存储 64 位整数（有符号或无符号）。
+     
+     */
+    NSArray *arr = @[@(123), @(-123), @(120), @(0)];
+    
+    for (NSNumber *num in arr) {
+        int rnum = [self action18Reverse:num.intValue];
+        NSLog(@"%d", rnum);
+    }
+    // 321 -321 21 0
+}
+
+// https://leetcode-cn.com/problems/reverse-integer/solution/tu-jie-7-zheng-shu-fan-zhuan-by-wang_ni_ma/
+- (int)action18Reverse:(int)x
+{
+    int res = 0;
+    while(x!=0) {
+        //每次取末尾数字
+        int tmp = x%10;
+        //判断是否 大于 最大32位整数
+        if (res>INT_MAX/10 || (res==INT_MAX/10 && tmp>7)) {
+            return 0;
+        }
+        //判断是否 小于 最小32位整数
+        if (res<-INT_MAX/10 || (res==-INT_MAX/10 && tmp<-8)) {
+            return 0;
+        }
+        res = res*10 + tmp;
+        x /= 10;
+    }
+    return res;
+}
+
+- (void)action160
+{
+    // 160. 相交链表
+    /*
+     指针 pA 指向 A 链表，指针 pB 指向 B 链表，依次往后遍历
+     如果 pA 到了末尾，则 pA = headB 继续遍历
+     如果 pB 到了末尾，则 pB = headA 继续遍历
+     比较长的链表指针指向较短链表head时，长度差就消除了
+     如此，只需要将最短链表遍历两次即可找到位置
+     */
+}
+
+- (ListNode*)action19GetIntersectionNode:(ListNode *)headA node:(ListNode *)headB
+{
+    if (headA == nil || headB == nil) return nil;
+    ListNode *pA = headA, *pB = headB;
+    while (pA != pB) {
+        pA = pA == nil ? headB : pA.next;
+        pB = pB == nil ? headA : pB.next;
+    }
+    return pA;
+}
+
+- (void)action3
+{
+    // 3. 无重复字符的最长子串
+    /*
+     给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+     */
+    
+    NSArray *arr = @[@"abcabcbb", @"bbbbb", @"pwwkew"];
+    
+    for (NSString *num in arr) {
+        int rnum = [self action20minString:num];
+        NSLog(@"%d", rnum);
+    }
+}
+
+- (int)action20minString:(NSString *)s
+{
+    if (s.length == 0) return 0;
+    NSMutableDictionary <NSString*, NSNumber*>*map = [NSMutableDictionary dictionary];
+    int max = 0;
+    int left = 0;
+    for(int i = 0; i < s.length; i ++){
+        NSString *c = [s substringWithRange:NSMakeRange(i, 1)];
+        if([map.allKeys containsObject:c]){
+            left = (int)MAX(left,map[c].integerValue + 1);
+        }
+        map[c] = @(i);
+        max = (int)MAX(max, i-left+1);
+    }
+    return max;
+
+}
+
+- (void)action445
+{
+    // 445. 两数相加 II
+    /*
+     如果输入链表不能修改该如何处理？换句话说，你不能对列表中的节点进行翻转。
+
+     输入：(7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
+     输出：7 -> 8 -> 0 -> 7
+
+     */
+    
+}
+
+//- (ListNode *)action21Sum:(ListNode *)node0 node:(ListNode *)node1
+//{
+//    // 利用栈的思路
+//}
 
 @end
 
