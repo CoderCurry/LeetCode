@@ -349,7 +349,7 @@
             // 快慢指针相遇后，此时从head 和 相遇点，同时查找直至相遇 相遇点就是环点
             ListNode* index1 = fast;
             ListNode* index2 = head;
-            while (fast.value == head.value) {
+            while (index1.value != index2.value) {
                 index1 = index1.next;
                 index2 = index2.next;
             }

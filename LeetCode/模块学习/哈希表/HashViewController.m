@@ -187,12 +187,14 @@
 
     for (int i = 0; i < nums.count; i++) {
         
+        // 在i下需要的匹配的值
         NSInteger num = target - nums[i].integerValue;
         NSString *key = @(num).stringValue;
-        
+        // 如果匹配到就返回 因为只有一组解 查到就返回
         if ([dic.allKeys containsObject:key]) {
             return @[@(i), dic[key]];
         }
+        // 没有匹配到就记录i值
         [dic setObject:@(i) forKey:nums[i].stringValue];
     }
     return @[];
