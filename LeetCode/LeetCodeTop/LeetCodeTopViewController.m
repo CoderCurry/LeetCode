@@ -57,7 +57,8 @@
         @"151.翻转字符串里的单词",
         @"33.搜索旋转排序数组",
         @"86.分隔链表",
-        @"236.二叉树的最近公共祖先"
+        @"236.二叉树的最近公共祖先",
+        @"23.合并K个升序链表"
     ]];
 }
 
@@ -1716,6 +1717,63 @@
     if(right == nil) return left;
     // 左右都不为空 说明pq在两侧 直接返回root
     return root;
+}
+
+- (void)action23
+{
+    // 23.合并K个升序链表
+    /*
+     请你将所有链表合并到一个升序链表中，返回合并后的链表。
+     输入：lists = [[1,4,5],[1,3,4],[2,6]]
+     输出：[1,1,2,3,4,4,5,6]
+     
+     */
+    
+    ListNode *node02 = [ListNode nodeValue:5 next:nil];
+    ListNode *node01 = [ListNode nodeValue:4 next:node02];
+    ListNode *node00 = [ListNode nodeValue:1 next:node01];
+    
+    ListNode *node12 = [ListNode nodeValue:4 next:nil];
+    ListNode *node11 = [ListNode nodeValue:3 next:node12];
+    ListNode *node10 = [ListNode nodeValue:1 next:node11];
+    
+    ListNode *node21 = [ListNode nodeValue:6 next:nil];
+    ListNode *node20 = [ListNode nodeValue:2 next:node21];
+
+    NSArray *nodeArray = @[node00, node10, node20];
+    ListNode *result = [self action23MergeKLists:nodeArray];
+    NSLog(@"%@", result);
+}
+
+- (ListNode *)action23MergeKLists:(NSArray *)lists
+{
+    if (lists == nil || lists.count == 0) return nil;
+    return [self action23Merge:lists left:0 right:lists.count - 1];
+}
+
+- (ListNode *)action23Merge:(NSArray *)lists left:(NSInteger)left right:(NSInteger)right
+{
+    if (left == right) {
+        return lists[left];
+    }
+    
+    NSInteger mid = left + (right - left) / 2;
+    ListNode *l1 = [self action23Merge:lists left:left right:mid];
+    ListNode *l2 = [self action23Merge:lists left:mid + 1 right:right];
+    return [self action23MergeTwo:l1 node:l2];
+}
+// 合并2个链表
+- (ListNode *)action23MergeTwo:(ListNode *)l1 node:(ListNode *)l2
+{
+    if (l1 == nil) return l2;
+    if (l2 == nil) return l1;
+    if (l1.value < l2.value) {
+        l1.next = [self action23MergeTwo:l1.next node:l2];
+        return l1;
+    } else {
+        l2.next = [self action23MergeTwo:l1 node:l2.next];
+        return l2;
+    }
 }
 
 @end
