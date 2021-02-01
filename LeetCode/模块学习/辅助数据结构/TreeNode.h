@@ -21,6 +21,29 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)nodeValue:(NSInteger)value
                      left:(TreeNode * _Nullable)left
                     right:(TreeNode * _Nullable)right;
+
+
+
+#pragma mark - extra
+/*
+        5
+       / \
+      4   6
+     / \ / \
+    1  2 7  8
+ 
+ 前 5412678
+ 中 1425768
+ 后 1247865
+ 层次 [[5], [4,6], [1,2,7,8]]
+*/
++ (TreeNode *)getNormalHead;
+
+
+
+
+
+
 @end
 
 NS_ASSUME_NONNULL_END
