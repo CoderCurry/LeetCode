@@ -841,19 +841,104 @@
 - (TreeNode *)action105inorder:(NSArray *)inorder preorder:(NSArray *)preorder
 {
     if (inorder.count == 0 || preorder.count == 0) return nil;
-    TreeNode *result = [self action105Traversal:inorder.mutableCopy preorder:preorder.mutableCopy];
-//    TreeNode *result = [self action106Traversal:inorder.mutableCopy
-//                                   inorderBegin:0
-//                                     inorderEnd:inorder.count - 1
-//                                      postorder:postorder.mutableCopy
-//                                 postorderBegin:0
-//                                   postorderEnd:postorder.count - 1];
+//    TreeNode *result = [self action105Traversal:inorder.mutableCopy preorder:preorder.mutableCopy];
+    TreeNode *result = [self action105Traversal:inorder.mutableCopy
+                                   inorderBegin:0
+                                     inorderEnd:inorder.count - 1
+                                       preorder:preorder.mutableCopy
+                                  preorderBegin:0
+                                    preorderEnd:preorder.count - 1];
     return result;
 }
 
 - (TreeNode *)action105Traversal:(NSMutableArray <NSNumber *>*)inorder preorder:(NSMutableArray <NSNumber *>*)preorder
 {
+    if (preorder.count == 0) {
+        return nil;
+    }
     
+    NSNumber *root = preorder.firstObject;
+    TreeNode *rootNode = [TreeNode nodeValue:root.integerValue left:nil right:nil];
+    
+    // 叶子节点
+    if (preorder.count == 1) {
+        return rootNode;
+    }
+    
+    // 查找中序分割点
+    NSInteger rootIndex = 0;
+    for (NSInteger i = 0; i < inorder.count; i++) {
+        if (inorder[i] == root) {
+            rootIndex = i;
+            break;
+        }
+    }
+    // 切割中序
+    NSMutableArray *leftInorder = [inorder subarrayWithRange:NSMakeRange(0, rootIndex)].mutableCopy;
+    NSMutableArray *rightInorder = [inorder subarrayWithRange:NSMakeRange(rootIndex + 1, inorder.count - 1 - (rootIndex + 1) + 1)].mutableCopy;
+    
+    // 切割前序
+    [preorder removeObjectAtIndex:0];
+    NSMutableArray *leftPreorder = [preorder subarrayWithRange:NSMakeRange(0, leftInorder.count)].mutableCopy;
+    NSMutableArray *rightPreorder = [preorder subarrayWithRange:NSMakeRange(leftPreorder.count, preorder.count - 1 - leftPreorder.count + 1)].mutableCopy;
+    
+    
+    rootNode.left = [self action105Traversal:leftInorder preorder:leftPreorder];
+    rootNode.right = [self action105Traversal:rightInorder preorder:rightPreorder];
+    return rootNode;
 }
+
+- (TreeNode *)action105Traversal:(NSMutableArray <NSNumber *>*)inorder
+                    inorderBegin:(NSInteger)inorderBegin
+                      inorderEnd:(NSInteger)inorderEnd
+                        preorder:(NSMutableArray <NSNumber *>*)preorder
+                   preorderBegin:(NSInteger)preorderBegin
+                     preorderEnd:(NSInteger)preorderEnd
+{
+    if (preorderBegin > preorderEnd) {
+        return nil;
+    }
+    
+    NSNumber *root = preorder[preorderBegin];
+    TreeNode *rootNode = [TreeNode nodeValue:root.integerValue left:nil right:nil];
+    
+    NSInteger inorderRootIndex = 0;
+    for (NSInteger i = inorderBegin; i <= inorderEnd; i++) {
+        if (inorder[i] == root) {
+            inorderRootIndex = i;
+            break;;
+        }
+    }
+    // [inorderBegin, inorderRootIndex-1]
+    NSInteger leftInorderBegin = inorderBegin;
+    NSInteger leftInorderEnd = inorderRootIndex - 1;
+    // [inorderRootIndex + 1, inorderEnd]
+    NSInteger rightInorderBegin = inorderRootIndex + 1;
+    NSInteger rightInorderEnd = inorderEnd;
+    
+    // preorderBegin + 1 是因为第一个是root
+    // [preorderBegin + 1, leftPreorderBegin + (leftInorderEnd - leftInorderBegin)]
+    NSInteger leftPreorderBegin = preorderBegin + 1;
+    NSInteger leftPreorderEnd = leftPreorderBegin + (leftInorderEnd - leftInorderBegin);
+    // [leftPreorderEnd + 1, preorderEnd]
+    NSInteger rightPreorderBegin = leftPreorderEnd + 1;
+    NSInteger rightPreorderEnd = preorderEnd;
+    
+    rootNode.left = [self action105Traversal:inorder
+                                inorderBegin:leftInorderBegin
+                                  inorderEnd:leftInorderEnd
+                                    preorder:preorder
+                               preorderBegin:leftPreorderBegin
+                                 preorderEnd:leftPreorderEnd];
+    rootNode.right = [self action105Traversal:inorder
+                                inorderBegin:rightInorderBegin
+                                  inorderEnd:rightInorderEnd
+                                    preorder:preorder
+                               preorderBegin:rightPreorderBegin
+                                 preorderEnd:rightPreorderEnd];
+    return rootNode;
+}
+
+
 
 @end
