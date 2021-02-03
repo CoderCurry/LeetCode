@@ -61,9 +61,11 @@
                             @"113.路径总和II",
                             @"106.从中序与后序遍历序列构造二叉树",
                             @"105.从前序与中序遍历序列构造二叉树",
-                            @"654.最大二叉树"
-                            
-                            
+                            @"654.最大二叉树",
+                            @"617.合并二叉树",
+                            @"98.验证二叉搜索树",
+                            @"530.二叉搜索树的最小绝对差",
+                            @"236.二叉树的最近公共祖先"
     ]];
     
 }
@@ -989,6 +991,141 @@
 //        node.right = constructMaximumBinaryTree(newVec);
 //    }
     return node;
+}
+
+- (void)action617
+{
+    // 617.合并二叉树
+}
+
+- (TreeNode *)action617MergeTrees:(TreeNode *)t1  t2:(TreeNode *)t2
+{
+    if (t1 == nil) return t2; // 如果t1为空，合并之后就应该是t2
+    if (t2 == nil) return t1; // 如果t2为空，合并之后就应该是t1
+    // 修改了t1的数值和结构
+    t1.value += t2.value;                             // 中
+    t1.left = [self action617MergeTrees:t1.left t2:t2.left]; // 左
+    t1.right = [self action617MergeTrees:t1.right t2:t2.right];
+    return t1;
+}
+
+- (void)action98
+{
+    // 98.验证二叉搜索树
+    
+    TreeNode *node2 = [TreeNode nodeValue:3 left:nil right:nil];
+    TreeNode *node1 = [TreeNode nodeValue:1 left:nil right:nil];
+    TreeNode *node = [TreeNode nodeValue:2 left:node1 right:node2];
+    BOOL result = [self action98isSearch:node];
+    NSLog(@"%@", result?@"yes":@"no");
+}
+
+//要知道中序遍历下，输出的二叉搜索树节点的数值是有序序列。
+- (BOOL)action98isSearch:(TreeNode *)node
+{
+//    NSMutableArray <NSNumber *>*result = [NSMutableArray array];
+//    [self action98traversal:node reslut:result];
+//
+//    BOOL isSearch = YES;
+//    for (NSInteger i = 0; i < result.count - 1; i++) {
+//        if (result[i].integerValue < result[i+1].integerValue) {
+//            continue;
+//        } else {
+//            isSearch = NO;
+//            break;
+//        }
+//    }
+//    return isSearch;
+//
+    TreeNode *pre = nil;
+    return [self action98traversal1:node pre:pre];
+}
+
+- (void)action98traversal:(TreeNode *)node reslut:(NSMutableArray *)result
+{
+    if (node == NULL) return;
+    [self action98traversal:node.left reslut:result];
+    [result addObject:@(node.value)];
+    [self action98traversal:node.right reslut:result];
+}
+
+- (BOOL)action98traversal1:(TreeNode *)node pre:(TreeNode *)pre
+{
+    if (node == nil) return true;
+    BOOL left = [self action98traversal1:node.left pre:pre];
+
+    if (pre != nil && pre.value >= node.value) return false;
+    pre = node; // 记录前一个节点
+
+    BOOL right = [self action98traversal1:node.right pre:pre];
+    return left && right;
+}
+
+- (void)action530
+{
+    // 530.二叉搜索树的最小绝对差
+    // 在一个有序数组上求两个数最小差值，这是不是就是一道送分题了。」
+    // 最直观的想法，就是把二叉搜索树转换成有序数组，然后遍历一遍数组，就统计出来最小差值了。
+    TreeNode *node2 = [TreeNode nodeValue:2 left:nil right:nil];
+    TreeNode *node1 = [TreeNode nodeValue:3 left:node2 right:nil];
+    TreeNode *node = [TreeNode nodeValue:1 left:nil right:node1];
+    NSInteger result= [self action530getMinimumDifference:node];
+    NSLog(@"%ld", result);
+}
+
+- (NSInteger)action530getMinimumDifference:(TreeNode *)node
+{
+    NSMutableArray <NSNumber *>*result = [NSMutableArray array];
+    [self action98traversal:node reslut:result];
+    
+    NSInteger min = INT_MAX;
+    for (int i = 1; i < result.count; i++) { // 统计有序数组的最小差值
+        min = MIN(min, result[i].integerValue - result[i-1].integerValue);
+    }
+    return min;
+}
+
+- (void)action236
+{
+    // 236. 二叉树的最近公共祖先
+    /*
+     给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+     输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+     输出: 3
+     解释: 节点 5 和节点 1 的最近公共祖先是节点 3。
+
+     输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+     输出: 5
+     */
+    
+    TreeNode *node8 = [TreeNode nodeValue:4 left:nil right:nil];
+    TreeNode *node7 = [TreeNode nodeValue:7 left:nil right:nil];
+    TreeNode *node6 = [TreeNode nodeValue:8 left:nil right:nil];
+    TreeNode *node5 = [TreeNode nodeValue:0 left:nil right:nil];
+    TreeNode *node4 = [TreeNode nodeValue:2 left:node7 right:node8];
+    TreeNode *node3 = [TreeNode nodeValue:6 left:nil right:nil];
+    TreeNode *node2 = [TreeNode nodeValue:1 left:node5 right:node6];
+    TreeNode *node1 = [TreeNode nodeValue:5 left:node3 right:node4];
+    TreeNode *node = [TreeNode nodeValue:3 left:node1 right:node2];
+    
+    TreeNode *common = [self action236TreeNode:node p:node1 q:node8];
+    NSLog(@"%ld", common.value);
+}
+
+- (TreeNode *)action236TreeNode:(TreeNode *)root p:(TreeNode *)p q:(TreeNode *)q
+{
+    if (root == nil || root == q || root == p) return root;
+    
+    TreeNode *left = [self action236TreeNode:root.left p:p q:q];
+    TreeNode *right = [self action236TreeNode:root.right p:p q:q];
+    // 说明左右子树 都不含pq 返回 nil
+    if(left == nil && right == nil) return nil;
+    // pq都在右子树中 返回right即可
+    if(left == nil) return right;
+    // pq都在左子树中 返回left即可
+    if(right == nil) return left;
+    // 左右都不为空 说明pq在两侧 直接返回root
+    return root;
 }
 
 @end
