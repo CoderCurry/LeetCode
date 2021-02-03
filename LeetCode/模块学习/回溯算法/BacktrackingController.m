@@ -19,6 +19,11 @@
  */
 
 /*
+ 回溯的模板中
+ for 中的i 代表纵向递归下一层的时候 是从什么位置开始 0 i i+1
+ */
+
+/*
  ** 回溯算法 **
  - 如果解决一个问题有多个步骤，每一个步骤有多种方法，题目又要我们找出所有的方法，可以使用回溯算法；
  - 回溯算法是在一棵树上的 深度优先遍历（因为要找所有的解，所以需要遍历）；
@@ -30,7 +35,7 @@
  组合问题：N个数里面按一定规则找出k个数的集合
  排列问题：N个数按一定规则全排列，有几种排列方式
  切割问题：一个字符串按一定规则有几种切割方式
- 子集问题：一个N个数的集合里有多少符合条件的子集
+ 子集问题：一个N个数的集合里有多少符合条件的子集 在终止条件前add path
  棋盘问题：N皇后，解数独等等
  
  回溯算法模板框架如下：
@@ -57,80 +62,26 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self configRowTitles:@[@"组合问题-所给集合求k个数的组合",
-                            @"组合总和III-集合不含重复元素, 元素不可重复使用",
-                            @"电话号码的字母组合",
-                            @"组合总和-集合不含重复元素, 元素可重复使用, 解集不能包含重复组合",
-                            @"组合总和II-集合有重复元素, 解集不能包含重复组合",
-                            @"分割回文串",
-                            @"复原IP地址",
-                            @"子集-集合不含重复元素, 解集不能包含重复子集",
-                            @"子集II-集合有重复元素, 解集不能包含重复子集",
-                            @"递增子序列",
-                            @"全排列-不含重复元素",
-                            @"全排列II-包含重复",
+    [self configRowTitles:@[@"77.组合问题(中等)-所给集合求k个数的组合",
+                            @"216.组合总和III(中等)-集合不含重复元素, 元素不可重复使用",
+                            @"17.电话号码的字母组合(中等)",
+                            @"39.组合总和(中等)-集合不含重复元素, 元素可重复使用, 解集不能包含重复组合",
+                            @"40.组合总和II(中等)-集合有重复元素, 解集不能包含重复组合",
+                            @"131.分割回文串(中等)",
+                            @"93.复原IP地址(中等)",
+                            @"78.子集(中等)-集合不含重复元素, 解集不能包含重复子集",
+                            @"90.子集II(中等)-集合有重复元素, 解集不能包含重复子集",
+                            @"491.递增子序列(中等)",
+                            @"46.全排列-不含重复元素(中等)",
+                            @"47.全排列II-包含重复(中等)",
                             @"重新安排行程",
-                            @"N皇后",
+                            @"51.N皇后(困难)",
                             @"解数独"
                             
     ]];
 }
 
-- (void)didSelectRowAtIndex:(NSInteger)index
-{
-    switch (index) {
-        case 0:
-            [self action0];
-            break;
-        case 1:
-            [self action1];
-            break;
-        case 2:
-            [self action2];
-            break;
-        case 3:
-            [self action3];
-            break;
-        case 4:
-            [self action4];
-            break;
-        case 5:
-            [self action5];
-            break;
-        case 6:
-            [self action6];
-            break;
-        case 7:
-            [self action7];
-            break;
-        case 8:
-            [self action8];
-            break;
-        case 9:
-            [self action9];
-            break;
-        case 10:
-            [self action10];
-            break;
-        case 11:
-            [self action11];
-            break;
-        case 12:
-            [self action12];
-            break;
-        case 13:
-            [self action13];
-            break;
-        case 14:
-            [self action14];
-            break;
-           
-        default:
-            break;
-    }
-}
-
-- (void)action0 {
+- (void)action77 {
     // 77 组合问题
     /*
      给定两个整数 n 和 k，返回 1 ... n 中所有可能的 k 个数的组合。
@@ -193,7 +144,7 @@
     }
 }
 
-- (void)action1
+- (void)action216
 {
     // 216 组合总和III
     // 找出所有相加之和为 n 的 k 个数的组合。组合中只允许含有 1 - 9 的正整数，并且每种组合中不存在重复的数字。
@@ -245,7 +196,7 @@
     }
 }
 
-- (void)action2
+- (void)action17
 {
     // 17 电话号码的字母组合
     // 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
@@ -316,7 +267,7 @@
     }
 }
 
-- (void)action3
+- (void)action39
 {
     // 39. 组合总和
     // 给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。 candidates 中的数字可以无限制重复被选取。
@@ -386,7 +337,7 @@
     }
 }
 
-- (void)action4
+- (void)action40
 {
     // 40.组合总和II
     /*
@@ -493,7 +444,7 @@
 }
 
 
-- (void)action5
+- (void)action131
 {
     // 131 分割回文串
     // 给定一个字符串 s，将 s 分割成一些子串，使每个子串都是回文串。
@@ -556,7 +507,7 @@
     return YES;
 }
 
-- (void)action6
+- (void)action93
 {
     // 93 复原IP地址
     /*
@@ -646,7 +597,7 @@
     return YES;
 }
 
-- (void)action7
+- (void)action78
 {
     // 78. 子集
     /*
@@ -691,7 +642,7 @@
     }
 }
 
-- (void)action8
+- (void)action90
 {
     // 90 子集II
     /*
@@ -754,7 +705,7 @@
     }
 }
 
-- (void)action9
+- (void)action491
 {
     // 491 递增子序列
     // 给定一个整型数组, 你的任务是找到所有该数组的递增子序列，递增子序列的长度至少是2。
@@ -815,7 +766,7 @@
     }
 }
 
-- (void)action10
+- (void)action46
 {
     // 46 全排列
     // 排列问题就不用使用startIndex了, 但排列问题需要一个used数组，标记已经选择的元素
@@ -872,7 +823,7 @@
         [path removeLastObject];
     }
 }
-- (void)action11
+- (void)action47
 {
     // 47.全排列 II
     // 给定一个可包含重复数字的序列 nums ，按任意顺序 返回所有不重复的全排列。
@@ -963,7 +914,7 @@
      */
 }
 
-- (void)action13
+- (void)action51
 {
     // 第51题. N皇后
     // n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。

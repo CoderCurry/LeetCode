@@ -37,40 +37,13 @@
     // Do any additional setup after loading the view.
     
     [self configRowTitles:@[
-        @"斐波那契数",
-        @"爬楼梯",
-        @"使用最小花费爬楼梯",
+        @"509.斐波那契数(简单)",
+        @"70.爬楼梯(简单)",
+        @"746.使用最小花费爬楼梯(简单)",
         @"不同路径 II",
         @"整数拆分",
         @"不同的二叉搜索树"
     ]];
-}
-
-- (void)didSelectRowAtIndex:(NSInteger)index
-{
-    switch (index) {
-        case 0:
-            [self action0];
-            break;
-        case 1:
-            [self action1];
-            break;
-        case 2:
-            [self action2];
-            break;
-        case 3:
-            [self action3];
-            break;
-        case 4:
-            [self action4];
-            break;
-        case 5:
-            [self action5];
-            break;
-            
-        default:
-            break;
-    }
 }
 
 - (void)action0
@@ -118,7 +91,7 @@
     return dp[n].integerValue;
 }
 
-- (void)action1
+- (void)action70
 {
     // 70 爬楼梯
     /*
@@ -162,7 +135,7 @@
     return dp[n].integerValue;
 }
 
-- (void)action2
+- (void)action746
 {
     // 746. 使用最小花费爬楼梯
     /*
@@ -176,7 +149,6 @@
      输入：cost = [1, 100, 1, 1, 1, 100, 1, 1, 100, 1]
      输出：6
      解释：最低花费方式是从 cost[0] 开始，逐个经过那些 1 ，跳过 cost[3] ，一共花费 6
-
      */
     NSArray <NSNumber *>* cost = @[@(1), @(100), @(1), @(1), @(1), @(100), @(1), @(1), @(100), @(1)];
     NSInteger result = [self action2MinStop2:cost];

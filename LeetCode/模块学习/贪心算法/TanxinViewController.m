@@ -30,49 +30,17 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self configRowTitles:@[@"分发饼干",
-                            @"摆动序列",
-                            @"最大子序和",
-                            @"买卖股票的最佳时机II",
-                            @"跳跃游戏",
-                            @"跳跃游戏II",
+    [self configRowTitles:@[@"455.分发饼干(简单)",
+                            @"376.摆动序列(中等)",
+                            @"53.最大子序和(简单)",
+                            @"122.买卖股票的最佳时机II(中等)",
+                            @"55.跳跃游戏",
+                            @"45.跳跃游戏II",
                             @"K次取反后最大化的数组和",
                             @"加油站"]];
 }
 
-- (void)didSelectRowAtIndex:(NSInteger)index
-{
-    switch (index) {
-        case 0:
-            [self action0];
-            break;
-        case 1:
-            [self action1];
-            break;
-        case 2:
-            [self action2];
-            break;
-        case 3:
-            [self action3];
-            break;
-        case 4:
-            [self action4];
-            break;
-        case 5:
-            [self action5];
-            break;
-        case 6:
-            [self action6];
-            break;
-        case 7:
-            [self action7];
-            break;
-        default:
-            break;
-    }
-}
-
-- (void)action0
+- (void)action455
 {
     // 455 分发饼干
     /*
@@ -110,7 +78,7 @@
     return result;
 }
 
-- (void)action1
+- (void)action376
 {
     // 376 摆动序列
     /*
@@ -165,7 +133,7 @@
     return result;
 }
 
-- (void)action2
+- (void)action53
 {
     // 53 最大子序和
     /*
@@ -246,7 +214,7 @@
     return result;
 }
 
-- (void)action4
+- (void)action55
 {
     // 55 跳跃游戏
     /*
@@ -297,7 +265,7 @@
     return true;
 }
 
-- (void)action5
+- (void)action45
 {
     // 45 跳跃游戏II
     /*
