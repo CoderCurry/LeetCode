@@ -60,7 +60,8 @@
                             @"112.路径总和",
                             @"113.路径总和II",
                             @"106.从中序与后序遍历序列构造二叉树",
-                            @"105.从前序与中序遍历序列构造二叉树"
+                            @"105.从前序与中序遍历序列构造二叉树",
+                            @"654.最大二叉树"
                             
                             
     ]];
@@ -939,6 +940,55 @@
     return rootNode;
 }
 
+- (void)action654
+{
+    // 654.最大二叉树
+    /*
+     二叉树的根是数组 nums 中的最大元素。
+     左子树是通过数组中 最大值左边部分 递归构造出的最大二叉树。
+     右子树是通过数组中 最大值右边部分 递归构造出的最大二叉树。
+     
+     输入 [3,2,1,6,0,5]
+     输出 [6,3,5,null,2,0,null,null,1]
+     */
+    
+    NSArray *array = @[@(3), @(2), @(1), @(6), @(0), @(5)];
+    
+}
 
+- (TreeNode *)action654Traversal:(NSMutableArray <NSNumber *>*)nums
+{
+    if (nums.count == 0) {
+        return nil;
+    }
+    
+    TreeNode *node = [TreeNode nodeValue:0 left:nil right:nil];
+    if (nums.count == 1) {
+        node.value = nums[0].integerValue;
+        return node;
+    }
+    
+    // 找到数组中最大的值和对应的下表
+    NSInteger maxValue = 0;
+    NSInteger maxValueIndex = 0;
+    for (int i = 0; i < nums.count; i++) {
+        if (nums[i].integerValue > maxValue) {
+            maxValue = nums[i].integerValue;
+            maxValueIndex = i;
+        }
+    }
+    node.value = maxValue;
+    // 最大值所在的下表左区间 构造左子树
+//    if (maxValueIndex > 0) {
+//        vector<int> newVec(nums.begin(), nums.begin() + maxValueIndex);
+//        node.left = constructMaximumBinaryTree(newVec);
+//    }
+//    // 最大值所在的下表右区间 构造右子树
+//    if (maxValueIndex < (nums.size() - 1)) {
+//        vector<int> newVec(nums.begin() + maxValueIndex + 1, nums.end());
+//        node.right = constructMaximumBinaryTree(newVec);
+//    }
+    return node;
+}
 
 @end
