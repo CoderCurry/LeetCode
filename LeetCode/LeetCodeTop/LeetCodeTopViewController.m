@@ -206,7 +206,6 @@
 - (void)action695
 {
     // 695 岛屿的最大面积
-    
     NSMutableArray *grid = @[
         @[@(1), @(1), @(1), @(1), @(0)].mutableCopy,
         @[@(1), @(1), @(0), @(1), @(0)].mutableCopy,
@@ -250,12 +249,6 @@
     [self action2Area:grid row:row+1 col:col] +
     [self action2Area:grid row:row col:col-1] +
     [self action2Area:grid row:row col:col+1];
-}
-
-- (void)action827
-{
-    // 827 填海造陆问题
-    
 }
 
 - (void)action53
@@ -477,6 +470,7 @@
     
 }
 
+// 利用堆栈 每遇( index进栈 遇到) 如果栈顶是( 正好与(前一个算差值 如果是) 更新(的index 就堆栈pop 然后算差值
 - (NSInteger)action7Arr:(NSArray <NSString *>*)s
 {
     NSInteger maxLength = 0;
@@ -535,6 +529,15 @@
     }
 }
 
+
+/*
+ anchor 指向当前读到连续字符串的起始位置
+ write 当前写入位置
+ read 当前读的位置
+ 当读到最后一个字符，或者下一个字符与当前不同时，则到达连续区块的结尾
+ 当我们到达连续区块的结尾时，就从 write 写入压缩的结果。chars[anchor] 为字符，read - anchor + 1 （若大于 1）为长度。
+
+ */
 - (NSInteger)action8LengthCompress:(NSMutableArray <NSString *>*)chars
 {
     NSInteger anchor = 0, write = 0;
@@ -544,7 +547,6 @@
         if (read + 1 == chars.count || chars[read + 1] != chars[read]) {
             chars[write++] = chars[anchor];
             if (read > anchor) {
-                
                 NSInteger count = read - anchor + 1;
                 NSString *countStr = @(count).stringValue;
                 
