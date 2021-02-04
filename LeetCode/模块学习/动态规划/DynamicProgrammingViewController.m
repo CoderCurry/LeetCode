@@ -40,8 +40,8 @@
         @"509.斐波那契数(简单)",
         @"70.爬楼梯(简单)",
         @"746.使用最小花费爬楼梯(简单)",
-        @"不同路径 II",
-        @"整数拆分",
+        @"63.不同路径 II(中等)",
+        @"343.整数拆分(中等)",
         @"不同的二叉搜索树"
     ]];
 }
@@ -278,6 +278,14 @@
     NSLog(@"result %ld", result);
 }
 
+/*
+ 由于每个正整数对应的最大乘积取决于比它小的正整数对应的最大乘积，因此可以使用动态规划求解。
+ 将i 拆分成 j i-j
+ 就有两种情况可以得到dp[i]
+ 1. i-j 不能在拆分 -> j * (i-j)
+ 1. i-j 可以在拆分 那么i-j的最大值就是dp[i-j] -> j * dp[i-j]
+ 
+ */
 - (NSInteger)action4Break:(NSInteger)n
 {
     NSMutableArray <NSNumber *>*dp = [NSMutableArray array];
@@ -313,7 +321,10 @@
     NSInteger result = [self action5Num:3];
     NSLog(@"result %ld", result);
 }
-// dp[3] = dp[2] * dp[0] + dp[1] * dp[1] + dp[0] * dp[2]
+// dp[3] = dp[2] * dp[0] + dp[1] * dp[1] + dp[0] * dp[2] ->
+// dp[n] = dp[1] * dp[n-1] + dp[2] * dp[n-2] ... dp[n-1] * dp[1] -> 在循环中
+// dp[n] = dp[n] + dp[j - 1] * dp[i - j]
+//
 // 所以2层for下是+=
 - (NSInteger)action5Num:(NSInteger)n
 {
@@ -324,11 +335,17 @@
     // 0要给一个默认值 用于 1
     // i 当前节点数 j 是i下的头结点
     dp[0] = @(1);
-    
+    dp[1] = @(1);
     for (int i = 1; i <= n; i++) {
         for (int j = 1; j <= i; j++) {
             dp[i] = @(dp[i].integerValue + dp[j - 1].integerValue * dp[i - j].integerValue);
         }
+        /*
+         假设i = 3 内for循环拓展为 j是分别当头结点的时候
+         j = 1 dp[3](此时是0) + dp[0] * dp[2]
+         j = 2 dp[3](此时是j=1的情况 dp[0] * dp[2]) + dp[1] * dp[1]
+         j = 3 dp[3](此时是j=2的情况 dp[0] * dp[2] + dp[1] * dp[1]) + dp[2] * dp[0]
+         */
     }
     return dp[n].integerValue;
 }

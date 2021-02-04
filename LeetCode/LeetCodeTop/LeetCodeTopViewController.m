@@ -24,14 +24,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self configRowTitles:@[
-        @"200.岛屿数量",
-        @"463.岛屿的周长",
-        @"695.岛屿的最大面积",
-        @"827.最大人工岛",
+        @"200.岛屿数量(中等)",
+        @"463.岛屿的周长(简单)",
+        @"695.岛屿的最大面积(中等)",
         
-        @"53.最大子序和",
-        @"25.K个一组翻转链表",
-        @"5.最长回文子串",
+        @"53.最大子序和(简单)",
+        @"25.K个一组翻转链表(困难)",
+        @"5.最长回文子串(中等)",
         @"32.最长有效括号",
         @"443.压缩字符串",
         @"120.三角形最小路径和 - 动态规划的反向用法",
@@ -135,7 +134,7 @@
     //如果坐标（r,c）超出了网格范围，直接返回
     if(![self action0IsArea:grid row:row col:col]) return;
     
-    //如果这个格子不是岛屿，直接返回
+    //如果这个格子不是岛屿/已经遍历过，直接返回
     if (![grid[row][col] isEqual:@(1)]) return;
     
     grid[row][col] = @(2); //将格子标记为【已遍历过】
@@ -206,7 +205,6 @@
 - (void)action695
 {
     // 695 岛屿的最大面积
-    
     NSMutableArray *grid = @[
         @[@(1), @(1), @(1), @(1), @(0)].mutableCopy,
         @[@(1), @(1), @(0), @(1), @(0)].mutableCopy,
@@ -250,12 +248,6 @@
     [self action2Area:grid row:row+1 col:col] +
     [self action2Area:grid row:row col:col-1] +
     [self action2Area:grid row:row col:col+1];
-}
-
-- (void)action827
-{
-    // 827 填海造陆问题
-    
 }
 
 - (void)action53
@@ -399,33 +391,32 @@
     
 }
 
-// 中心扩散法
+// 中心扩散法 遍历子串 每一个点都像外扩散 找到每一个点的最长子串 然后比较
 - (NSString *)action6LongestPalindrome:(NSString *)s
 {
     if (s.length < 1) {
         return @"";
     }
-    
+    NSString *res = @"";
     NSInteger maxLength = 1;
-    NSInteger begin = 0;
     // 最后一个位置违法向右延伸 所以不用枚举
     for (NSInteger i = 0; i < s.length - 1; i++) {
-        NSInteger len1 = [self action6ExpandAroundCenter:s left:i right:i];
-        NSInteger len2 = [self action6ExpandAroundCenter:s left:i right:i+1];
-        NSInteger curMaxLength = MAX(len1, len2);
-        if (curMaxLength > maxLength) {
-            maxLength = curMaxLength;
-            begin = i - (maxLength - 1) / 2;
+        NSString *str1 = [self action6ExpandAroundCenter:s left:i right:i];
+        NSString *str2 = [self action6ExpandAroundCenter:s left:i right:i+1];
+        NSString *maxStr = str1.length > str2.length ? str1 : str2;
+        if (maxStr.length > maxLength) {
+            maxLength = maxStr.length;
+            res = maxStr;
         }
     }
-    return [s substringWithRange:NSMakeRange(begin, maxLength)];
+    return res;
 }
 
-/// 回文串长度
+/// 回文串长度 以奇数/偶数中心点扩散 得到的最长回文串
 /// @param s 字符串
 /// @param left 起始左
 /// @param right 起始右
-- (NSInteger)action6ExpandAroundCenter:(NSString *)s left:(NSInteger)left right:(NSInteger)right
+- (NSString *)action6ExpandAroundCenter:(NSString *)s left:(NSInteger)left right:(NSInteger)right
 {
     NSInteger i = left;
     NSInteger j = right;
@@ -438,8 +429,9 @@
             break;
         }
     }
+    // 此时跳出 i j 是不符合条件的下标 要回退
     // j - 1 -( i + 1) + 1
-    return j - i - 1;
+    return [s substringWithRange:NSMakeRange(i + 1, j - 1 -( i + 1) + 1)];;
 }
 
 - (NSString *)action6CharAtIndex:(NSInteger)index s:(NSString *)s
