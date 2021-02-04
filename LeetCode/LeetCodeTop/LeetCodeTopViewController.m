@@ -31,33 +31,33 @@
         @"53.最大子序和(简单)",
         @"25.K个一组翻转链表(困难)",
         @"5.最长回文子串(中等)",
-        @"32.最长有效括号",
-        @"443.压缩字符串",
-        @"120.三角形最小路径和 - 动态规划的反向用法",
-        @"146.LRU缓存机制",
-        @"165.比较版本号",
-        @"82.删除排序链表中的重复元素 II",
-        @"438.找到字符串中所有字母异位词",
-        @"739.每日温度",
-        @"2.两数相加",
-        @"71.简化路径",
-        @"162.寻找峰值",
-        @"7.整数反转",
-        @"160.相交链表",
-        @"3.无重复字符的最长子串",
-        @"445.两数相加 II",
-        @"1233.删除子文件夹",
-        @"1.两数之和",
-        @"20.有效的括号",
-        @"189.旋转数组",
-        @"767.重构字符串-未解题",
-        @"48.旋转图像",
-        @"101.对称二叉树",
-        @"151.翻转字符串里的单词",
-        @"33.搜索旋转排序数组",
-        @"86.分隔链表",
-        @"236.二叉树的最近公共祖先",
-        @"23.合并K个升序链表"
+        @"32.最长有效括号(困难)",
+        @"443.压缩字符串(中等)",
+        @"120.三角形最小路径和(中等) - 动态规划的反向用法",
+        @"146.LRU缓存机制(中等)",
+        @"165.比较版本号(中等)",
+        @"82.删除排序链表中的重复元素II(中等)",
+        @"438.找到字符串中所有字母异位词(中等)",
+        @"739.每日温度(中等)",
+        @"2.两数相加(中等)",
+        @"445.两数相加II(中等)",
+        @"71.简化路径(中等)",
+        @"162.寻找峰值(中等)",
+        @"7.整数反转(简单)",
+        @"160.相交链表(简单)",
+        @"3.无重复字符的最长子串(重新学习)(中等)",
+        @"1233.删除子文件夹(中等)",
+        @"1.两数之和(简单)",
+        @"20.有效的括号(简单)",
+        @"189.旋转数组(中等)",
+        @"767.重构字符串-未解题(中等)",
+        @"48.旋转图像(中等)",
+        @"101.对称二叉树(简单)",
+        @"151.翻转字符串里的单词(中等)",
+        @"33.搜索旋转排序数组(中等)",
+        @"86.分隔链表(中等)",
+        @"236.二叉树的最近公共祖先(中等)",
+        @"23.合并K个升序链表(困难)"
     ]];
 }
 
@@ -959,6 +959,89 @@
     return pre.next;
 }
 
+- (void)action445
+{
+    // 445. 两数相加 II
+    /*
+     给你两个 非空 链表来代表两个非负整数。数字最高位位于链表开始位置。它们的每个节点只存储一位数字。将这两数相加会返回一个新的链表。
+     如果输入链表不能修改该如何处理？换句话说，你不能对列表中的节点进行翻转。
+
+     输入：(7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
+     输出：7 -> 8 -> 0 -> 7
+     */
+    ListNode *node04 = [ListNode nodeValue:3 next:nil];
+    ListNode *node03 = [ListNode nodeValue:4 next:node04];
+    ListNode *node02 = [ListNode nodeValue:2 next:node03];
+    ListNode *node01 = [ListNode nodeValue:7 next:node02];
+    
+    ListNode *node13 = [ListNode nodeValue:4 next:nil];
+    ListNode *node12 = [ListNode nodeValue:6 next:node13];
+    ListNode *node11 = [ListNode nodeValue:5 next:node12];
+    
+    ListNode *result = [self action21Sum:node01 node:node11];
+    NSLog(@"%ld", result.value);
+}
+
+- (ListNode *)action21Sum:(ListNode *)node0 node:(ListNode *)node1
+{
+    // 利用栈的思路
+    NSMutableArray <NSNumber *>*stack0 = [NSMutableArray array];
+    NSMutableArray <NSNumber *>*stack1 = [NSMutableArray array];
+    
+    ListNode *cur0 = node0;
+    while (cur0) {
+        [stack0 addObject:@(cur0.value)];
+        cur0 = cur0.next;
+    }
+    
+    ListNode *cur1 = node1;
+    while (cur1) {
+        [stack1 addObject:@(cur1.value)];
+        cur1 = cur1.next;
+    }
+    
+    NSInteger maxLength = MAX(stack0.count, stack1.count);
+    NSMutableArray <NSNumber *>*stack2 = [NSMutableArray array];
+    // 进位
+    BOOL carry = NO;
+    for (NSInteger i = 0; i < maxLength; i++) {
+        NSInteger num0 = 0;
+        if (stack0.count != 0) {
+            num0 = stack0.lastObject.integerValue;
+            [stack0 removeLastObject];
+        }
+        
+        NSInteger num1 = 0;
+        if (stack1.count != 0) {
+            num1 = stack1.lastObject.integerValue;
+            [stack1 removeLastObject];
+        }
+        
+        NSInteger num2 = num0 + num1 + (carry?1:0);
+        carry = NO;
+        
+        if (num2 > 9) {
+            num2 %= 10;
+            carry = YES;
+        }
+        
+        [stack2 addObject:@(num2)];
+    }
+    
+    if (carry) {
+        [stack2 addObject:@(1)];
+    }
+    
+    //
+    ListNode *cur = [ListNode nodeValue:0 next:nil];;
+    for (NSInteger i = 0; i < stack2.count; i++) {
+        ListNode *temp = [ListNode nodeValue:stack2[i].integerValue next:nil];
+        temp.next = cur;
+        cur = temp;
+    }
+    return cur;
+}
+
 - (void)action71
 {
     // 71. 简化路径
@@ -1103,6 +1186,7 @@
 - (void)action160
 {
     // 160. 相交链表
+    // 编写一个程序，找到两个单链表相交的起始节点
     /*
      指针 pA 指向 A 链表，指针 pB 指向 B 链表，依次往后遍历
      如果 pA 到了末尾，则 pA = headB 继续遍历
@@ -1156,89 +1240,6 @@
 
 }
 
-- (void)action445
-{
-    // 445. 两数相加 II
-    /*
-     给你两个 非空 链表来代表两个非负整数。数字最高位位于链表开始位置。它们的每个节点只存储一位数字。将这两数相加会返回一个新的链表。
-     如果输入链表不能修改该如何处理？换句话说，你不能对列表中的节点进行翻转。
-
-     输入：(7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
-     输出：7 -> 8 -> 0 -> 7
-     */
-    ListNode *node04 = [ListNode nodeValue:3 next:nil];
-    ListNode *node03 = [ListNode nodeValue:4 next:node04];
-    ListNode *node02 = [ListNode nodeValue:2 next:node03];
-    ListNode *node01 = [ListNode nodeValue:7 next:node02];
-    
-    ListNode *node13 = [ListNode nodeValue:4 next:nil];
-    ListNode *node12 = [ListNode nodeValue:6 next:node13];
-    ListNode *node11 = [ListNode nodeValue:5 next:node12];
-    
-    ListNode *result = [self action21Sum:node01 node:node11];
-    NSLog(@"%ld", result.value);
-}
-
-- (ListNode *)action21Sum:(ListNode *)node0 node:(ListNode *)node1
-{
-    // 利用栈的思路
-    NSMutableArray <NSNumber *>*stack0 = [NSMutableArray array];
-    NSMutableArray <NSNumber *>*stack1 = [NSMutableArray array];
-    
-    ListNode *cur0 = node0;
-    while (cur0) {
-        [stack0 addObject:@(cur0.value)];
-        cur0 = cur0.next;
-    }
-    
-    ListNode *cur1 = node1;
-    while (cur1) {
-        [stack1 addObject:@(cur1.value)];
-        cur1 = cur1.next;
-    }
-    
-    NSInteger maxLength = MAX(stack0.count, stack1.count);
-    NSMutableArray <NSNumber *>*stack2 = [NSMutableArray array];
-    // 进位
-    BOOL carry = NO;
-    for (NSInteger i = 0; i < maxLength; i++) {
-        NSInteger num0 = 0;
-        if (stack0.count != 0) {
-            num0 = stack0.lastObject.integerValue;
-            [stack0 removeLastObject];
-        }
-        
-        NSInteger num1 = 0;
-        if (stack1.count != 0) {
-            num1 = stack1.lastObject.integerValue;
-            [stack1 removeLastObject];
-        }
-        
-        NSInteger num2 = num0 + num1 + (carry?1:0);
-        carry = NO;
-        
-        if (num2 > 9) {
-            num2 %= 10;
-            carry = YES;
-        }
-        
-        [stack2 addObject:@(num2)];
-    }
-    
-    if (carry) {
-        [stack2 addObject:@(1)];
-    }
-    
-    //
-    ListNode *cur = [ListNode nodeValue:0 next:nil];;
-    for (NSInteger i = 0; i < stack2.count; i++) {
-        ListNode *temp = [ListNode nodeValue:stack2[i].integerValue next:nil];
-        temp.next = cur;
-        cur = temp;
-    }
-    return cur;
-}
-
 - (void)action1233
 {
     // 1233. 删除子文件夹
@@ -1274,13 +1275,13 @@
     if (folders.count <= 1) {
         return folders;
     }
-    
+    // 进行一波排序
     NSMutableArray *sortFolders = [folders sortedArrayUsingSelector:@selector(compare:)].mutableCopy;
     NSMutableArray *stack = [NSMutableArray array];
     [stack addObject:sortFolders.firstObject];
     
     for (NSInteger i = 1; i < sortFolders.count; i++) {
-        
+        // 添加/ 是分辨 /a/b/c /a/b/ca的情况
         NSString *pre = [NSString stringWithFormat:@"%@/", stack.lastObject];
         if ([sortFolders[i] hasPrefix:pre]) {
             continue;
@@ -1380,6 +1381,7 @@
         } else if ([sub isEqualToString:@"{"]) {
             [stack addObject:@"}"];
         } else if (stack.count == 0) {
+            // stack 为0 && 添加的是右括号
             return NO;
         } else {
             if ([sub isEqualToString:stack.lastObject]) {
@@ -1597,6 +1599,8 @@
     NSLog(@"%ld", result);
 }
 
+
+// 暴力解法 直接遍历 数组 O(n) 也是可以的
 - (NSInteger)action33Nums:(NSArray <NSNumber *>*)nums target:(NSInteger)target
 {
     NSInteger n = nums.count;
@@ -1610,7 +1614,7 @@
     NSInteger left = 0;
     NSInteger right = n - 1;
     while (left <= right) {
-        NSInteger mid = (right - left + 1) >> 1;
+        NSInteger mid = (right + left) / 2;
         
         if (nums[mid].integerValue == target) return mid;
         
@@ -1655,7 +1659,7 @@
     ListNode *result = [self action86:node target:3];
     NSLog(@"%@", result);
 }
-
+// 遍历节点  用small larget 分别存储小于x 和 大于x 然后将两个两表合并
 - (ListNode *)action86:(ListNode *)head target:(NSInteger)x
 {
     ListNode* small = [ListNode nodeValue:0 next:nil];
@@ -1745,7 +1749,7 @@
     ListNode *result = [self action23MergeKLists:nodeArray];
     NSLog(@"%@", result);
 }
-
+// 递归两两合并
 - (ListNode *)action23MergeKLists:(NSArray *)lists
 {
     if (lists == nil || lists.count == 0) return nil;
@@ -1768,6 +1772,7 @@
 {
     if (l1 == nil) return l2;
     if (l2 == nil) return l1;
+    // 升序合并
     if (l1.value < l2.value) {
         l1.next = [self action23MergeTwo:l1.next node:l2];
         return l1;
