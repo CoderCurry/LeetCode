@@ -311,11 +311,11 @@
     // 只有当左右节点都是nil的时候 才是最小深度
     // 一边为空 另一边不为空 不是
     // 下面是用来找叶子节点的
-    if (node.left == 0 && node.right > 0) {
+    if (node.left == nil && node.right > 0) {
         return 1 + rightDepth;
     }
     
-    if (node.right == 0 && node.left > 0) {
+    if (node.right == nil && node.left > 0) {
         return 1 + leftDepth;
     }
     
@@ -677,8 +677,11 @@
         return;
     }
     
-    if (!node.left && !node.right && node.value == sum) {
-        [result addObject:path.copy];
+    if (!node.left && !node.right) {
+        if (node.value == sum) {
+            [result addObject:path.copy];
+        }
+        return;
     }
     
     if (node.left) {
