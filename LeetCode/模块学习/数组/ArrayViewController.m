@@ -18,50 +18,17 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self configRowTitles:@[@"搜索插入位置",
-                            @"移除元素",
-                            @"三数之和",
-                            @"四数之和",
-                            @"反转链表",
-                            @"环形链表II",
-                            @"长度最小的子数组",
-                            @"螺旋矩阵II"]];
+    [self configRowTitles:@[@"35.搜索插入位置(简单)",
+                            @"27.移除元素(简单)",
+                            @"15.三数之和(中等)",
+                            @"18.四数之和(中等)",
+                            @"206.反转链表(简单)",
+                            @"142.环形链表II(中等)",
+                            @"209.长度最小的子数组(中等)",
+                            @"59.螺旋矩阵II(中等)"]];
 }
 
-- (void)didSelectRowAtIndex:(NSInteger)index
-{
-    switch (index) {
-        case 0:
-            [self action0];
-            break;
-        case 1:
-            [self action1];
-            break;
-        case 2:
-            [self action2];
-            break;
-        case 3:
-            [self action3];
-            break;
-        case 4:
-            [self action4];
-            break;
-        case 5:
-            [self action5];
-            break;
-        case 6:
-            [self action6];
-            break;
-        case 7:
-            [self action7];
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (void)action0
+- (void)action35
 {
     // 编号35：搜索插入位置
     // [1,3,5,6], 5
@@ -105,7 +72,7 @@
     return left;
 }
 
-- (void)action1
+- (void)action27
 {
     // 27. 移除元素
     // 给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。
@@ -124,24 +91,20 @@
     }
 }
 
-// 双指针 这里nums已经被修改过 用nums 取前slow个 就是新数组
+// 双指针 当fast与val相等时 fast跳过该元素 fast与val不等时 将fast的值给slow 并且同时递增
 - (NSInteger)action1Nums:(NSMutableArray <NSNumber *>*)nums val:(NSInteger)val
 {
-    NSInteger fast = 0;
     NSInteger slow = 0;
-    for (NSInteger i = 1; i < nums.count; i++) {
-        if (nums[fast].integerValue == val) {
-            fast++;
-        } else {
+    for (NSInteger fast = 0; fast < nums.count; fast++) {
+        if (nums[fast].integerValue != val) {
             nums[slow] = nums[fast];
-            fast++;
             slow++;
         }
     }
     return slow;
 }
 
-- (void)action2
+- (void)action15
 {
     // 15.三数之和
     // 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
@@ -198,7 +161,7 @@
     return result.copy;
 }
 
-- (void)action3
+- (void)action18
 {
     // 18. 四数之和
     /*
@@ -283,7 +246,7 @@
     return result.copy;
 }
 
-- (void)action4
+- (void)action206
 {
     // 第206题：反转链表
     /*
@@ -315,7 +278,7 @@
     return pre;
 }
 
-- (void)action5
+- (void)action142
 {
     // 第142题.环形链表II
     /*
@@ -359,7 +322,7 @@
     return nil;
 }
 
-- (void)action6
+- (void)action209
 {
     // 209.长度最小的子数组
     // 给定一个含有 n 个正整数的数组和一个正整数 s ，找出该数组中满足其和 ≥ s 的长度最小的 连续 子数组，并返回其长度。如果不存在符合条件的子数组，返回 0。
@@ -396,7 +359,7 @@
     return (length == NSIntegerMax) ? 0 : length;
 }
 
-- (void)action7
+- (void)action59
 {
     // 59.螺旋矩阵II
     // 给定一个正整数 n，生成一个包含 1 到 n2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。

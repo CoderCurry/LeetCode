@@ -26,46 +26,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self configRowTitles:@[@"有效的字母异位词",
-                            @"快乐数",
-                            @"两数之和",
-                            @"四数相加II",
-                            @"赎金信",
+    [self configRowTitles:@[@"242.有效的字母异位词(简单)",
+                            @"202.快乐数(简单)",
+                            @"1.两数之和(简单)",
+                            @"454.四数相加II(中等)",
+                            @"383.赎金信(简单)",
                             @"三数之和",
                             @"四数之和"]];
 }
 
-- (void)didSelectRowAtIndex:(NSInteger)index
-{
-    switch (index) {
-        case 0:
-            [self action0];
-            break;
-        case 1:
-            [self action1];
-            break;
-        case 2:
-            [self action2];
-            break;
-        case 3:
-            [self action3];
-            break;
-        case 4:
-            [self action4];
-            break;
-        case 5:
-            [self action5];
-            break;
-        case 6:
-            [self action6];
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (void)action0
+- (void)action242
 {
     // 242. 有效的字母异位词
     // 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
@@ -107,7 +77,7 @@
     return dic.allKeys.count == 0 ? YES : NO;
 }
 
-- (void)action1
+- (void)action202
 {
     // 202 快乐数
     // 编写一个算法来判断一个数 n 是不是快乐数。
@@ -159,7 +129,7 @@
     }
 }
 
-- (void)action2
+- (void)action1
 {
     // 1 两数之和
     // 给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 的那 两个 整数，并返回它们的数组下标。 你可以假设每种输入只会对应一个答案。但是，数组中同一个元素不能使用两遍。
@@ -200,7 +170,7 @@
     return @[];
 }
 
-- (void)action3
+- (void)action454
 {
     // 454 四数相加II
     // 给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。 为了使问题简单化，所有的 A, B, C, D 具有相同的长度 N，且 0 ≤ N ≤ 500 。所有整数的范围在 -2^28 到 2^28 - 1 之间，最终结果不会超过 2^31 - 1 。
@@ -218,7 +188,7 @@
                                      B:@[@(-2), @(-1)]
                                      C:@[@(-1), @(2)]
                                      D:@[@(0), @(2)]];
-    NSLog(@"- %ld", res);
+    NSLog(@"%ld", res);
     
 }
 
@@ -233,13 +203,9 @@
     for(int i = 0;i<A.count;i++){
         for(int j= 0;j<B.count;j++){
             NSInteger sumAB = A[i].integerValue + B[j].integerValue;
-            
-            if ([map.allKeys containsObject:@(sumAB).stringValue]) {
-                NSNumber *obj = map[@(sumAB).stringValue];
-                [map setObject:@(obj.integerValue + 1) forKey:@(sumAB).stringValue];
-            } else {
-                [map setObject:@(1) forKey:@(sumAB).stringValue];
-            }
+            // 取出sumAB当前出现的次数 自增 默认是0
+            NSInteger curValue = [map[@(sumAB).stringValue] integerValue];
+            [map setObject:@(curValue + 1) forKey:@(sumAB).stringValue];
         }
     }
     
@@ -256,7 +222,7 @@
     return res;
 }
 
-- (void)action4
+- (void)action383
 {
     // 383 救赎信
     // 给定救赎信字符串(ransom)和杂志字符串(magazine)，判断第一个字符串 ransom 能不能由第二个字符串 magazines 里面的字符构成。如果可以构成，返回 true ；否则返回 false。

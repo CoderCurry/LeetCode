@@ -18,4 +18,15 @@
     return node;
 }
 
+- (NSArray *)getListValue
+{
+    NSMutableArray *arr = [NSMutableArray array];
+    ListNode *cur = self;
+    while (cur) {
+        [arr addObject:@(cur.value)];
+        cur = cur.next;
+    }
+    return arr.copy;
+}
+
 @end

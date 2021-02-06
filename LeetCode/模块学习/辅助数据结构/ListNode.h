@@ -20,6 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)nodeValue:(NSInteger)value next:(ListNode * _Nullable)next;
 
+
+- (NSArray *)getListValue;
+
 @end
 
 NS_ASSUME_NONNULL_END

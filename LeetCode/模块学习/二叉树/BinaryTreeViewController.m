@@ -44,28 +44,28 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self configRowTitles:@[@"144.二叉树前序遍历-深度搜索",
-                            @"94.二叉树中序遍历-深度搜索",
-                            @"145.二叉树后序遍历-深度搜索",
-                            @"102.层次遍历-广度搜索",
-                            @"226.翻转二叉树",
-                            @"101.对称二叉树",
-                            @"104.二叉树的最大深度",
-                            @"111.二叉树的最小深度",
-                            @"222.完全二叉树的节点个数",
-                            @"110.平衡二叉树",
-                            @"257.二叉树的所有路径",
-                            @"404.左叶子之和",
-                            @"513.找树左下角的值",
-                            @"112.路径总和",
-                            @"113.路径总和II",
-                            @"106.从中序与后序遍历序列构造二叉树",
-                            @"105.从前序与中序遍历序列构造二叉树",
-                            @"654.最大二叉树",
-                            @"617.合并二叉树",
-                            @"98.验证二叉搜索树",
-                            @"530.二叉搜索树的最小绝对差",
-                            @"236.二叉树的最近公共祖先"
+    [self configRowTitles:@[@"144.二叉树前序遍历-深度搜索(中等)",
+                            @"94.二叉树中序遍历-深度搜索(中等)",
+                            @"145.二叉树后序遍历-深度搜索(中等)",
+                            @"102.层次遍历-广度搜索(中等)",
+                            @"226.翻转二叉树(简单)",
+                            @"101.对称二叉树(简单)",
+                            @"104.二叉树的最大深度(简单)",
+                            @"111.二叉树的最小深度(简单)",
+                            @"222.完全二叉树的节点个数(中等)",
+                            @"110.平衡二叉树(简单)",
+                            @"257.二叉树的所有路径(简单)",
+                            @"404.左叶子之和(简单)",
+                            @"513.找树左下角的值(中等)",
+                            @"112.路径总和(简单)",
+                            @"113.路径总和II(中等)",
+                            @"106.从中序与后序遍历序列构造二叉树(中等)",
+                            @"105.从前序与中序遍历序列构造二叉树(中等)",
+                            @"654.最大二叉树(中等)",
+                            @"617.合并二叉树(简单)",
+                            @"98.验证二叉搜索树(中等)",
+                            @"530.二叉搜索树的最小绝对差(简单)",
+                            @"236.二叉树的最近公共祖先(中等)"
     ]];
     
 }
@@ -402,15 +402,18 @@
     return [self action9DepNode:node] != -1;
 }
 
-// 如果这个节点时平衡的 返回这个节点的深度 用来和兄弟节点比较 如果不是 返回-1
+// node下深度差超过1 则返回-1 不超过返回这个节点的深度
 - (NSInteger)action9DepNode:(TreeNode *)node
 {
     if (node == nil) return 0;
     NSInteger left = [self action9DepNode:node.left];
+    // node.left 已经不符合了 直接return -1
     if(left == -1) return -1;
     NSInteger right = [self action9DepNode:node.right];
+    // node.right 已经不符合了 直接return -1
     if(right == -1) return -1;
-    //如果子树平衡(也就是相应的深度之差的绝对值小于2),则返回该子树的深度用于和他的兄弟子树比较深度之差
+    // 当left和right都符合 则看left和right的深度差
+    // left right 深度差小于2 则返回node的深度(left/right最大深度 + node本身), 否则返回-1
     return labs(left - right) < 2 ? MAX(left, right) + 1 : -1;
 }
 
@@ -427,43 +430,30 @@
      返回 ["1->2->5", "1->3]
      */
     
-    
     TreeNode *node3 = [TreeNode nodeValue:5 left:nil right:nil];
     TreeNode *node2 = [TreeNode nodeValue:3 left:nil right:nil];
     TreeNode *node1 = [TreeNode nodeValue:2 left:nil right:node3];
     TreeNode *head = [TreeNode nodeValue:1 left:node1 right:node2];
     
     NSMutableArray *result = [NSMutableArray array];
-    NSMutableArray *path = [NSMutableArray array];
-    [self traversal:head path:path pathArray:result];
+    [self traversal:head path:@"" pathArray:result];
     NSLog(@"%@", result);
 }
 
 - (void)traversal:(TreeNode *)cur
-             path:(NSMutableArray *)path
+             path:(NSString *)path
         pathArray:(NSMutableArray *)result
 {
-    [path addObject:@(cur.value)];
-    // 找到叶子节点
-    if (!cur.left && !cur.right) {
-        // 终止
-        NSString *sPath = @"";
-        for (int i = 0; i < path.count; i++) {
-            sPath = [path componentsJoinedByString:@"->"];
+    if (cur) {
+        path = [NSString stringWithFormat:@"%@%@", path, @(cur.value).stringValue];
+        // 当前是叶子节点 统计完整路径
+        if (!cur.left && !cur.right) {
+            [result addObject:path.copy];
+        } else {
+            path = [NSString stringWithFormat:@"%@->", path];
+            [self traversal:cur.left path:path pathArray:result];
+            [self traversal:cur.right path:path pathArray:result];
         }
-        [result addObject:sPath];
-        //        [result addObject:path.copy];
-        return;
-    }
-    
-    if (cur.left) {
-        [self traversal:cur.left path:path pathArray:result];
-        [path removeLastObject];
-    }
-    
-    if (cur.right) {
-        [self traversal:cur.right path:path pathArray:result];
-        [path removeLastObject];
     }
 }
 
@@ -611,7 +601,7 @@
 - (BOOL)action13Traversa:(TreeNode *)cur sum:(NSInteger)sum
 {
     if(!cur){
-        return NO;
+        return (sum == 0);
     }
     
     if(cur.left == nil && cur.right == nil){
@@ -949,16 +939,19 @@
 {
     // 654.最大二叉树
     /*
+     给定一个不含重复元素的整数数组 nums 。一个以此数组直接递归构建的 最大二叉树 定义如下：
      二叉树的根是数组 nums 中的最大元素。
      左子树是通过数组中 最大值左边部分 递归构造出的最大二叉树。
      右子树是通过数组中 最大值右边部分 递归构造出的最大二叉树。
+     返回有给定数组 nums 构建的 最大二叉树
      
      输入 [3,2,1,6,0,5]
      输出 [6,3,5,null,2,0,null,null,1]
      */
     
-    NSArray *array = @[@(3), @(2), @(1), @(6), @(0), @(5)];
-    
+    NSMutableArray *array = @[@(3), @(2), @(1), @(6), @(0), @(5)].mutableCopy;
+    TreeNode *node = [self action654Traversal:array];
+    NSLog(@"%@", node);
 }
 
 - (TreeNode *)action654Traversal:(NSMutableArray <NSNumber *>*)nums
@@ -984,21 +977,44 @@
     }
     node.value = maxValue;
     // 最大值所在的下表左区间 构造左子树
-//    if (maxValueIndex > 0) {
-//        vector<int> newVec(nums.begin(), nums.begin() + maxValueIndex);
-//        node.left = constructMaximumBinaryTree(newVec);
-//    }
-//    // 最大值所在的下表右区间 构造右子树
-//    if (maxValueIndex < (nums.size() - 1)) {
-//        vector<int> newVec(nums.begin() + maxValueIndex + 1, nums.end());
-//        node.right = constructMaximumBinaryTree(newVec);
-//    }
+    if (maxValueIndex > 0) {
+        NSMutableArray *leftNums = [nums subarrayWithRange:NSMakeRange(0, maxValueIndex - 1 - 0 + 1)].mutableCopy;
+        node.left = [self action654Traversal:leftNums];
+    } else {
+        // maxValueIndex == 0 说明是第一个元素最大 没有左子树了
+    }
+    
+    if (maxValueIndex < nums.count - 1) {
+        NSMutableArray *rightNums = [nums subarrayWithRange:NSMakeRange(maxValueIndex + 1, nums.count - 1 - (maxValueIndex + 1) + 1)].mutableCopy;
+        node.right = [self action654Traversal:rightNums];
+    } else {
+        // maxValueIndex == nums.count - 1 说明是最后一个元素最大 没有右子树了
+    }
     return node;
 }
 
 - (void)action617
 {
     // 617.合并二叉树
+    /*
+     给定两个二叉树，想象当你将它们中的一个覆盖到另一个上时，两个二叉树的一些节点便会重叠。
+     你需要将他们合并为一个新的二叉树。合并的规则是如果两个节点重叠，那么将他们的值相加作为节点合并后的新值，否则不为 NULL 的节点将直接作为新二叉树的节点
+     输入:
+         Tree 1                     Tree 2
+               1                         2
+              / \                       / \
+             3   2                     1   3
+            /                           \   \
+           5                             4   7
+     输出:
+     合并后的树:
+              3
+             / \
+            4   5
+           / \   \
+          5   4   7
+     */
+    
 }
 
 - (TreeNode *)action617MergeTrees:(TreeNode *)t1  t2:(TreeNode *)t2
@@ -1015,7 +1031,13 @@
 - (void)action98
 {
     // 98.验证二叉搜索树
-    
+    /*
+     给定一个二叉树，判断其是否是一个有效的二叉搜索树。
+     假设一个二叉搜索树具有如下特征：
+     节点的左子树只包含小于当前节点的数。
+     节点的右子树只包含大于当前节点的数。
+     所有左子树和右子树自身必须也是二叉搜索树。
+*/
     TreeNode *node2 = [TreeNode nodeValue:3 left:nil right:nil];
     TreeNode *node1 = [TreeNode nodeValue:1 left:nil right:nil];
     TreeNode *node = [TreeNode nodeValue:2 left:node1 right:node2];
@@ -1026,20 +1048,7 @@
 //要知道中序遍历下，输出的二叉搜索树节点的数值是有序序列。
 - (BOOL)action98isSearch:(TreeNode *)node
 {
-//    NSMutableArray <NSNumber *>*result = [NSMutableArray array];
-//    [self action98traversal:node reslut:result];
-//
-//    BOOL isSearch = YES;
-//    for (NSInteger i = 0; i < result.count - 1; i++) {
-//        if (result[i].integerValue < result[i+1].integerValue) {
-//            continue;
-//        } else {
-//            isSearch = NO;
-//            break;
-//        }
-//    }
-//    return isSearch;
-//
+    // pre 记录前一个节点 用来判断和当前节点比较
     TreeNode *pre = nil;
     return [self action98traversal1:node pre:pre];
 }
@@ -1115,6 +1124,7 @@
     NSLog(@"%ld", common.value);
 }
 
+// 在root子树中遍历找p 和 q 找到一个即可返回
 - (TreeNode *)action236TreeNode:(TreeNode *)root p:(TreeNode *)p q:(TreeNode *)q
 {
     if (root == nil || root == q || root == p) return root;

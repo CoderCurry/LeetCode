@@ -19,34 +19,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self configRowTitles:@[@"移除链表元素",
-                            @"链表设计",
+    [self configRowTitles:@[@"203.移除链表元素(简单)",
+                            @"707.链表设计(中等)",
                             @"反转链表",
-                            @"环形链表II"]];
+                            @"环形链表II",
+                            @"25.(剑指)合并两个排序链表(简单)"
+    ]];
 }
 
-- (void)didSelectRowAtIndex:(NSInteger)index
-{
-    switch (index) {
-        case 0:
-            [self action0];
-            break;
-        case 1:
-            [self action1];
-            break;
-        case 2:
-            [self action2];
-            break;
-        case 3:
-            [self action3];
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (void)action0
+- (void)action203
 {
     // 第203题：移除链表元素
     // 删除链表中等于给定值 val 的所有节点
@@ -57,35 +38,33 @@
     ListNode *node6 = [ListNode nodeValue:6 next:nil];
     ListNode *node5 = [ListNode nodeValue:5 next:node6];
     ListNode *node4 = [ListNode nodeValue:4 next:node5];
-    ListNode *node3 = [ListNode nodeValue:3 next:node4];
+    ListNode *node3 = [ListNode nodeValue:1 next:node4];
     ListNode *node2 = [ListNode nodeValue:6 next:node3];
-    ListNode *node1 = [ListNode nodeValue:2 next:node2];
+    ListNode *node1 = [ListNode nodeValue:1 next:node2];
     ListNode *head = [ListNode nodeValue:1 next:node1];
     
-    [self deleteListNode:head target:6];
-    NSLog(@"%@", head);
+    ListNode *res = [self deleteListNode:head target:1];
+    NSLog(@"%@", [res getListValue]);
 }
 
-- (void)deleteListNode:(ListNode *)head target:(NSInteger)target
+- (ListNode *)deleteListNode:(ListNode *)head target:(NSInteger)target
 {
-    // 先确保头结点安全
-    while (head.value == target) {
-        head = head.next;
-    }
-    
+    ListNode *dummy = [ListNode nodeValue:0 next:head];
+    ListNode *pre = dummy;
     ListNode *cur = head;
+    
     while (cur) {
-        // 如果next命中 就指向next.next
-        // 如果next没命中 cur后移
-        if (cur.next.value == target) {
-            cur.next = cur.next.next;
+        if (cur.value == target) {
+            pre.next = cur.next;
         } else {
-            cur = cur.next;
+            pre = cur;
         }
+        cur = cur.next;
     }
+    return dummy.next;
 }
 
-- (void)action1
+- (void)action707
 {
     // 707. 设计链表
     /*
@@ -114,6 +93,44 @@
 - (void)action3
 {
     NSLog(@"在数组章节中");
+}
+
+- (void)action25
+{
+    // 剑指 Offer 25. 合并两个排序的链表
+    /*
+     输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然是递增排序的。
+     输入：1->2->4, 1->3->4
+     输出：1->1->2->3->4->4
+     */
+    ListNode *node2 = [ListNode nodeValue:4 next:nil];
+    ListNode *node1 = [ListNode nodeValue:2 next:node2];
+    ListNode *node0 = [ListNode nodeValue:1 next:node1];
+    
+    ListNode *node5 = [ListNode nodeValue:4 next:nil];
+    ListNode *node4 = [ListNode nodeValue:3 next:node5];
+    ListNode *node3 = [ListNode nodeValue:1 next:node4];
+    
+    ListNode *res = [self action25MergeNode:node0 node1:node3];
+    NSLog(@"%@", [res getListValue]);
+}
+
+- (ListNode *)action25MergeNode:(ListNode *)node0 node1:(ListNode *)node1
+{
+    if (node0 == nil) {
+        return node1;
+    }
+    if (node1 == nil) {
+        return node0;
+    }
+    
+    if (node0.value < node1.value) {
+        node0.next = [self action25MergeNode:node0.next node1:node1];
+        return node0;
+    } else {
+        node1.next = [self action25MergeNode:node0 node1:node1.next];
+        return node1;
+    }
 }
 
 @end
