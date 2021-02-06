@@ -28,6 +28,7 @@
         @"94.二叉树的中序遍历(中等)",
         @"977.有序数组的平方(简单)",
         @"17.电话号码的字母组合(中等)",
+        @"543.二叉树的直径(简单)",
         @"200.岛屿数量(中等)",
         @"463.岛屿的周长(简单)",
         @"695.岛屿的最大面积(中等)",
@@ -84,8 +85,43 @@
 
      输入: amount = 10, coins = [10]
      输出: 1
-
      */
+    
+    NSMutableArray *coins = @[@(1), @(2), @(5)].mutableCopy;
+    NSInteger result = [self action518:coins amount:5];
+    NSLog(@"%ld", (long)result);
+}
+
+
+/*
+ 1. 确定dp数组以及下标的含义
+ dp[j]：凑成总金额j的货币组合数为dp[j]
+ 1. 确定递推公式
+ dp[j] 就是所有的dp[j - coins[i]]相加。
+ 比如dp[5] = dp[4] + dp[3] + dp[0]
+ 因为dp[4]代表凑4元的组合数 + 1 = 5
+ 因为dp[3]代表凑3元的组合数 + 2 = 5
+ 因为dp[0]代表凑0元的组合数 + 5 = 5
+ 所以推出 dp[5] = dp[4] + dp[3] + dp[0]
+ 3. dp数组如何初始化
+ 首先dp[0]一定要为1，dp[0] = 1是 递归公式的基础。
+ 从dp[i]的含义上来讲就是，凑成总金额0的货币组合数为1。
+ */
+- (NSInteger)action518:(NSMutableArray <NSNumber *>*)coins amount:(NSInteger)amount
+{
+    NSMutableArray <NSNumber *>*dp = [NSMutableArray array];
+    for (NSInteger i = 0; i <= amount; i++) {
+        [dp addObject:@(0)];
+    }
+    dp[0] = @(1);
+    // 因为推到公式是 dp[j] 就是所有的dp[j - coins[i]]相加。 所以外层用来拿金币 内层用来算
+    for (NSInteger i = 0; i < coins.count; i++) {
+        // dp数组不能超过amount
+        for (NSInteger j = coins[i].integerValue; j <= amount; j++) {
+            dp[j] = @(dp[j].integerValue + dp[j - coins[i].integerValue].integerValue);
+        }
+    }
+    return dp[amount].integerValue;
 }
 
 - (void)action94
@@ -97,6 +133,40 @@
 - (void)action977
 {
     // 977.有序数组的平方
+    /*
+     给你一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序。
+
+     输入：nums = [-4,-1,0,3,10]
+     输出：[0,1,9,16,100]
+     解释：平方后，数组变为 [16,1,0,9,100]
+     排序后，数组变为 [0,1,9,16,100]
+
+     */
+    NSMutableArray *nums = @[@(-4), @(-1), @(0), @(3), @(10)].mutableCopy;
+    NSMutableArray *newNums = [self action977:nums];
+    NSLog(@"%@", newNums);
+}
+
+- (NSMutableArray *)action977:(NSMutableArray <NSNumber *>*)nums
+{
+    NSInteger n = nums.count;
+    NSMutableArray <NSNumber *>*newNums = [NSMutableArray array];
+    for (NSInteger i = 0; i < n; i++) {
+        [newNums addObject:@(0)];
+    }
+    // 收尾平方比较 大的移进新数组 然后移动index
+    for (NSInteger i = 0, j = n - 1, pos = n - 1; i <= j;) {
+        if (nums[i].integerValue * nums[i].integerValue > nums[j].integerValue * nums[j].integerValue) {
+            newNums[pos] = @(nums[i].integerValue * nums[i].integerValue);
+            ++i;
+        }
+        else {
+            newNums[pos] = @(nums[j].integerValue * nums[j].integerValue);
+            --j;
+        }
+        --pos;
+    }
+    return newNums;
 }
 
 - (void)action17
@@ -114,11 +184,66 @@
 - (void)action255
 {
     // 225.用队列实现栈
+    /*
+     请你仅使用两个队列实现一个后入先出（LIFO）的栈，并支持普通队列的全部四种操作（push、top、pop 和 empty）。
+
+     实现 MyStack 类：
+
+     void push(int x) 将元素 x 压入栈顶。
+     int pop() 移除并返回栈顶元素。
+     int top() 返回栈顶元素。
+     boolean empty() 如果栈是空的，返回 true ；否则，返回 false 。
+      
+
+     注意：
+     你只能使用队列的基本操作 —— 也就是 push to back、peek/pop from front、size 和 is empty 这些操作。
+     你所使用的语言也许不支持队列。 你可以使用 list （列表）或者 deque（双端队列）来模拟一个队列 , 只要是标准的队列操作即可。
+
+*/
 }
 
 - (void)action543
 {
     // 543.二叉树的直径
+    /*
+     给定一棵二叉树，你需要计算它的直径长度。一棵二叉树的直径长度是任意两个结点路径长度中的最大值。这条路径可能穿过也可能不穿过根结点。
+
+     示例 :
+     给定二叉树
+
+               1
+              / \
+             2   3
+            / \
+           4   5
+     返回 3, 它的长度是路径 [4,2,1,3] 或者 [5,2,1,3]。
+*/
+    
+    TreeNode *node4 = [TreeNode nodeValue:5 left:nil right:nil];
+    TreeNode *node3 = [TreeNode nodeValue:4 left:nil right:nil];
+    TreeNode *node2 = [TreeNode nodeValue:3 left:nil right:nil];
+    TreeNode *node1 = [TreeNode nodeValue:2 left:node3 right:node4];
+    TreeNode *node = [TreeNode nodeValue:1 left:node1 right:node2];
+    NSInteger result = [self action543DiameterOfBinaryTree:node];
+    NSLog(@"%ld", result);
+}
+
+static NSInteger maxd = 0;
+- (NSInteger)action543DiameterOfBinaryTree:(TreeNode *)root
+{
+    [self action543Depth:root];
+    return maxd;
+}
+
+- (NSInteger)action543Depth:(TreeNode *)node
+{
+    if(node == nil){
+        return 0;
+    }
+    NSInteger left = [self action543Depth:node.left];
+    NSInteger right = [self action543Depth:node.right];
+    maxd = MAX(left+right, maxd);//将每个节点最大直径(左子树深度+右子树深度)当前最大值比较并取大者
+    return MAX(left,right)+1;//返回节点深度
 }
 
 - (void)action200
@@ -526,7 +651,6 @@
         NSInteger result = [self action7Arr:s];
         NSLog(@"%ld", result);
     }
-    
 }
 
 // 利用堆栈 每遇( index进栈 遇到) 如果栈顶是( 正好与(前一个算差值 如果是) 更新(的index 就堆栈pop 然后算差值
@@ -534,6 +658,7 @@
 {
     NSInteger maxLength = 0;
     NSMutableArray <NSNumber *>*stack = [NSMutableArray array];
+    // 当一个( 加 ) 后 需要从堆栈中获取默认值来计算长度 i从0开始的 所以默认是-1
     [stack addObject:@(-1)];
     for (int i = 0; i < s.count; i++) {
         if ([s[i] isEqualToString: @"("]) {
@@ -590,7 +715,7 @@
 
 
 /*
- anchor 指向当前读到连续字符串的起始位置
+ startIndex 指向当前读到连续字符串的起始位置
  write 当前写入位置
  read 当前读的位置
  当读到最后一个字符，或者下一个字符与当前不同时，则到达连续区块的结尾
@@ -599,14 +724,14 @@
  */
 - (NSInteger)action8LengthCompress:(NSMutableArray <NSString *>*)chars
 {
-    NSInteger anchor = 0, write = 0;
+    NSInteger startIndex = 0, write = 0;
     for (int read = 0; read < chars.count; read++) {
         // read + 1 == chars.count : 最后一个数 开始压缩
         // chars[read + 1] != chars[read] : 当前值 != 下一个值 开始压缩前一段
         if (read + 1 == chars.count || chars[read + 1] != chars[read]) {
-            chars[write++] = chars[anchor];
-            if (read > anchor) {
-                NSInteger count = read - anchor + 1;
+            chars[write++] = chars[startIndex];
+            if (read > startIndex) {
+                NSInteger count = read - startIndex + 1;
                 NSString *countStr = @(count).stringValue;
                 
                 for (NSInteger i = 0; i < countStr.length; i++) {
@@ -614,7 +739,7 @@
                     chars[write++] = sub;
                 }
             }
-            anchor = read + 1;
+            startIndex = read + 1;
         }
     }
     // 最后有一个write++ 所以write就是长度 而不是write-1
@@ -839,6 +964,7 @@
     NSLog(@"%@", head);
 }
 
+// 返回不重复的第一个节点
 - (ListNode *)action12DeleteDuplicatesNode:(ListNode *)head
 {
     // 判断参数安全 是好的习惯 其实不加也行
@@ -892,6 +1018,7 @@
 
 - (NSArray <NSNumber *>*)action13FindAnagrams:(NSString *)s p:(NSString *)p
 {
+    // 将字符串转换成字符串数组
     NSArray <NSString *>*(^toCharArray)(NSString *) = ^(NSString *str) {
         NSMutableArray *result = @[].mutableCopy;
         for (NSInteger i = 0; i < str.length; i++) {
@@ -906,7 +1033,7 @@
     NSMutableArray *result = [NSMutableArray array];
     NSMutableDictionary <NSString *, NSNumber *>*window = [NSMutableDictionary dictionary];
     NSMutableDictionary <NSString *, NSNumber *>*needs = [NSMutableDictionary dictionary];
-    
+    // 将p存入字典
     for (NSInteger i = 0; i < arrP.count; i++) {
         NSString *key = arrP[i];
         needs[key] = @(needs[key].integerValue + 1);
